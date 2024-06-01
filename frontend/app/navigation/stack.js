@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import SavingsScreen from "../screens/SavingsScreen";
 import SpendingsScreen from "../screens/SpendingsScreen";
+import ChallengesScreen from "../screens/ChallengesScreen";
 import { HomeTabs } from "./tabs";
 
 const Stack = createStackNavigator();
