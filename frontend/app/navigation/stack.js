@@ -16,3 +16,13 @@ export const HomeStack = () => {
         </Stack.Navigator>
     )
 }
+
+export const LogInStack = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="LogIn" component={LogInScreen} />
+            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+        </Stack.Navigator>
+    )
+}

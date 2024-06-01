@@ -1,22 +1,31 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import colors from "../config/colors";
 
+
 export default function HomeScreen(props) {
+    const navigation = useNavigation();
+
     return (
         <SafeAreaView style={styles.background}>
             <Text>you spent $xyz this month! </Text>
             <View style={styles.piechart}></View>
             <View style={styles.both}>
-                <View style={styles.savings}>
-                    <Text>savings</Text>
-                    <View style= {styles.box}></View>
-                </View>
-                <View  style={styles.savings}>
-                <Text>spendings</Text>
-                <View style= {styles.box}></View>
-                </View>
+                <TouchableOpacity>
+                    <View style={styles.savings}>
+                        <Text>savings</Text>
+                        <View style= {styles.box}></View>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <View  style={styles.savings}>
+                        <Text>spendings</Text>
+                        <View style= {styles.box}></View>
+                    </View>
+                </TouchableOpacity>
+                
             </View>
         </SafeAreaView>
     );

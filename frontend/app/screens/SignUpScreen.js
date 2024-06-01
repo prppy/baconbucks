@@ -1,26 +1,19 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity } from "react-native";
 
 import colors from '../config/colors';
-import { useNavigation } from '@react-navigation/native';
 
-export default function LogInScreen(props) {
-    const [username, setUserName]= React.useState("");
-    const [password, setPassword]= React.useState("");
-
-    const navigation = useNavigation();
-
-    const handleLogIn = () => {
-        navigation.navigate("Home");
-    };
+export default function SignUpScreen(props) {
+    const [username, setUserName] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [confirm, setConfirm] = React.useState("");
 
     const handleSignUp = () => {
-        navigation.navigate("SignUp");
+        console.log("signup")
     };
 
-
     return (
-        <SafeAreaView style={styles.background}>
+        <SafeAreaView  style={styles.background}>
             <Image 
                 style={styles.logo} 
                 source={require('../assets/images/LOGO_Light.png')} />
@@ -34,6 +27,7 @@ export default function LogInScreen(props) {
                     secureTextEntry="false" 
                     autoCapitalize='none'
                     maxLength={20}
+                    keyboardType='ascii-capable'
                 ></TextInput>
             </View>
             <Text style={styles.text}>Password</Text>
@@ -45,17 +39,25 @@ export default function LogInScreen(props) {
                     onChangeText={setPassword}
                     secureTextEntry="true" 
                     autoCapitalize='none'
+                    maxLength={20}
+                    keyboardAppearance=''
+                ></TextInput>
+            </View>
+            <Text style={styles.text}>Confirm Password</Text>
+            <View style={styles.textbox}>
+                <TextInput
+                    style={styles.username}
+                    placeholder="Type here"
+                    value={confirm}
+                    onChangeText={setConfirm}
+                    secureTextEntry="true" 
+                    autoCapitalize='none'
+                    maxLength={20}
                 ></TextInput>
             </View>
             <TouchableOpacity style={styles.loginbutn}
-                    onPress={handleLogIn}>
+                    onPress={handleSignUp}>
                         <Text style={styles.logintext}>Log in</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.text}>Don't have an account yet?</Text>
-            <TouchableOpacity
-                onPress={handleSignUp}>
-                <Text style={styles.text}>Sign up now!</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
