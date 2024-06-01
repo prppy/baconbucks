@@ -8,18 +8,27 @@ import colors from "../config/colors";
 export default function HomeScreen(props) {
     const navigation = useNavigation();
 
+    const handleSavings = () => {
+        navigation.navigate("Savings");
+    }
+    const handleSpendings = () => {
+        navigation.navigate("Spendings");
+    }
+
     return (
         <SafeAreaView style={styles.background}>
             <Text>you spent $xyz this month! </Text>
             <View style={styles.piechart}></View>
             <View style={styles.both}>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSavings}>
                     <View style={styles.savings}>
                         <Text>savings</Text>
                         <View style= {styles.box}></View>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={handleSpendings}>
                     <View  style={styles.savings}>
                         <Text>spendings</Text>
                         <View style= {styles.box}></View>

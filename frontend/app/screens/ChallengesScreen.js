@@ -3,8 +3,8 @@ import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacit
 
 import colors from "../config/colors";
 
-export default function SavingsScreen(props) {
+export default function ChallengesScreen(props) {
     <SafeAreaView>
-        <Text>savings screen goes here</Text>
+        <Text>challenges screen goes here</Text>
     </SafeAreaView>
 }
