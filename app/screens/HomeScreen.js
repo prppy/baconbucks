@@ -1,15 +1,23 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView, Dimensions } from "react-native";
 
 import colors from "../config/colors";
 
 export default function HomeScreen(props) {
     return (
-        <SafeAreaView 
-            style={styles.background}>
-                <View></View>
-            <Text style = {{marginBottom: 20}}>you spent $xyz this month! </Text>
+        <SafeAreaView style={styles.background}>
+            <Text>you spent $xyz this month! </Text>
             <View style={styles.piechart}></View>
+            <View style={styles.both}>
+                <View style={styles.savings}>
+                    <Text>savings</Text>
+                    <View style= {styles.box}></View>
+                </View>
+                <View  style={styles.savings}>
+                <Text>spendings</Text>
+                <View style= {styles.box}></View>
+                </View>
+            </View>
         </SafeAreaView>
     );
 }
@@ -26,6 +34,27 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300, 
         borderRadius: 150,
-        backgroundColor: colors.darkPink
-    }
+        backgroundColor: colors.darkPink,
+        margin: 20, 
+    },
+
+    both: {
+        height: 200,
+        width: Dimensions.get('window').width,
+        flexDirection: "row",
+        justifyContent: "space-around",
+        borderWidth: 1,
+    },
+
+    savings: {
+        width: 150, 
+        heigth: 200,
+    },
+
+    box: {
+        width: 150,
+        height: 150, 
+        backgroundColor: colors.darkPink,
+        borderRadius: 10,
+    },
 })

@@ -9,8 +9,7 @@ const Stack = createStackNavigator();
 
 export const HomeStack = () => {
     return (
-        <Stack.Navigator
-            screenOptions={{headerShown: "false"}} >
+        <Stack.Navigator>
             <Stack.Screen name="LogIn" component={LogInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
