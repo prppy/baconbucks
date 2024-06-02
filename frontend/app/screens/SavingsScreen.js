@@ -5,6 +5,17 @@ import colors from "../config/colors";
 
 export default function SavingsScreen(props) {
     <SafeAreaView>
-        <Text>savings screen goes here</Text>
+        <View style={styles.test}>
+            <Text>savings screen goes here</Text>
+        </View>
     </SafeAreaView>
 }
+
+const styles = StyleSheet.create({
+    test: {
+        justifyContent: "center", 
+        alignItems: "center",
+        backgroundColor: colors.lightPink,
+        flex: 1,
+    }
+})

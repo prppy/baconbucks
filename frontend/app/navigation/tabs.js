@@ -1,13 +1,14 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import HomeScreen from '../screens/HomeScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import ChallengesScreen from '../screens/ChallengesScreen';
 import CommunityScreen from '../screens/CommunityScreen';
 import RemindersScreen from '../screens/RemindersScreen';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../config/colors';
+
 
 const Tab = createBottomTabNavigator();
 
