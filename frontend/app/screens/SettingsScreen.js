@@ -16,7 +16,7 @@ export default function SettingsScreen(props) {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.background}>
             <View style={styles.row}>
                 {/* Buttons for My Account and Accessibility */}
                 <TouchableOpacity style={styles.button} onPress={handleMyAccount}>
@@ -34,21 +34,22 @@ const styles = StyleSheet.create({
     background: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'top',
         padding: 20,
+        backgroundColor: colors.lightPink,
     },
     row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         width: '100%',
         marginBottom: 20,
+        justifyContent: 'space-between',
     },
     button: {
-        backgroundColor: 'blue',
-        padding: 10,
-        borderRadius: 5,
-        width: '45%',
-        alignItems: 'center',
+        backgroundColor: colors.darkPink,
+        width: '100%',
+        alignItems: 'flex-start',
+        height: 50,
+        justifyContent: 'center',
+        paddingLeft: 20,
     },
     buttonText: {
         color: 'white',
