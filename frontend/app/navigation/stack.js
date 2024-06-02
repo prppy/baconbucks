@@ -11,7 +11,7 @@ const Stack = createStackNavigator();
 export const HomeStack = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="HomeTabs" component={HomeTabs} />
+            <Stack.Screen name="HomeTabs" options={{ headerShown: false }} component={HomeTabs} />
             <Stack.Screen name="Savings" component={SavingsScreen} />
             <Stack.Screen name="Spendings" component={SpendingsScreen} />
         </Stack.Navigator>
