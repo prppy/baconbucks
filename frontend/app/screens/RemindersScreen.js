@@ -2,29 +2,18 @@ import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Dimensions, Modal, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Calendar } from 'react-native-calendars';
+import { navigationRef } from "../../App";
 
 import colors from "../config/colors";
 
 export default function RemindersScreen(props) {
     const navigation = useNavigation();
+    console.log(navigation);
     const screenWidth = Dimensions.get('window').width
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [notesData, setNotesData] = useState({});
-    const [modalVisible, setModalVisible] = useState(false);
-    const [noteInput, setNoteInput] = useState('');
-    const handleDayPress = (day) => {
-      setSelectedDate(day.dateString);
-      setModalVisible(true);
-    };
-
-    const handleSaveNote = () => {
-        // Save the note input to the notesData object
-        setNotesData(prevNotesData => ({
-          ...prevNotesData,
-          [selectedDate]: { note: noteInput }
-        }));
-        setModalVisible(false);
-    };
+    const newReminder = () => {
+        console.log('Navigating to New Reminder');
+        navigationRef.navigate("RemindersStack", { screen: "New Reminder" });
+    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -37,21 +26,16 @@ export default function RemindersScreen(props) {
                     todayTextColor: colors.darkPink, // Change the text color of today's date
                     arrowColor: colors.darkPink, // Change the color of the arrows for navigating months
                 }}
-                onDayPress={handleDayPress}
-                markedDates={notesData}
                 />
-                <Modal visible={modalVisible}>
-                  <View>
-                    <Text>Note for {selectedDate}:</Text>
-                    <TextInput
-                      multiline
-                      placeholder="Type your note here"
-                      value={noteInput}
-                    onChangeText={text => setNoteInput(text)}
-                    />
-                    <Button title="Save Note" onPress={handleSaveNote} />
-                  </View>
-                </Modal>
+            </View>
+            <View style={styles.newbutton}>
+                <TouchableOpacity
+                    onPress={newReminder}>
+                    <View style={styles.newreminder}>
+                        <Text>Add Reminder</Text>
+                        <View style= {styles.box}></View>
+                    </View>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );
@@ -67,5 +51,22 @@ const styles = StyleSheet.create({
     calendarContainer: {
         flex: 1,
         marginTop: 20,
+    },
+    newbutton: {
+        height: 200,
+        width: Dimensions.get('window').width,
+        flexDirection: "row",
+        justifyContent: "space-around",
+        borderWidth: 1,
+    },
+    newreminder: {
+      width: 150, 
+      heigth: 200,
+    },
+    box: {
+      width: 25,
+      height: 25, 
+      backgroundColor: colors.darkPink,
+      borderRadius: 10,
     },
 });
