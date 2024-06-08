@@ -12,7 +12,7 @@ export default function LogInScreen(props) {
     const navigation = useNavigation();
 
     const handleLogIn = () => {
-        navigation.navigate("HomeStack");
+        navigation.replace("HomeTabs");
     };
 
     const handleSignUp = () => {

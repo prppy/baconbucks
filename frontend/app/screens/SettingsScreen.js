@@ -8,7 +8,7 @@ export default function SettingsScreen(props) {
     const navigation = useNavigation();
 
     const handleMyAccount = () => {
-        navigation.navigate("MyAccount");
+        navigation.navigate("My Account");
     };
 
     const handleAccessibility = () => {
@@ -33,7 +33,7 @@ export default function SettingsScreen(props) {
 const styles = StyleSheet.create({
     background: {
         flex: 1,
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
         alignItems: 'top',
         padding: 20,
         backgroundColor: colors.lightPink,

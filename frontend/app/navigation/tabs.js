@@ -1,11 +1,8 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
-import HomeScreen from '../screens/HomeScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import { HomeStack, RemindersStack, SettingsStack } from './stack';
 import ChallengesScreen from '../screens/ChallengesScreen';
 import CommunityScreen from '../screens/CommunityScreen';
-import RemindersScreen from '../screens/RemindersScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from '../config/colors';
 
@@ -37,11 +34,11 @@ export const HomeTabs = () => {
       tabBarInactiveTintColor: 'gray',
     })}      
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Reminders" component={RemindersScreen} />
+      <Tab.Screen name="Home" component={HomeStack} />
+      <Tab.Screen name="Reminders" component={RemindersStack} />
       <Tab.Screen name="Challenges" component={ChallengesScreen} />
       <Tab.Screen name="Community" component={CommunityScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Settings" component={SettingsStack} />
     </Tab.Navigator>
   );
 }
