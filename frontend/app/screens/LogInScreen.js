@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import colors from '../config/colors';
 
 
-export default function LogInScreen(props) {
+export default function LogInScreen() {
     const [username, setUserName]= React.useState("");
     const [password, setPassword]= React.useState("");
 

@@ -1,14 +1,16 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { HomeStack, RemindersStack, SettingsStack } from './stack';
-import ChallengesScreen from '../screens/ChallengesScreen';
-import CommunityScreen from '../screens/CommunityScreen';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from '../config/colors';
+
+import colors from '../../config/colors';
+import { HomeStack } from '../stacks/HomeStack';
+import { RemindersStack } from '../stacks/RemindersStack';
+import { SettingsStack } from '../stacks/SettingsStack';
+import ChallengesScreen from '../../screens/ChallengesScreen';
+import CommunityScreen from '../../screens/CommunityScreen';
 
 
 const Tab = createBottomTabNavigator();
-
 
 export const HomeTabs = () => {
   return (

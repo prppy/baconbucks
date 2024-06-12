@@ -8,7 +8,7 @@ export default function SettingsScreen(props) {
     const navigation = useNavigation();
 
     const handleMyAccount = () => {
-        navigation.navigate("My Account");
+        navigation.navigate("MyAccount");
     };
 
     const handleAccessibility = () => {

@@ -9,7 +9,7 @@ export default function SignUpScreen(props) {
     const [confirm, setConfirm] = React.useState("");
 
     const handleSignUp = () => {
-        console.log("signup")
+        navigation.replace("HomeTabs");
     };
 
     return (

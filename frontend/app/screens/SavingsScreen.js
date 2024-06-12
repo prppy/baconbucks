@@ -4,18 +4,24 @@ import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacit
 import colors from "../config/colors";
 
 export default function SavingsScreen(props) {
-    <SafeAreaView>
-        <View style={styles.test}>
+    <SafeAreaView style={styles.background}>
             <Text>savings screen goes here</Text>
-        </View>
     </SafeAreaView>
 }
 
 const styles = StyleSheet.create({
+    background: {
+        flex: 1, 
+        backgroundColor: colors.darkPink,
+        justifyContent: "center",  
+        alignItems: "center", 
+    },
+
     test: {
         justifyContent: "center", 
         alignItems: "center",
         backgroundColor: colors.lightPink,
-        flex: 1,
-    }
+        width: 400, 
+        height: 400, 
+    },
 })
