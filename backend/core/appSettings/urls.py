@@ -6,6 +6,7 @@ from .views import SettingsView
 
 urlpatterns = [
     path('settings', SettingsView.as_view()),
+    path('create-new-setting/', SettingsView.as_view()),
 ]
 
-# localhost:8000/api/v1.0/user/test
+# localhost:8000/api/v1.0/app/
