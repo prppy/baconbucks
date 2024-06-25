@@ -29,8 +29,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders', 
     'userAPI',
-    'appSettings',
-    'reminders'
+    'appSettings'
 ]
 
 MIDDLEWARE = [
