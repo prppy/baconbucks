@@ -6,7 +6,7 @@ import colors from '../../config/colors';
 import { HomeStack } from '../stacks/HomeStack';
 import { RemindersStack } from '../stacks/RemindersStack';
 import { SettingsStack } from '../stacks/SettingsStack';
-import ChallengesScreen from '../../screens/ChallengesScreen';
+import { ChallengesStack } from '../stacks/ChallengesStack';
 import CommunityScreen from '../../screens/CommunityScreen';
 
 
@@ -38,7 +38,7 @@ export const HomeTabs = () => {
     >
       <Tab.Screen name="Home" component={HomeStack} />
       <Tab.Screen name="Reminders" component={RemindersStack} />
-      <Tab.Screen name="Challenges" component={ChallengesScreen} />
+      <Tab.Screen name="Challenges" component={ChallengesStack} />
       <Tab.Screen name="Community" component={CommunityScreen} />
       <Tab.Screen name="Settings" component={SettingsStack} />
     </Tab.Navigator>

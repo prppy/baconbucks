@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent', // Set background color to transparent
     },
     remindersContainer: {
-        marginTop: 20,
         alignItems: 'center',
+        justifyContent: 'center',
     },
     reminderItem: {
         backgroundColor: 'white',
@@ -126,5 +126,6 @@ const styles = StyleSheet.create({
     selectedDateText: {
         fontSize: 16,
         color: colors.darkPink,
+        marginTop: 20,
     },
 });

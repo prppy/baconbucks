@@ -5,9 +5,6 @@ import colors from "../config/colors";
 import axios from 'axios';
 import moment from 'moment';
 
-
-
-
 export default function NewReminderScreen(props) {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
