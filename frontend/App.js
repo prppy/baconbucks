@@ -8,7 +8,6 @@ import { RemindersStack } from './app/navigation/stacks/RemindersStack';
 import { SettingsStack } from './app/navigation/stacks/SettingsStack';
 import { ChallengesStack } from './app/navigation/stacks/ChallengesStack';
 import { Provider } from './app/components/GlobalContext';
-import { Provider } from './app/components/GlobalContext';  // Adjust the path as necessary
 
 export const navigationRef = createNavigationContainerRef();
 const RootStack = createStackNavigator();
