@@ -1,4 +1,5 @@
 node_modules/
+frontend/node_modules/
 .expo/
 dist/
 npm-debug.*
@@ -9,7 +10,7 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-__pycache__/
+backend/core/core__pycache__/
 *.pyc
 
 # macOS
