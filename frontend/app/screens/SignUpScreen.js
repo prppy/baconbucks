@@ -2,14 +2,22 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity } from "react-native";
 
 import colors from '../config/colors';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignUpScreen(props) {
     const [username, setUserName] = React.useState("");
+    const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [confirm, setConfirm] = React.useState("");
 
+    const navigation = useNavigation();
+
     const handleSignUp = () => {
         navigation.replace("HomeTabs");
+    };
+
+    const handleLogIn = () => {
+        navigation.goBack();
     };
 
     return (
@@ -24,6 +32,19 @@ export default function SignUpScreen(props) {
                     placeholder="Type here"
                     value={username}
                     onChangeText={setUserName}
+                    secureTextEntry="false" 
+                    autoCapitalize='none'
+                    maxLength={20}
+                    keyboardType='ascii-capable'
+                ></TextInput>
+            </View>
+            <Text style={styles.text}>Email</Text>
+            <View style={styles.textbox}>
+                <TextInput
+                    style={styles.username}
+                    placeholder="Type here"
+                    value={email}
+                    onChangeText={setEmail}
                     secureTextEntry="false" 
                     autoCapitalize='none'
                     maxLength={20}
@@ -57,7 +78,10 @@ export default function SignUpScreen(props) {
             </View>
             <TouchableOpacity style={styles.loginbutn}
                     onPress={handleSignUp}>
-                        <Text style={styles.logintext}>Log in</Text>
+                        <Text style={styles.logintext}>Sign up!</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleLogIn}>
+                <Text style={styles.text}>Back to Log In</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

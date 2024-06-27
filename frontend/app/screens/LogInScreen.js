@@ -1,30 +1,37 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors';
-
+import { Context } from '../components/GlobalContext';
 
 export default function LogInScreen() {
-    const [username, setUserName]= React.useState("");
-    const [password, setPassword]= React.useState("");
+    const globalContext = useContext(Context);
+    const { isLoggedIn, setIsLoggedIn } = globalContext;
+
+    const [username, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+
+    const [secure, setSecure] = useState(true);
 
     const navigation = useNavigation();
 
     const handleLogIn = () => {
         navigation.replace("HomeTabs");
+        setIsLoggedIn(true)
     };
 
     const handleSignUp = () => {
         navigation.navigate("SignUp");
     };
 
-
     return (
         <SafeAreaView style={styles.background}>
             <Image 
                 style={styles.logo} 
-                source={require('../assets/images/LOGO_Light.png')} />
+                source={require('../assets/images/LOGO_Light.png')} 
+            />
+            <Text>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
             <Text style={styles.text}>Username</Text>
             <View style={styles.textbox}>
                 <TextInput
@@ -32,10 +39,10 @@ export default function LogInScreen() {
                     placeholder="Type here"
                     value={username}
                     onChangeText={setUserName}
-                    secureTextEntry="false" 
+                    secureTextEntry={false} 
                     autoCapitalize='none'
                     maxLength={20}
-                ></TextInput>
+                />
             </View>
             <Text style={styles.text}>Password</Text>
             <View style={styles.textbox}>
@@ -44,18 +51,16 @@ export default function LogInScreen() {
                     placeholder="Type here"
                     value={password}
                     onChangeText={setPassword}
-                    secureTextEntry="true" 
+                    secureTextEntry={secure} 
                     autoCapitalize='none'
-                ></TextInput>
+                />
             </View>
-            <TouchableOpacity style={styles.loginbutn}
-                    onPress={handleLogIn}>
-                        <Text style={styles.logintext}>Log in</Text>
+            <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
+                <Text style={styles.logintext}>Log in</Text>
             </TouchableOpacity>
             
             <Text style={styles.text}>Don't have an account yet?</Text>
-            <TouchableOpacity
-                onPress={handleSignUp}>
+            <TouchableOpacity onPress={handleSignUp}>
                 <Text style={styles.text}>Sign up now!</Text>
             </TouchableOpacity>
         </SafeAreaView>
