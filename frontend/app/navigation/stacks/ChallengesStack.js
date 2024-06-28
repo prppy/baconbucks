@@ -2,6 +2,7 @@ import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import ChallengesScreen from "../../screens/ChallengesScreen";
 import QuizScreen from "../../screens/QuizScreen";
+import ResultsScreen from '../../screens/ResultsScreen';
 
 
 const Stack = createStackNavigator();
@@ -11,6 +12,7 @@ export const ChallengesStack = () => {
         <Stack.Navigator>
             <Stack.Screen name="ChallengesScreen" component={ChallengesScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
+            <Stack.Screen name="Results" component={ResultsScreen} />
         </Stack.Navigator>
     );
 };

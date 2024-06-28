@@ -42,7 +42,7 @@ export default function QuizScreen(props) {
 
     const handleNext = () => {
         if (currentQuestionIndex === allQuestions.length - 1) {
-            navigation.navigate("Result", { score: score });
+            navigation.replace("Results", { score: score });
         } else {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setCurrentOptionSelected(null);
