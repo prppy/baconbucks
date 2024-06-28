@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors';
 import { Context } from '../components/GlobalContext';
+import { Keyboard } from 'react-native';
 
 export default function LogInScreen() {
     const globalContext = useContext(Context);
@@ -59,46 +60,50 @@ export default function LogInScreen() {
         <SafeAreaView style={styles.background}>
             <KeyboardAvoidingView style={styles.background} 
             behavior='padding'>
-                <Image 
-                    style={styles.logo} 
-                    source={require('../assets/images/LOGO_Light.png')} 
-                />
-                <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
-                <Text style={styles.text}>Username or Email</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={username}
-                        onChangeText={setUserName}
-                        secureTextEntry={false} 
-                        autoCapitalize='none'
-                    />
-                </View>
-                <Text style={styles.text}>Password</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry={secure} 
-                        autoCapitalize='none'
-                    />
-                </View>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <>
+                        <Image 
+                            style={styles.logo} 
+                            source={require('../assets/images/LOGO_Light.png')} 
+                        />
+                        <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
+                        <Text style={styles.text}>Username or Email</Text>
+                        <View style={styles.textbox}>
+                            <TextInput
+                                style={styles.username}
+                                placeholder="Type here"
+                                placeholderTextColor={styles.username.color}
+                                value={username}
+                                onChangeText={setUserName}
+                                secureTextEntry={false} 
+                                autoCapitalize='none'
+                            />
+                        </View>
+                        <Text style={styles.text}>Password</Text>
+                        <View style={styles.textbox}>
+                            <TextInput
+                                style={styles.username}
+                                placeholder="Type here"
+                                placeholderTextColor={styles.username.color}
+                                value={password}
+                                onChangeText={setPassword}
+                                secureTextEntry={secure} 
+                                autoCapitalize='none'
+                            />
+                        </View>
 
-                <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+                        <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
 
-                <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
-                    <Text style={styles.logintext}>Log in</Text>
-                </TouchableOpacity>
-                
-                <Text style={styles.text}>Don't have an account yet?</Text>
-                <TouchableOpacity onPress={handleSignUp}>
-                    <Text style={[styles.text, { textDecorationLine: "underline" }]}>Sign up now!</Text>
-                </TouchableOpacity>
+                        <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
+                            <Text style={styles.logintext}>Log in</Text>
+                        </TouchableOpacity>
+                        
+                        <Text style={styles.text}>Don't have an account yet?</Text>
+                        <TouchableOpacity onPress={handleSignUp}>
+                            <Text style={[styles.text, { textDecorationLine: "underline" }]}>Sign up now!</Text>
+                        </TouchableOpacity>
+                    </>
+                </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </SafeAreaView>
     );
