@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useContext, } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer, createNavigationContainerRef } from '@react-navigation/native';
 
@@ -7,23 +7,40 @@ import { LogInStack } from './app/navigation/stacks/LogInStack';
 import { RemindersStack } from './app/navigation/stacks/RemindersStack';
 import { SettingsStack } from './app/navigation/stacks/SettingsStack';
 import { ChallengesStack } from './app/navigation/stacks/ChallengesStack';
-import { Provider } from './app/components/GlobalContext';
+import { Context, Provider } from './app/components/GlobalContext';
 
 export const navigationRef = createNavigationContainerRef();
 const RootStack = createStackNavigator();
 
+
+const MainApp = () => {
+
+    const globalContext = useContext(Context);
+    const { isLoggedIn, userObj } = globalContext;
+
+    return (
+        <NavigationContainer ref={navigationRef}>
+            <RootStack.Navigator initialRouteName="LogInStack">
+                {(!isLoggedIn || !userObj) ? (
+                        <RootStack.Screen name="LogInStack" options={{ headerShown: false }} component={LogInStack} />
+                    ) : (
+                        <>
+                            <RootStack.Screen name="HomeStack" options={{ headerShown: false }} component={HomeStack} />
+                            <RootStack.Screen name="RemindersStack" options={{ headerShown: false }} component={RemindersStack} />
+                            <RootStack.Screen name="ChallengesStack" options={{ headerShown: false }} component={ChallengesStack} />
+                            <RootStack.Screen name="SettingsStack" options={{ headerShown: false }} component={SettingsStack} />
+                        </>
+                    )}
+            </RootStack.Navigator>
+        </NavigationContainer>
+    );
+};
+
+
 export default function App() {
-  return (
-    <Provider>
-      <NavigationContainer ref={navigationRef}>
-        <RootStack.Navigator initialRouteName="LogInStack">
-          <RootStack.Screen name="LogInStack" options={{ headerShown: false }} component={LogInStack} />
-          <RootStack.Screen name="HomeStack" options={{ headerShown: false }} component={HomeStack} />
-          <RootStack.Screen name="RemindersStack" options={{ headerShown: false }} component={RemindersStack} />
-          <RootStack.Screen name="ChallengesStack" options={{ headerShown: false }} component={ChallengesStack} />
-          <RootStack.Screen name="SettingsStack" options={{ headerShown: false }} component={SettingsStack} />
-        </RootStack.Navigator>
-      </NavigationContainer>
-    </Provider>
-  );
+    return (
+        <Provider>
+            <MainApp/>
+        </Provider>
+    );
 }

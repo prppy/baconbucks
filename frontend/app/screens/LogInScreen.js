@@ -7,18 +7,45 @@ import { Context } from '../components/GlobalContext';
 
 export default function LogInScreen() {
     const globalContext = useContext(Context);
-    const { isLoggedIn, setIsLoggedIn } = globalContext;
+    const { isLoggedIn, setIsLoggedIn, domain, userObj, setUserObj, setToken } = globalContext;
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("")
 
     const [secure, setSecure] = useState(true);
 
     const navigation = useNavigation();
 
     const handleLogIn = () => {
-        navigation.replace("HomeTabs");
-        setIsLoggedIn(true)
+
+        let body = JSON.stringify({
+            'username': username,
+            'password': password
+        })
+
+        fetch(`${domain}/api/v1.0/user/login-user/`, { 
+            method: 'POST' , 
+            headers: { 'Content-Type': 'application/json' },
+            body: body
+        })
+        .then(res => {
+            if (res.ok) {
+                return res.json()
+            } else {
+                setError("Unable to Log in")
+                throw res.json()
+            }
+        })
+        .then(json => {
+            setUserObj(json)
+            setToken(json.access)
+            setIsLoggedIn(true)
+        })
+        .catch(error => {
+            console.log(error);
+        });
+
     };
 
     const handleSignUp = () => {
@@ -55,6 +82,7 @@ export default function LogInScreen() {
                     autoCapitalize='none'
                 />
             </View>
+            <Text>{error}</Text>
             <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
                 <Text style={styles.logintext}>Log in</Text>
             </TouchableOpacity>

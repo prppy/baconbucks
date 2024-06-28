@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext } from "react";
+import * as SecureStore from 'expo-secure-store';
 
 const Context = createContext();
 
@@ -6,11 +7,15 @@ const Provider = ({ children }) => {
     const [domain, setDomain] = useState("http://127.0.0.1:8000");
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [appSettings, setAppSettings] = useState({});
-    const [token, setToken] = useState()
+    const [userObj, setUserObj] = useState()
+
+    const setToken = async (token) => {
+        await SecureStore.setItemAsync('token', token);
+    }
 
     const initAppSettings = () => {
         fetch(`${domain}/api/v1.0/app/settings`, { method: 'GET' })
-            .then(res => res.ok ? res.json() : Promise.reject(res.json()))
+            .then(res => res.ok ? res.json() : res.json())
             .then(json => {
                 console.log(json);
             })
@@ -29,7 +34,8 @@ const Provider = ({ children }) => {
         setIsLoggedIn, 
         appSettings, 
         setAppSettings,
-        token, 
+        userObj, 
+        setUserObj,
         setToken,
     };
 
