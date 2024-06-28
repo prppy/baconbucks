@@ -9,7 +9,7 @@ export default function ChallengesScreen(props) {
     const todayDate = moment().format('MMMM Do YYYY');
     const navigation = useNavigation();
     const handleQuiz = (day) => {
-        navigation.navigate("Quiz");
+        navigation.replace("Quiz");
     };
 
     return (
@@ -38,16 +38,16 @@ const styles = StyleSheet.create({
         paddingTop: 10,
     },
     box: {
-        width: '100%',
+        width: '90%',
         padding: 20,
         backgroundColor: '#f6dde7',
         borderColor: '#ccc',
         borderRadius: 10,
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 2 },
-        // shadowOpacity: 0.8,
-        // shadowRadius: 2,
-        // elevation: 5,
+        shadowColor: '#171717',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+        elevation: 5,
         marginTop: 10,
         height: 120,
         alignItems: 'left',
