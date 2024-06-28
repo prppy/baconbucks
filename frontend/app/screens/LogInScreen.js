@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, KeyboardAvoidingView, Dimensions } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors';
@@ -19,33 +19,36 @@ export default function LogInScreen() {
 
     const handleLogIn = () => {
 
-        let body = JSON.stringify({
-            'username': username,
-            'password': password
-        })
+        if (username && password) {
+            let body = JSON.stringify({
+                'username': username,
+                'password': password
+            })
 
-        fetch(`${domain}/api/v1.0/user/login-user/`, { 
-            method: 'POST' , 
-            headers: { 'Content-Type': 'application/json' },
-            body: body
-        })
-        .then(res => {
-            if (res.ok) {
-                return res.json()
-            } else {
-                setError("Username and Password does not match")
-                throw res.json()
-            }
-        })
-        .then(json => {
-            setUserObj(json)
-            setToken(json.access)
-            setIsLoggedIn(true)
-        })
-        .catch(error => {
-            console.log(error);
-        });
-
+            fetch(`${domain}/api/v1.0/user/login-user/`, { 
+                method: 'POST' , 
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            })
+            .then(res => {
+                if (res.ok) {
+                    return res.json()
+                } else {
+                    setError("Username and Password does not match")
+                    throw res.json()
+                }
+            })
+            .then(json => {
+                setUserObj(json)
+                setToken(json.access)
+                setIsLoggedIn(true)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        } else {
+            setError("Username or Password is empty");
+        }
     };
 
     const handleSignUp = () => {
@@ -54,46 +57,49 @@ export default function LogInScreen() {
 
     return (
         <SafeAreaView style={styles.background}>
-            <Image 
-                style={styles.logo} 
-                source={require('../assets/images/LOGO_Light.png')} 
-            />
-            <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
-            <Text style={styles.text}>Username or Email</Text>
-            <View style={styles.textbox}>
-                <TextInput
-                    style={styles.username}
-                    placeholder="Type here"
-                    placeholderTextColor={styles.username.color}
-                    value={username}
-                    onChangeText={setUserName}
-                    secureTextEntry={false} 
-                    autoCapitalize='none'
+            <KeyboardAvoidingView style={styles.background} 
+            behavior='padding'>
+                <Image 
+                    style={styles.logo} 
+                    source={require('../assets/images/LOGO_Light.png')} 
                 />
-            </View>
-            <Text style={styles.text}>Password</Text>
-            <View style={styles.textbox}>
-                <TextInput
-                    style={styles.username}
-                    placeholder="Type here"
-                    placeholderTextColor={styles.username.color}
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry={secure} 
-                    autoCapitalize='none'
-                />
-            </View>
-            
-            <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+                <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
+                <Text style={styles.text}>Username or Email</Text>
+                <View style={styles.textbox}>
+                    <TextInput
+                        style={styles.username}
+                        placeholder="Type here"
+                        placeholderTextColor={styles.username.color}
+                        value={username}
+                        onChangeText={setUserName}
+                        secureTextEntry={false} 
+                        autoCapitalize='none'
+                    />
+                </View>
+                <Text style={styles.text}>Password</Text>
+                <View style={styles.textbox}>
+                    <TextInput
+                        style={styles.username}
+                        placeholder="Type here"
+                        placeholderTextColor={styles.username.color}
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={secure} 
+                        autoCapitalize='none'
+                    />
+                </View>
 
-            <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
-                <Text style={styles.logintext}>Log in</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.text}>Don't have an account yet?</Text>
-            <TouchableOpacity onPress={handleSignUp}>
-                <Text style={[styles.text, { textDecorationLine: "underline" }]}>Sign up now!</Text>
-            </TouchableOpacity>
+                <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+
+                <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
+                    <Text style={styles.logintext}>Log in</Text>
+                </TouchableOpacity>
+                
+                <Text style={styles.text}>Don't have an account yet?</Text>
+                <TouchableOpacity onPress={handleSignUp}>
+                    <Text style={[styles.text, { textDecorationLine: "underline" }]}>Sign up now!</Text>
+                </TouchableOpacity>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     );
 }
