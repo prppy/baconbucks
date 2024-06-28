@@ -82,7 +82,7 @@ export default function LogInScreen() {
                     autoCapitalize='none'
                 />
             </View>
-            <Text>{error}</Text>
+            <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
             <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
                 <Text style={styles.logintext}>Log in</Text>
             </TouchableOpacity>

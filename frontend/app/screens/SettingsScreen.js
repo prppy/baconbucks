@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../config/colors";
+import { Context } from "../components/GlobalContext";
 
 export default function SettingsScreen(props) {
+    const globalContext = useContext(Context);
+    const { setIsLoggedIn } = globalContext;
+    
     const navigation = useNavigation();
 
     const handleMyAccount = () => {
@@ -16,7 +20,7 @@ export default function SettingsScreen(props) {
     };
 
     const handleLogOut = () => {
-        navigation.replace("LogIn");
+        setIsLoggedIn(false);
     };
 
     return (
