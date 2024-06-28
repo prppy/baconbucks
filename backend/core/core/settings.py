@@ -16,7 +16,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 SECRET_KEY = 'django-insecure-*l3-&&^@0u5m0fxo@-0z5rg9i!vv#q%6$83352k!6dnp(%10mf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = ['baconbucksh-766c108220c0.herokuapp.com', 'localhost', '127.0.0.1']
 
@@ -151,3 +151,5 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
