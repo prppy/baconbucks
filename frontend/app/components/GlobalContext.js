@@ -10,7 +10,7 @@ const Provider = ({ children }) => {
     const [userObj, setUserObj] = useState()
 
     const setToken = async (token) => {
-        await SecureStore.setItemAsync('token', token);
+        await SecureStore.setItemAsync('token', JSON.stringify(token));
     }
 
     const initAppSettings = () => {

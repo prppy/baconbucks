@@ -22,11 +22,11 @@ class UserView(APIView):
         if user_serializer.is_valid(raise_exception=False):
             user_serializer.save()
 
-            return Response({'user':user_serializer.data}, status=200)
+            return Response(user_serializer.data, status=200)
         
             """
                 will return a response like this, user's password is not visible. 
-                access contains the actuall access token for authentication.
+                access contains the actual access token for authentication.
                 {
                     "user": {
                         "token": {

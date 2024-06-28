@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-*l3-&&^@0u5m0fxo@-0z5rg9i!vv#q%6$83352k!6dnp(%10mf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,3 +133,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Example: Set access token to expire in 15 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Example: Set refresh token to expire in 7 days
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

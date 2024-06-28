@@ -1,23 +1,63 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Button, TouchableOpacity } from "react-native";
-
-import colors from '../config/colors';
 import { useNavigation } from '@react-navigation/native';
 
+import colors from '../config/colors';
+import { Context } from '../components/GlobalContext';
+
 export default function SignUpScreen(props) {
+
+    const globalContext = useContext(Context);
+    const { setIsLoggedIn, domain, setUserObj, setToken } = globalContext;
+
     const [username, setUserName] = React.useState("");
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [confirm, setConfirm] = React.useState("");
+    const [error, setError] = useState("");
 
     const navigation = useNavigation();
 
-    const handleSignUp = () => {
-        navigation.replace("HomeTabs");
-    };
 
     const handleLogIn = () => {
         navigation.goBack();
+    };
+
+    const handleSignUp = () => {
+
+        if (confirm == password) {
+
+            let body = JSON.stringify({
+                'username': username,
+                'email': email,
+                'password': password
+            })
+
+            fetch(`${domain}/api/v1.0/user/create-user/`, { 
+                method: 'POST' , 
+                headers: { 'Content-Type': 'application/json' },
+                body: body
+            })
+            .then(res => {
+                if (res.ok) {
+                    return res.json()
+                } else {
+                    setError("User already exists")
+                    throw res.json()
+                }
+            })
+            .then(json => {
+                setUserObj(json)
+                setToken(json.access)
+                setIsLoggedIn(true)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+
+        setError("Passwords do not match!")
+
     };
 
     return (
@@ -25,63 +65,74 @@ export default function SignUpScreen(props) {
             <Image 
                 style={styles.logo} 
                 source={require('../assets/images/LOGO_Light.png')} />
+
             <Text style={styles.text}>Username</Text>
             <View style={styles.textbox}>
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={username}
                     onChangeText={setUserName}
                     secureTextEntry="false" 
                     autoCapitalize='none'
-                    maxLength={20}
+                    maxLength={32}
                     keyboardType='ascii-capable'
                 ></TextInput>
             </View>
+
             <Text style={styles.text}>Email</Text>
             <View style={styles.textbox}>
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={email}
                     onChangeText={setEmail}
                     secureTextEntry="false" 
                     autoCapitalize='none'
-                    maxLength={20}
                     keyboardType='ascii-capable'
                 ></TextInput>
             </View>
+
             <Text style={styles.text}>Password</Text>
             <View style={styles.textbox}>
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry="true" 
                     autoCapitalize='none'
-                    maxLength={20}
+                    minLength={8}
                     keyboardAppearance=''
                 ></TextInput>
             </View>
+
             <Text style={styles.text}>Confirm Password</Text>
             <View style={styles.textbox}>
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={confirm}
                     onChangeText={setConfirm}
                     secureTextEntry="true" 
                     autoCapitalize='none'
-                    maxLength={20}
+                    minLength={8}
                 ></TextInput>
             </View>
+
+            <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+
             <TouchableOpacity style={styles.loginbutn}
                     onPress={handleSignUp}>
                         <Text style={styles.logintext}>Sign up!</Text>
             </TouchableOpacity>
+
             <TouchableOpacity onPress={handleLogIn}>
-                <Text style={styles.text}>Back to Log In</Text>
+                <Text style={[styles.text, { textDecorationLine: "underline" }]}>Back to Log In</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );

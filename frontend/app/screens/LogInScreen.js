@@ -33,7 +33,7 @@ export default function LogInScreen() {
             if (res.ok) {
                 return res.json()
             } else {
-                setError("Unable to Log in")
+                setError("Username and Password does not match")
                 throw res.json()
             }
         })
@@ -58,17 +58,17 @@ export default function LogInScreen() {
                 style={styles.logo} 
                 source={require('../assets/images/LOGO_Light.png')} 
             />
-            <Text>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
-            <Text style={styles.text}>Username</Text>
+            <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
+            <Text style={styles.text}>Username or Email</Text>
             <View style={styles.textbox}>
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={username}
                     onChangeText={setUserName}
                     secureTextEntry={false} 
                     autoCapitalize='none'
-                    maxLength={20}
                 />
             </View>
             <Text style={styles.text}>Password</Text>
@@ -76,20 +76,23 @@ export default function LogInScreen() {
                 <TextInput
                     style={styles.username}
                     placeholder="Type here"
+                    placeholderTextColor={styles.username.color}
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={secure} 
                     autoCapitalize='none'
                 />
             </View>
+            
             <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+
             <TouchableOpacity style={styles.loginbutn} onPress={handleLogIn}>
                 <Text style={styles.logintext}>Log in</Text>
             </TouchableOpacity>
             
             <Text style={styles.text}>Don't have an account yet?</Text>
             <TouchableOpacity onPress={handleSignUp}>
-                <Text style={styles.text}>Sign up now!</Text>
+                <Text style={[styles.text, { textDecorationLine: "underline" }]}>Sign up now!</Text>
             </TouchableOpacity>
         </SafeAreaView>
     );
