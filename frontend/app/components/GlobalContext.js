@@ -13,8 +13,8 @@ const Provider = ({ children }) => {
         await SecureStore.setItemAsync('token', JSON.stringify(token));
     }
 
-    const initAppSettings = () => {
-        fetch(`${domain}/api/v1.0/app/settings`, { method: 'GET' })
+    const initTest = () => {
+        fetch(`${domain}/api/v1.0/user/test`, { method: 'GET' })
             .then(res => res.ok ? res.json() : res.json())
             .then(json => {
                 console.log(json);
@@ -25,7 +25,7 @@ const Provider = ({ children }) => {
     };
 
     useEffect(() => {
-        initAppSettings();
+        initTest();
     }, []);
 
     const globalContext = {

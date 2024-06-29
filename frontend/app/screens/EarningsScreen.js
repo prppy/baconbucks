@@ -3,16 +3,20 @@ import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacit
 
 import colors from "../config/colors";
 
-export default function SavingsScreen(props) {
-    <SafeAreaView style={styles.background}>
-            <Text>savings screen goes here</Text>
-    </SafeAreaView>
+export default function EarningsScreen(props) {
+
+    return (
+        <SafeAreaView style={styles.background}>
+            <Text>You Earned ${} this month! </Text>
+        </SafeAreaView>
+    );
 }
+
 
 const styles = StyleSheet.create({
     background: {
         flex: 1, 
-        backgroundColor: colors.darkPink,
+        backgroundColor: colors.lightPink,
         justifyContent: "center",  
         alignItems: "center", 
     },
@@ -24,4 +28,9 @@ const styles = StyleSheet.create({
         width: 400, 
         height: 400, 
     },
+    text: {
+        fontFamily: "System", 
+        fontSize: 15, 
+        color: colors.lightPink, 
+    }, 
 })

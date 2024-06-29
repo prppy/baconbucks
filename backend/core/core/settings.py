@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'userAPI',
-    'appSettings'
+    'appSettings',
+    'spendLogs',
 ]
 
 MIDDLEWARE = [

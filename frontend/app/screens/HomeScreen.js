@@ -9,7 +9,7 @@ export default function HomeScreen(props) {
     const navigation = useNavigation();
 
     const handleSavings = () => {
-        navigation.navigate("Savings");
+        navigation.navigate("Earnings");
     }
     const handleSpendings = () => {
         navigation.navigate("Spendings");

@@ -56,6 +56,10 @@ export default function LogInScreen() {
         navigation.navigate("SignUp");
     };
 
+    const handleSecure = () => {
+        setSecure(!secure);
+    };
+
     return (
         <SafeAreaView style={styles.background}>
             <KeyboardAvoidingView style={styles.background} 
@@ -82,7 +86,7 @@ export default function LogInScreen() {
                         <Text style={styles.text}>Password</Text>
                         <View style={styles.textbox}>
                             <TextInput
-                                style={styles.username}
+                                style={[styles.username, {alignItems: 'center'}]}
                                 placeholder="Type here"
                                 placeholderTextColor={styles.username.color}
                                 value={password}

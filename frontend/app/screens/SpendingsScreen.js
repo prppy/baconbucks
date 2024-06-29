@@ -4,7 +4,9 @@ import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacit
 import colors from "../config/colors";
 
 export default function SpendingsScreen(props) {
-    <SafeAreaView>
-        <Text>spendings screen goes here</Text>
-    </SafeAreaView>
+    return (
+        <SafeAreaView>
+            <Text>spendings screen goes here</Text>
+        </SafeAreaView>
+    );
 }
