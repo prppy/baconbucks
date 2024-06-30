@@ -48,7 +48,7 @@ class UserLoginView(APIView):
             user_serializer = UserSerializer(user)
             return Response(user_serializer.data, status=200)
         else:
-            return Response({"error": "Invalid credentials"}, status=401)\
+            return Response({"error": "Invalid credentials"}, status=401)
 
 
 class WalletView(APIView):
