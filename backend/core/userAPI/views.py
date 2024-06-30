@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 
 from .serializers import UserSerializer, WalletSerializer
-from .models import Wallet
+from .models import Wallet, User
 
 class TestView(APIView):
     def get(self, request, format=None):
@@ -39,16 +39,21 @@ class UserLoginView(APIView):
     def post(self, request, format=None):
         print("login class")
 
-        username = request.data.get('username')
-        password = request.data.get('password')
+        user_obj = User.objects.filter(email=request.data['username']) or User.objects.filter(username=request.data['username'])
 
-        user = authenticate(request, username=username, password=password)
+        if user_obj is not None:
+            credentials = {
+                'username': user_obj.username,
+                'password': request.data['password']
+            }
+            
+            user = authenticate(**credentials)
 
-        if user:
-            user_serializer = UserSerializer(user)
-            return Response(user_serializer.data, status=200)
-        else:
-            return Response({"error": "Invalid credentials"}, status=401)
+            if user and user.is_active:
+                user_serializer = UserSerializer(user)
+                return Response(user_serializer.data, status=200)
+            
+        return Response({"error": "Invalid credentials"}, status=401)
 
 
 class WalletView(APIView):
