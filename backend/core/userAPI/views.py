@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
 
-from .serializers import UserSerializer, WalletSerializer
+from .serializers import UserSerializer
 from .models import Wallet, User
 
 class TestView(APIView):
@@ -54,33 +54,3 @@ class UserLoginView(APIView):
                 return Response(user_serializer.data, status=200)
             
         return Response({"error": "Invalid credentials"}, status=401)
-
-
-class WalletView(APIView):
-
-    def post(self, request, format=None):
-        wallet_data = request.data
-        wallet_serializer = WalletSerializer(data=wallet_data)
-
-        if wallet_serializer.is_valid(raise_exception=False):
-            wallet_serializer.save()
-            return Response(wallet_serializer.data, status=201)
-
-        return Response({'error': 'cannot make wallet'}, status=400)
-    
-class WalletBalanceView(APIView):
-
-    def get(self, request, format=None):
-        user = request.user
-
-        wallets = Wallet.objects.filter(user=user)
-        wallet_serializer = WalletSerializer(wallets, many=True)
-
-        # Calculate total balance across all wallets
-        total_balance = sum(wallet.balance for wallet in wallets)
-
-        response_data = {
-            'wallets': wallet_serializer.data,
-            'total_balance': total_balance,
-        }
-        return Response(response_data, status=200)

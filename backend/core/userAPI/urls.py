@@ -10,7 +10,4 @@ urlpatterns = [
     path('create-user/', UserView.as_view()),
     path('get-user', UserLoginView.as_view()),
     path('login-user/', UserLoginView.as_view()),
-
-    path('create-wallet/', WalletView.as_view()),
-    path('get-wallet', WalletBalanceView.as_view()),
 ]
