@@ -10,7 +10,8 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-backend/core/core__pycache__/
+backend/core/core/__pycache__/
+backend/core/userAPI/__pycache__/
 *.pyc
 
 # macOS
