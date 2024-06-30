@@ -25,11 +25,12 @@ export default function SettingsScreen(props) {
 
     return (
         <SafeAreaView style={styles.background}>
+            <Text style={styles.headertext}>Settings</Text>
             <View style={styles.pfp}></View>
             <TouchableOpacity style={styles.editpfp}>
                 <Ionicons name="pencil" size={15} color={'white'} />
             </TouchableOpacity>
-            <Text style={styles.username}>Username</Text>
+            <Text style={styles.username}>username</Text>
 
             <View style={styles.row}>
                 <TouchableOpacity style={styles.button} onPress={handleMyAccount}>
@@ -136,5 +137,11 @@ const styles = StyleSheet.create({
         position: 'relative',
         left: 120,
         top: 5,
+    },
+    headertext: {
+        fontSize: 20,
+        marginLeft: 25,
+        marginTop: 15,
+        fontWeight: 'bold',
     },
 })

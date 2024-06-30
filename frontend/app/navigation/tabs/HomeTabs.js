@@ -36,11 +36,11 @@ export const HomeTabs = () => {
       tabBarInactiveTintColor: 'gray',
     })}      
     >
-      <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Reminders" component={RemindersStack} />
-      <Tab.Screen name="Challenges" component={ChallengesStack} />
+      <Tab.Screen name="Home" options={{ headerShown: false }} component={HomeStack} />
+      <Tab.Screen name="Reminders" options={{ headerShown: false }} component={RemindersStack} />
+      <Tab.Screen name="Challenges" options={{ headerShown: false }} component={ChallengesStack} />
       <Tab.Screen name="Community" component={CommunityScreen} />
-      <Tab.Screen name="Settings" component={SettingsStack} />
+      <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
     </Tab.Navigator>
   );
 }

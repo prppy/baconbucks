@@ -42,9 +42,10 @@ export default function RemindersScreen(props) {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text style={styles.headertext}>Reminders</Text>
             <View style={styles.calendarContainer}>
                 <Calendar
-                style={{ width: screenWidth }}
+                style={{ width: 350, }}
                 theme={{
                     calendarBackground: 'white', // Change the background color of the calendar
                     todayTextColor: colors.darkPink, // Change the text color of today's date
@@ -53,12 +54,13 @@ export default function RemindersScreen(props) {
                 onDayPress={handleDayPress} // Handle date selection
                 markedDates={markedDates}
             />
+            
+            </View>
             {selectedDate && (
                     <Text style={styles.selectedDateText}>
                         Selected Date: {selectedDate}
                     </Text>
                 )}
-            </View>
             <View style={styles.remindersContainer}>
                 {reminders.length > 0 ? (
                     reminders.map((reminder) => (
@@ -67,7 +69,7 @@ export default function RemindersScreen(props) {
                         </View>
                     ))
                 ) : (
-                    <Text>No reminders for selected date</Text>
+                    <Text style={styles.fetchedreminders}>No reminders for selected date</Text>
                 )}
             </View>
            
@@ -93,6 +95,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         marginTop: 20,
+        shadowColor: '#171717',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
     },
     buttonContainer: {
         position: 'absolute',
@@ -125,7 +131,19 @@ const styles = StyleSheet.create({
     },
     selectedDateText: {
         fontSize: 16,
-        color: colors.darkPink,
-        marginTop: 20,
+        marginBottom: 10,
+        marginLeft: 20,
     },
+    headertext: {
+        fontSize: 20,
+        marginLeft: 25,
+        marginTop: 15,
+        fontWeight: 'bold',
+    },
+    fetchedreminders: {
+        marginBottom: 20,
+        fontSize: 14,
+        marginBottom: 280,
+        marginRight: 145,
+    }
 });

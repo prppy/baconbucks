@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 export const ChallengesStack = () => {
     return (
         <Stack.Navigator>
-            <Stack.Screen name="ChallengesScreen" component={ChallengesScreen} />
+            <Stack.Screen name="ChallengesScreen" options={{ headerShown: false }} component={ChallengesScreen} />
             <Stack.Screen name="Quiz" component={QuizScreen} />
             <Stack.Screen name="Results" component={ResultsScreen} />
         </Stack.Navigator>
