@@ -1,6 +1,6 @@
 from django.db import models
 
-from ..userAPI.models import User, Wallet
+from userAPI.models import User, Wallet
 
 # Create your models here.
 
