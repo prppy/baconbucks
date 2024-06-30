@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'userAPI',
     'appSettings',
-    'logAPI'
 ]
 
 MIDDLEWARE = [
@@ -157,3 +156,5 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+AUTH_USER_MODEL = 'userAPI.User'

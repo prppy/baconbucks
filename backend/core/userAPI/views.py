@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from django.contrib.auth import authenticate
 
 from .serializers import UserSerializer
-from .models import Wallet, User
+from .models import User
 
 class TestView(APIView):
     def get(self, request, format=None):
