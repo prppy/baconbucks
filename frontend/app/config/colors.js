@@ -3,4 +3,5 @@ export default {
     lightPink: "#F4D5E1", 
     eggWhite: "fffcf6", 
     eggYolk: "e5b409",
+    palePink: "f6dde7",
 }
