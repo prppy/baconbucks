@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     )
 
     password = models.CharField(
-        max_length=64,
+        max_length=256,
     )
 
     is_active = models.BooleanField(default=True)

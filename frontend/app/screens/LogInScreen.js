@@ -21,6 +21,7 @@ export default function LogInScreen() {
     const handleLogIn = () => {
 
         if (username && password) {
+            
             let body = JSON.stringify({
                 'username': username,
                 'password': password
