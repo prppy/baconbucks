@@ -1,7 +1,9 @@
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from .models import User
+from decimal import Decimal
+
+from .models import User, Wallet
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,3 +46,37 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'username', 'email', 'password', 'bacoin', 'token')
+
+
+class WalletSerializer(serializers.ModelSerializer):
+
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all()
+    )
+
+    wallet_name = serializers.CharField(
+        required = True,
+    )
+
+    balance = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Wallet
+        fields = ('user', 'id', 'wallet_name', 'balance')
+
+    def create(self, validated_data):
+
+        instance = Wallet.objects.create(
+            user = validated_data.get('user'),
+            wallet_name = validated_data.get('wallet_name'),
+        )
+
+        return instance
+    
+    def get_balance(self, obj):
+        return obj.calculate_balance()
+    
+    def update_name(self, instance, validated_data):
+        instance.name = validated_data.get('wallet_name', instance.wallet_name)
+        instance.save()
+        return instance

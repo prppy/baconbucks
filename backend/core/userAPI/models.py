@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
     )
 
     password = models.CharField(
-        max_length=128,
+        max_length=32,
     )
 
     is_active = models.BooleanField(default=True)
@@ -85,3 +85,16 @@ class User(AbstractBaseUser):
     
     def has_module_perms(self, app_label):
         return True
+    
+
+class Wallet(models.Model):
+    wallet_name = models.CharField(max_length=64)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wallets')
+
+    class Meta:
+        unique_together = ['wallet_name', 'user']
+
+    def calculate_balance(self):
+        transactions = self.transactions.all()
+        total_balance = sum(transaction.amount for transaction in transactions)
+        return total_balance
