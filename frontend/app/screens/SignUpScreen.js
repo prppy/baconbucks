@@ -24,31 +24,38 @@ export default function SignUpScreen(props) {
     };
 
     const handleSignUp = () => {
+        console.log('Username:', username);
+        console.log('Email:', email);
+        console.log('Password:', password);
+        console.log('Confirm Password:', confirm);
+
         if (password !== confirm) {
             setError("Passwords do not match!");
             return;
         }
 
-        let body = JSON.stringify({
-            "username": username,
-            "email": email,
-            "password": password
-        });
 
+        let body = JSON.stringify({ 
+            "username": username, 
+            "email": email, 
+            "password": password 
+        });
+        console.log('Fetch Body:', body);
+
+        console.log('Fetch URL:', `${domain}/api/v1.0/user/create-user/`);
         fetch(`${domain}/api/v1.0/user/create-user/`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: body
         })
         .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                setError("User already exists or invalid data.");
-                throw new Error("User already exists or invalid data.");
-            }
+            console.log('Fetch Response Status:', response.status);
+            return response.json();
         })
         .then(json => {
+            console.log('Fetch Response JSON:', json);
             setUserObj(json);
             setToken(json.access);
             setIsLoggedIn(true);
