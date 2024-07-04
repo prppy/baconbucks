@@ -40,6 +40,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
 
     username = models.CharField(
+        max_length=32,
         unique=True,
     )
 
@@ -48,6 +49,7 @@ class User(AbstractBaseUser):
     )
 
     password = models.CharField(
+        max_length=64,
     )
 
     is_active = models.BooleanField(default=True)
