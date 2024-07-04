@@ -3,12 +3,26 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Dimensions } fr
 import { useNavigation } from "@react-navigation/native";
 import colors from "../config/colors";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Modal from "react-native-modal";
+
 
 export default function HomeScreen(props) {
     const navigation = useNavigation();
 
-    const handleNewTranaction = () => {
+    const [ isVisible, setIsVisible ] = useState(false)
+
+    const toggleModal = () =>{
+        setIsVisible(!isVisible);
+    }
+
+    const handleNewTransaction = () => {
         navigation.navigate("Add New Transaction");
+        setIsVisible(false)
+    }
+
+    const handleNewWallet = () => {
+        navigation.navigate("Add New Wallet");
+        setIsVisible(false);
     }
 
     return (
@@ -16,9 +30,21 @@ export default function HomeScreen(props) {
             <Text style={styles.headertext}>Home</Text>
 
             <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={handleNewTranaction}>
-                <Ionicons name="add-circle" size={35} color={colors.darkPink} />
+            <TouchableOpacity onPress={toggleModal}>
+                <Ionicons name="add-circle" size={50} color={colors.darkPink} />
             </TouchableOpacity>
+            <Modal isVisible={isVisible} onBackdropPress={toggleModal}>
+                <TouchableOpacity onPress={handleNewWallet} style={{paddingBottom: 20}}>
+                    <View style={styles.modalContainer}>
+                        <Text>Add Wallet</Text>
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleNewTransaction}>
+                    <View style={styles.modalContainer}>
+                        <Text>Add Transaction</Text>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
             </View>
             
             
@@ -44,4 +70,10 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 20,
     },
+    modalContainer: {
+        width: 150, 
+        height: 30,
+        borderRadius: 4,
+        backgroundColor: colors.lightPink,
+    }
 })

@@ -1,7 +1,6 @@
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
-from decimal import Decimal
 
 from .models import User, Wallet
 

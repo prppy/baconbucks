@@ -7,7 +7,7 @@ import { Context } from "../components/GlobalContext";
 
 export default function SettingsScreen(props) {
     const globalContext = useContext(Context);
-    const { setIsLoggedIn } = globalContext;
+    const { setIsLoggedIn, userObj } = globalContext;
     
     const navigation = useNavigation();
 
@@ -30,7 +30,7 @@ export default function SettingsScreen(props) {
             <TouchableOpacity style={styles.editpfp}>
                 <Ionicons name="pencil" size={15} color={'white'} />
             </TouchableOpacity>
-            <Text style={styles.username}>username</Text>
+            <Text style={styles.username}>{userObj.username}</Text>
 
             <View style={styles.row}>
                 <TouchableOpacity style={styles.button} onPress={handleMyAccount}>

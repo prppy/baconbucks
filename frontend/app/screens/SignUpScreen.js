@@ -43,6 +43,7 @@ export default function SignUpScreen(props) {
         console.log('Fetch Body:', body);
 
         console.log('Fetch URL:', `${domain}/api/v1.0/user/create-user/`);
+        
         fetch(`${domain}/api/v1.0/user/create-user/`, {
             method: 'POST',
             headers: {
