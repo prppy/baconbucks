@@ -24,41 +24,39 @@ export default function SignUpScreen(props) {
     };
 
     const handleSignUp = () => {
-        if (confirm === password) {
-            let body = JSON.stringify({
-                "username": username,
-                "email": email,
-                "password": password
-            });
-    
-            fetch(`${domain}/api/v1.0/user/create-user/`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: body
-            })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                } else {
-                    setError("User already exists"); // Handle specific error case
-                    throw res.json(); // Throw to skip the next then block
-                }
-            })
-            .then(json => {
-                setUserObj(json);
-                setToken(json.access);
-                setIsLoggedIn(true);
-            })
-            .catch(error => {
-                console.error('Error during sign-up:', error);
-                return error.json(); // Log the actual error response
-            })
-            .then(json => {
-                console.log('Error JSON:', json); // Log the JSON response from error
-            });
-        } else {
-            setError("Passwords do not match!"); // Moved inside the else block
+        if (password !== confirm) {
+            setError("Passwords do not match!");
+            return;
         }
+
+        let body = JSON.stringify({
+            "username": username,
+            "email": email,
+            "password": password
+        });
+
+        fetch(`${domain}/api/v1.0/user/create-user/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: body
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                setError("User already exists or invalid data.");
+                throw new Error("User already exists or invalid data.");
+            }
+        })
+        .then(json => {
+            setUserObj(json);
+            setToken(json.access);
+            setIsLoggedIn(true);
+        })
+        .catch(error => {
+            console.error('Error during sign-up:', error);
+            Alert.alert('Error', 'Failed to sign up. Please try again.');
+        });
     };
 
     const dismissKeyboard = () => {
