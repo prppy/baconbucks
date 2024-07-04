@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'userAPI',
     'appSettings',
+    'logAPI'
 ]
 
 MIDDLEWARE = [
