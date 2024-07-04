@@ -24,40 +24,41 @@ export default function SignUpScreen(props) {
     };
 
     const handleSignUp = () => {
-
-        if (confirm == password) {
-
+        if (confirm === password) {
             let body = JSON.stringify({
-                'username': username,
-                'email': email,
-                'password': password
-            })
-
-            fetch(`${domain}/api/v1.0/user/create-user/`, { 
-                method: 'POST' , 
+                "username": username,
+                "email": email,
+                "password": password
+            });
+    
+            fetch(`${domain}/api/v1.0/user/create-user/`, {
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: body
             })
             .then(res => {
                 if (res.ok) {
-                    return res.json()
+                    return res.json();
                 } else {
-                    setError("User already exists")
-                    throw res.json()
+                    setError("User already exists"); // Handle specific error case
+                    throw res.json(); // Throw to skip the next then block
                 }
             })
             .then(json => {
-                setUserObj(json)
-                setToken(json.access)
-                setIsLoggedIn(true)
+                setUserObj(json);
+                setToken(json.access);
+                setIsLoggedIn(true);
             })
             .catch(error => {
-                console.log(error);
+                console.error('Error during sign-up:', error);
+                return error.json(); // Log the actual error response
+            })
+            .then(json => {
+                console.log('Error JSON:', json); // Log the JSON response from error
             });
+        } else {
+            setError("Passwords do not match!"); // Moved inside the else block
         }
-
-        setError("Passwords do not match!")
-
     };
 
     const dismissKeyboard = () => {
@@ -111,7 +112,7 @@ export default function SignUpScreen(props) {
                         secureTextEntry="true" 
                         autoCapitalize='none'
                         minLength={8}
-                        keyboardAppearance=''
+                        keyboardAppearance='dark'
                     ></TextInput>
                 </View>
 
