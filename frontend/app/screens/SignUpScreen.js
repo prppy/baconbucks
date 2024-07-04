@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 import colors from '../config/colors';
@@ -10,10 +10,10 @@ export default function SignUpScreen(props) {
     const globalContext = useContext(Context);
     const { setIsLoggedIn, domain, setUserObj, setToken } = globalContext;
 
-    const [username, setUserName] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [confirm, setConfirm] = React.useState("");
+    const [username, setUserName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirm, setConfirm] = useState("");
     const [error, setError] = useState("");
 
     const navigation = useNavigation();

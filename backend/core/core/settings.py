@@ -75,13 +75,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd6dpcim7mt44ha', # Database name
+        'USER': 'u14prf8k1fmh5', # Database user
+        'PASSWORD': 'p8f34173e6ee544ab897872f9358b9db05bcc69c186515ff33778cece06541a15', # Database password
+        'HOST': 'c9uss87s9bdb8n.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', # RDS endpoint
+        'PORT': '5432', # Port
     }
 }
-
-# Update the default database configuration with $DATABASE_URL.
-DATABASES['default'].update(dj_database_url.config(conn_max_age=600, ssl_require=True))
 
 
 # Password validation
@@ -144,7 +145,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Example: Set access token to expire in 15 minutes
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),  # Example: Set access token to expire in 30 minutes
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),     # Example: Set refresh token to expire in 7 days
 }
 
@@ -158,4 +159,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
+# Custom user model
 AUTH_USER_MODEL = 'userAPI.User'
