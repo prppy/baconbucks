@@ -14,16 +14,16 @@ export default function ChallengesScreen(props) {
     };
 
     const [isModal1Visible, setModal1Visible] = useState(false);
-    // const [isModal2Visible, setModal2Visible] = useState(false);
-    // const [isModal3Visible, setModal3Visible] = useState(false);
+    const [isModal2Visible, setModal2Visible] = useState(false);
+    const [isModal3Visible, setModal3Visible] = useState(false);
 
     const toggleModal1 = () => {
         console.log('Modal visibility before toggle:', isModal1Visible);
         setModal1Visible(!isModal1Visible);
         console.log('Modal visibility after toggle:', !isModal1Visible);
       };
-    // const toggleModal2 = () => setModal2Visible(!isModal2Visible);
-    // const toggleModal3 = () => setModal3Visible(!isModal3Visible);
+    const toggleModal2 = () => setModal2Visible(!isModal2Visible);
+    const toggleModal3 = () => setModal3Visible(!isModal3Visible);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -47,13 +47,13 @@ export default function ChallengesScreen(props) {
                 
 
                 <View style={styles.buttonContainer2}>
-                    <TouchableOpacity onPress={handleQuiz}>
+                    <TouchableOpacity onPress={toggleModal2}>
                         <Ionicons name="location-sharp" size={50} color={colors.darkPink} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.buttonContainer3}>
-                    <TouchableOpacity onPress={handleQuiz}>
+                    <TouchableOpacity onPress={toggleModal3}>
                         <Ionicons name="location-sharp" size={50} color={colors.darkPink} />
                     </TouchableOpacity>
                 </View>
@@ -65,6 +65,30 @@ export default function ChallengesScreen(props) {
             >
                 <View style={styles.modalContent}>
                     <Text style={styles.modalHeader}>Quiz 1: CPF</Text>
+                    <Text style={styles.modaltext}>Test your knowledge of the Central Provision Fund (CPF).</Text>
+                    <TouchableOpacity onPress={handleQuiz} style={styles.playbtn}>
+                        <Text style={styles.btntext}>Play</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+            <Modal 
+            isVisible={isModal1Visible} 
+            onBackdropPress={toggleModal2}
+            >
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalHeader}>Quiz 2: Tax</Text>
+                    <Text style={styles.modaltext}>Test your knowledge of the Central Provision Fund (CPF).</Text>
+                    <TouchableOpacity onPress={handleQuiz} style={styles.playbtn}>
+                        <Text style={styles.btntext}>Play</Text>
+                    </TouchableOpacity>
+                </View>
+            </Modal>
+            <Modal 
+            isVisible={isModal1Visible} 
+            onBackdropPress={toggleModal3}
+            >
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalHeader}>Quiz 3: Banking</Text>
                     <Text style={styles.modaltext}>Test your knowledge of the Central Provision Fund (CPF).</Text>
                     <TouchableOpacity onPress={handleQuiz} style={styles.playbtn}>
                         <Text style={styles.btntext}>Play</Text>
