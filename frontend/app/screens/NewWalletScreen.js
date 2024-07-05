@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInp
 import colors from "../config/colors";
 import { Context } from '../components/GlobalContext';
 
-export default function NewTransactionScreen(props) {
+export default function NewWalletScreen(props) {
 
     const globalContext = useContext(Context);
     const { userObj, domain } = globalContext;
@@ -53,14 +53,13 @@ export default function NewTransactionScreen(props) {
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <SafeAreaView style={styles.container}>
-                <KeyboardAvoidingView>
+            <KeyboardAvoidingView style={styles.container}>
+
                     <Text style={styles.text}>New Wallet Name</Text>
                     <View style={styles.inputContainer}>
                         <TextInput
-                            style={styles.text}
+                            style={styles.inputtext}
                             placeholder="Type here"
-                            placeholderTextColor={colors.lightPink}
                             value={walletName}
                             onChangeText={setWalletName}
                             autoCapitalize='none'
@@ -70,7 +69,6 @@ export default function NewTransactionScreen(props) {
                         <Text style={styles.savetext}>Add Wallet</Text>
                     </TouchableOpacity>
                 </KeyboardAvoidingView>
-            </SafeAreaView>
         </TouchableWithoutFeedback>
     );
 }
@@ -134,7 +132,7 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     savebutn: {
-        width: 200,
+        width: 100,
         height: 30,
         backgroundColor: colors.darkPink,
         borderRadius: 4,

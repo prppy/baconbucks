@@ -30,24 +30,29 @@ export default function HomeScreen(props) {
             <Text style={styles.headertext}>Home</Text>
 
             <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={toggleModal}>
-                <Ionicons name="add-circle" size={50} color={colors.darkPink} />
-            </TouchableOpacity>
-            <Modal isVisible={isVisible} onBackdropPress={toggleModal}>
-                <TouchableOpacity onPress={handleNewWallet} style={{paddingBottom: 20}}>
-                    <View style={styles.modalContainer}>
-                        <Text>Add Wallet</Text>
-                    </View>
+                <TouchableOpacity onPress={toggleModal}>
+                    <Ionicons name="add-circle" size={50} color={colors.darkPink} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleNewTransaction}>
-                    <View style={styles.modalContainer}>
-                        <Text>Add Transaction</Text>
+                <Modal 
+                    isVisible={isVisible} 
+                    onBackdropPress={toggleModal}
+                    backdropColor="black"
+                    backdropOpacity={0.3}
+                >
+                    <View style={styles.modalContent}>
+                        <TouchableOpacity onPress={handleNewWallet} style={{paddingBottom: 20}}>
+                            <View style={styles.modalContainer}>
+                                <Text style={styles.modaltext}>Add Wallet</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={handleNewTransaction} >
+                            <View style={styles.modalContainer}>
+                                <Text style={styles.modaltext}>Add Transaction</Text>
+                            </View>
+                        </TouchableOpacity>
                     </View>
-                </TouchableOpacity>
-            </Modal>
+                </Modal>
             </View>
-            
-            
         </SafeAreaView>
     );
 }
@@ -70,10 +75,22 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 20,
     },
+    modalContent: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     modalContainer: {
         width: 150, 
-        height: 30,
-        borderRadius: 4,
+        height: 40,
+        borderRadius: 5,
         backgroundColor: colors.lightPink,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        left: 100, 
+        top: 190,
+    },
+    modaltext: {
+        marginLeft: 10,
+        fontSize: 15,
     }
 })
