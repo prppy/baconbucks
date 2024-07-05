@@ -43,6 +43,7 @@ export default function NewTransactionScreen(props) {
         { id: '4', label: 'Food', icon: 'restaurant-outline' },
         { id: '5', label: 'Entertainment', icon: 'film-outline' },
         { id: '6', label: 'Rent', icon: 'home-outline' },
+        { id: '7', label: 'Top Up', icon: 'wallet-outline' },
     ];
 
     const dismissKeyboard = () => {
