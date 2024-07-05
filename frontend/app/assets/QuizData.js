@@ -1,13 +1,13 @@
 export default data = [
     {
-      question: "In Singapore, what is the deadline for filing personal income tax returns for the previous year for most individuals?",
+      question: "At what age can Singaporeans start withdrawing their CPF savings for retirement?",
       options: [
-        "18 April",
-        "18 June",
-        "31 December",
-        "1 January",
+        "55 years old",
+        "60 years old",
+        "65 years old",
+        "70 years old",
       ],
-      correct_option: "18 April",
+      correct_option: "55 years old",
     },
     {
       question: "What is the minimum age requirement to open an individual Central Provident Fund (CPF) account in Singapore?",
