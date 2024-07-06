@@ -72,24 +72,24 @@ export default function ChallengesScreen(props) {
                 </View>
             </Modal>
             <Modal 
-            isVisible={isModal1Visible} 
+            isVisible={isModal2Visible} 
             onBackdropPress={toggleModal2}
             >
                 <View style={styles.modalContent}>
                     <Text style={styles.modalHeader}>Quiz 2: Tax</Text>
-                    <Text style={styles.modaltext}>Test your knowledge of the Central Provision Fund (CPF).</Text>
+                    <Text style={styles.modaltext}>Learn about tax in Singapore!</Text>
                     <TouchableOpacity onPress={handleQuiz} style={styles.playbtn}>
                         <Text style={styles.btntext}>Play</Text>
                     </TouchableOpacity>
                 </View>
             </Modal>
             <Modal 
-            isVisible={isModal1Visible} 
+            isVisible={isModal3Visible} 
             onBackdropPress={toggleModal3}
             >
                 <View style={styles.modalContent}>
                     <Text style={styles.modalHeader}>Quiz 3: Banking</Text>
-                    <Text style={styles.modaltext}>Test your knowledge of the Central Provision Fund (CPF).</Text>
+                    <Text style={styles.modaltext}>Do you know what these banking terms mean?</Text>
                     <TouchableOpacity onPress={handleQuiz} style={styles.playbtn}>
                         <Text style={styles.btntext}>Play</Text>
                     </TouchableOpacity>
@@ -193,6 +193,7 @@ const styles = StyleSheet.create({
     },
     modaltext: {
         fontSize: 15,
+        padding: 10,
     },
     playbtn: {
         width: 80,
@@ -200,7 +201,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: colors.darkPink,
-        marginTop: 50,
         borderRadius: 5,
     }
 });

@@ -12,7 +12,7 @@ export const SettingsStack = () => {
         <Stack.Navigator>
             <Stack.Screen name="SettingsPage" options={{ headerShown: false }} component={SettingsScreen} />
             <Stack.Screen name="Accessibility" component={AccessibilityScreen} />
-            <Stack.Screen name="MyAccount" component={MyAccountScreen} />
+            <Stack.Screen name="MyAccount" options={{ headerShown: false }} component={MyAccountScreen} />
             <Stack.Screen name="LogIn" options={{ headerShown: false }} component={LogInScreen} />
         </Stack.Navigator>
     );

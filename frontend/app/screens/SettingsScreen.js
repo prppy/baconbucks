@@ -110,6 +110,12 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 200,
     },
+    delbtnText: {
+        color: 'black',
+        fontSize: 16,
+        marginLeft: 20,
+        marginRight: 145,
+    },
     pfp: {
         width: 100,
         height: 100,
