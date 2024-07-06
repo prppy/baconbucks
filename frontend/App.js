@@ -6,7 +6,6 @@ import { NavigationContainer, createNavigationContainerRef } from '@react-naviga
 import { LogInStack } from './app/navigation/stacks/LogInStack';
 import { Context, Provider } from './app/components/GlobalContext';
 import { HomeTabs } from './app/navigation/tabs/HomeTabs';
-import { ThemeProvider, useTheme } from './app//ThemeContext'; // Adjust the path as needed
 
 export const navigationRef = createNavigationContainerRef();
 const RootStack = createStackNavigator();
@@ -15,8 +14,7 @@ const RootStack = createStackNavigator();
 const MainApp = () => {
 
     const globalContext = useContext(Context);
-    const { isLoggedIn, userObj } = globalContext;
-    const { theme } = useTheme();
+    const { isLoggedIn, userObj, theme } = globalContext;
 
     return (
         <NavigationContainer ref={navigationRef}>
@@ -35,9 +33,7 @@ const MainApp = () => {
 export default function App() {
     return (
         <Provider>
-            <ThemeProvider>
                <MainApp/> 
-            </ThemeProvider>
         </Provider>
     );
 }

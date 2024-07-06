@@ -53,22 +53,23 @@ export default function NewWalletScreen(props) {
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <KeyboardAvoidingView style={styles.container}>
-
-                    <Text style={styles.text}>New Wallet Name</Text>
-                    <View style={styles.inputContainer}>
-                        <TextInput
-                            style={styles.inputtext}
-                            placeholder="Type here"
-                            value={walletName}
-                            onChangeText={setWalletName}
-                            autoCapitalize='none'
-                        />
-                    </View>
-                    <TouchableOpacity style={styles.savebutn} onPress={handleNewWallet}>
-                        <Text style={styles.savetext}>Add Wallet</Text>
-                    </TouchableOpacity>
-                </KeyboardAvoidingView>
+            <SafeAreaView style={styles.container}>
+                <KeyboardAvoidingView>
+                        <Text style={styles.text}>New Wallet Name</Text>
+                        <View style={styles.inputContainer}>
+                            <TextInput
+                                style={styles.inputtext}
+                                placeholder="Type here"
+                                value={walletName}
+                                onChangeText={setWalletName}
+                                autoCapitalize='none'
+                            />
+                        </View>
+                        <TouchableOpacity style={styles.savebutn} onPress={handleNewWallet}>
+                            <Text style={styles.savetext}>Add Wallet</Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
+                </SafeAreaView>
         </TouchableWithoutFeedback>
     );
 }

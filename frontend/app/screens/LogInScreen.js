@@ -41,9 +41,9 @@ export default function LogInScreen() {
                 }
             })
             .then(json => {
-                setUserObj(json)
-                setToken(json.access)
-                setIsLoggedIn(true)
+                setUserObj(json);
+                setToken(json.token.access);
+                setIsLoggedIn(true);
             })
             .catch(error => {
                 console.log(error);

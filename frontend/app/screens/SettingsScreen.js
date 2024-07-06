@@ -2,18 +2,18 @@ import React, { useContext, useState } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Modal from "react-native-modal";
+
 import colors from "../config/colors";
 import { Context } from "../components/GlobalContext";
-import Modal from "react-native-modal";
-import { useTheme } from '../ThemeContext';
 
 export default function SettingsScreen(props) {
+
     const globalContext = useContext(Context);
-    const { setIsLoggedIn, userObj } = globalContext;
+    const { setIsLoggedIn, userObj, theme, toggleTheme } = globalContext;
     const navigation = useNavigation();
 
     const [isPressed, setIsPressed] = useState(false); //for dark mode
-    const { theme, toggleTheme } = useTheme();
 
     const handlePress = () => {
         toggleTheme();

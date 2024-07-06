@@ -43,7 +43,7 @@ export default function SignUpScreen(props) {
         console.log('Fetch Body:', body);
 
         console.log('Fetch URL:', `${domain}/api/v1.0/user/create-user/`);
-        
+
         fetch(`${domain}/api/v1.0/user/create-user/`, {
             method: 'POST',
             headers: {
@@ -73,80 +73,82 @@ export default function SignUpScreen(props) {
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <KeyboardAvoidingView style={styles.background} behavior='padding'>
-                <Image 
-                    style={styles.logo} 
-                    source={require('../assets/images/LOGO_Light.png')} />
+            <SafeAreaView>
+                <KeyboardAvoidingView style={styles.background} behavior='padding'>
+                    <Image 
+                        style={styles.logo} 
+                        source={require('../assets/images/LOGO_Light.png')} />
 
-                <Text style={styles.text}>Username</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={username}
-                        onChangeText={setUserName}
-                        secureTextEntry="false" 
-                        autoCapitalize='none'
-                        maxLength={32}
-                        keyboardType='ascii-capable'
-                    ></TextInput>
-                </View>
+                    <Text style={styles.text}>Username</Text>
+                    <View style={styles.textbox}>
+                        <TextInput
+                            style={styles.username}
+                            placeholder="Type here"
+                            placeholderTextColor={styles.username.color}
+                            value={username}
+                            onChangeText={setUserName}
+                            secureTextEntry="false" 
+                            autoCapitalize='none'
+                            maxLength={32}
+                            keyboardType='ascii-capable'
+                        ></TextInput>
+                    </View>
 
-                <Text style={styles.text}>Email</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={email}
-                        onChangeText={setEmail}
-                        secureTextEntry="false" 
-                        autoCapitalize='none'
-                        keyboardType='ascii-capable'
-                    ></TextInput>
-                </View>
+                    <Text style={styles.text}>Email</Text>
+                    <View style={styles.textbox}>
+                        <TextInput
+                            style={styles.username}
+                            placeholder="Type here"
+                            placeholderTextColor={styles.username.color}
+                            value={email}
+                            onChangeText={setEmail}
+                            secureTextEntry="false" 
+                            autoCapitalize='none'
+                            keyboardType='ascii-capable'
+                        ></TextInput>
+                    </View>
 
-                <Text style={styles.text}>Password</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry="true" 
-                        autoCapitalize='none'
-                        minLength={8}
-                        keyboardAppearance='dark'
-                    ></TextInput>
-                </View>
+                    <Text style={styles.text}>Password</Text>
+                    <View style={styles.textbox}>
+                        <TextInput
+                            style={styles.username}
+                            placeholder="Type here"
+                            placeholderTextColor={styles.username.color}
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry="true" 
+                            autoCapitalize='none'
+                            minLength={8}
+                            keyboardAppearance='dark'
+                        ></TextInput>
+                    </View>
 
-                <Text style={styles.text}>Confirm Password</Text>
-                <View style={styles.textbox}>
-                    <TextInput
-                        style={styles.username}
-                        placeholder="Type here"
-                        placeholderTextColor={styles.username.color}
-                        value={confirm}
-                        onChangeText={setConfirm}
-                        secureTextEntry="true" 
-                        autoCapitalize='none'
-                        minLength={8}
-                    ></TextInput>
-                </View>
+                    <Text style={styles.text}>Confirm Password</Text>
+                    <View style={styles.textbox}>
+                        <TextInput
+                            style={styles.username}
+                            placeholder="Type here"
+                            placeholderTextColor={styles.username.color}
+                            value={confirm}
+                            onChangeText={setConfirm}
+                            secureTextEntry="true" 
+                            autoCapitalize='none'
+                            minLength={8}
+                        ></TextInput>
+                    </View>
 
-                <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
+                    <Text style={[styles.text, { marginBottom: 20 }]}>{error}</Text>
 
-                <TouchableOpacity style={styles.loginbutn}
-                        onPress={handleSignUp}>
-                            <Text style={styles.logintext}>Sign up!</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.loginbutn}
+                            onPress={handleSignUp}>
+                                <Text style={styles.logintext}>Sign up!</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity onPress={handleLogIn}>
-                    <Text style={[styles.text, { textDecorationLine: "underline" }]}>Back to Log In</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+                    <TouchableOpacity onPress={handleLogIn}>
+                        <Text style={[styles.text, { textDecorationLine: "underline" }]}>Back to Log In</Text>
+                    </TouchableOpacity>
+                </KeyboardAvoidingView>
+            </SafeAreaView>
         </TouchableWithoutFeedback>
     );
 }
