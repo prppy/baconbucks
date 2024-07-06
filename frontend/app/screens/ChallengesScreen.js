@@ -182,7 +182,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
-        marginLeft: 75,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     btntext: {
         color: 'white',
