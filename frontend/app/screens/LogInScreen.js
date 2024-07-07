@@ -86,7 +86,6 @@ export default function LogInScreen() {
                                 style={styles.logo} 
                                 source={require('../assets/images/LOGO_Light.png')} 
                             />
-                            <Text style={[styles.text, {marginBottom: 20}]}>You are {(isLoggedIn) ? "" : "not"} logged in</Text>
                             <Text style={styles.text}>Username or Email</Text>
                             <View style={styles.textbox}>
                                 <TextInput
