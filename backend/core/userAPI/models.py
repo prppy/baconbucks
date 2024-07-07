@@ -36,7 +36,6 @@ class UserManager(BaseUserManager):
 
         return user
 
-
 class User(AbstractBaseUser):
 
     username = models.CharField(
@@ -64,10 +63,6 @@ class User(AbstractBaseUser):
 
     last_login = models.DateTimeField(default=timezone.now)
 
-    bacoin = models.IntegerField(
-        default=0
-    )
-
     objects = UserManager()
 
     USERNAME_FIELD = 'username'
@@ -86,13 +81,17 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
     
+    def calculate_bacoin(self):
+        plays = self.plays.all()
+        total_bacoin = sum(play.bacoin for play in plays)
+        return total_bacoin
 
 class Wallet(models.Model):
-    wallet_name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wallets')
 
     class Meta:
-        unique_together = ['wallet_name', 'user']
+        unique_together = ['name', 'user']
 
     def calculate_balance(self):
         transactions = self.transactions.all()

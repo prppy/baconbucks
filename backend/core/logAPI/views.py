@@ -1,30 +1,51 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import TransactionSerializer
-from .models import Transaction
-from userAPI.models import Wallet
+from .serializers import TransactionSerializer, ReminderSerializer
+from .models import Transaction, Reminder
+from userAPI.models import User, Wallet
 
 # Create your views here.
 
-class TransactionView(APIView):
+class TransactionCreateView(APIView):
     # create a new transaction
     def post(self, request, format=None):
         wallet_id = request.data.get('wallet')
         if not wallet_id:
-            return Response({"error": "Wallet ID is required"}, status=400)
+            return Response("Wallet ID field is required.", status=400)
         
         try:
             wallet = Wallet.objects.get(id=wallet_id, user=request.user)
         except Wallet.DoesNotExist:
-            return Response({"error": "Wallet was not found or does not belong to the authenticated user"}, status=404)
+            return Response("Wallet was not found or does not belong to the authenticated user", status=404)
 
-        transaction_serializer = TransactionSerializer(data=request.data)
+        transaction_data = request.data.copy()
+        transaction_data['wallet'] = wallet.id
+        transaction_serializer = TransactionSerializer(data=transaction_data)
         if transaction_serializer.is_valid():
-            transaction_serializer.save()
-            # Update the wallet balance here if needed
-            return Response(transaction_serializer.data, status=201)
+            try:
+                transaction_serializer.save()
+                return Response("Transaction created successfully", status=201)
+            except ValueError as e:
+                return Response(str(e), status=400)
         return Response(transaction_serializer.errors, status=400)
+        
+class TransactionDetailView(APIView):
+    # view details of this transaction
+    def get(self, request, pk, format=None):
+        try:
+            transaction = Transaction.objects.get(pk=pk, wallet__user=request.user)
+        except Transaction.DoesNotExist:
+            return Response("Transaction not found.", status=404)
+        serializer = TransactionSerializer(transaction)
+        return Response(serializer.data)
+    
+class TransactionListView(APIView):
+    # see all transactions of this wallet
+    def get(self, request, wallet_id, format=None):
+        transactions = Transaction.objects.filter(wallet__id=wallet_id, wallet__user=request.user)
+        serializer = TransactionSerializer(transactions, many=True)
+        return Response(serializer.data)
     
 class TransactionDeleteView(APIView):
     # deletes transactions
@@ -32,17 +53,9 @@ class TransactionDeleteView(APIView):
         try:
             transaction = Transaction.objects.get(pk=pk, wallet__user=request.user)
             transaction.delete()
-            return Response({"message": "Transaction deleted successfully"}, status=200)
+            return Response("Transaction deleted successfully", status=200)
         except Transaction.DoesNotExist:
-            return Response({"error": "Transaction not found or does not belong to the authenticated user"}, status=404)
-
-class TransactionListView():
-    # returns all transactions of the user in a list
-    def get(self, request, format=None):
-        transactions = Transaction.objects.filter(wallet__user=request.user)
-        transaction_serializer = TransactionSerializer(transactions, many=True)
-        return Response(transaction_serializer.data, status=200)
-
+            return Response("Transaction not found or does not belong to the authenticated user", status=404)
 
 class TransactionUpdateView(APIView):
     # if user makes changes to the transaction
@@ -50,10 +63,54 @@ class TransactionUpdateView(APIView):
         try:
             transaction = Transaction.objects.get(pk=pk, wallet__user=request.user)
         except Transaction.DoesNotExist:
-            return Response({"error": "Transaction not found or does not belong to the authenticated user"}, status=404)
+            return Response("Transaction not found or does not belong to the authenticated user", status=404)
 
         transaction_serializer = TransactionSerializer(transaction, data=request.data, partial=True)
         if transaction_serializer.is_valid():
             transaction_serializer.save()
             return Response(transaction_serializer.data, status=200)
         return Response(transaction_serializer.errors, status=400)
+
+
+class ReminderCreateView(APIView):
+    # create new reminder
+    def post(self, request, format=None):
+        reminder_serializer = ReminderSerializer(data=request.data)
+        if reminder_serializer.is_valid():
+            reminder_serializer.save(user=request.user)
+            return Response("Reminder created successfully", status=201)
+        return Response(reminder_serializer.errors, status=400)
+    
+class ReminderDetailView(APIView):
+    # view details of this reminder
+    def get(self, request, pk, format=None):
+        try:
+            reminder = Reminder.objects.get(pk=pk, user=request.user)
+        except Reminder.DoesNotExist:
+            return Response("Reminder not found.", status=404)
+        serializer = ReminderSerializer(reminder)
+        return Response(serializer.data)
+    
+class ReminderDeleteView(APIView):
+    # delete this reminder
+    def delete(self, request, pk, format=None):
+        try:
+            reminder = Reminder.objects.get(pk=pk, user=request.user)
+            reminder.delete()
+            return Response(status=204)
+        except Reminder.DoesNotExist:
+            return Response("Reminder not found.", status=404)
+        
+class ReminderUpdateView(APIView):
+    # update reminder details
+    def put(self, request, pk, format=None):
+        try:
+            reminder = Reminder.objects.get(pk=pk, user=request.user)
+        except Reminder.DoesNotExist:
+            return Response("Reminder not found.", status=404)
+
+        serializer = ReminderSerializer(reminder, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)

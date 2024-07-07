@@ -1,33 +1,46 @@
-from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.password_validation import validate_password
 
 from .models import User, Wallet
+from logAPI.serializers import ReminderSerializer, TransactionSerializer
+from quizAPI.serializers import PlaySerializer
 
+# Create your serializers here.
 
+class WalletSerializer(serializers.ModelSerializer):
+    transactions = TransactionSerializer(many=True, read_only=True)
+    balance = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Wallet
+        fields = ('id', 'name', 'user', 'transactions', 'balance')
+
+    def create(self, validated_data):
+        user = validated_data.pop('user')
+        name = validated_data.get('name')
+        instance = Wallet.objects.create(user=user, name=name)
+        return instance
+
+    def get_balance(self, obj):
+        return obj.calculate_balance()
+    
 class UserSerializer(serializers.ModelSerializer):
-
-    token = serializers.SerializerMethodField()
-    
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    
-    username = serializers.CharField(
-        required=True,
-        max_length=32,
-        validators=[UniqueValidator(queryset=User.objects.all())]
-    )
-    
     password = serializers.CharField(
-        required=True,
         min_length=8,
         write_only=True
     )
-    
+    confirm_password = serializers.CharField(
+        min_length=8,
+        write_only=True
+    )
+    bacoin = serializers.SerializerMethodField()
+    wallets = WalletSerializer(many=True, read_only=True)
+    reminders = ReminderSerializer(many=True, read_only=True)
+    plays = PlaySerializer(many=True, read_only=True)
+
     def create(self, validated_data):
         password = validated_data.pop('password', None)
+        validated_data.pop('confirm_password', None)  # remove confirm_password from validated_data
         instance = self.Meta.model(**validated_data)
         
         if password is not None:
@@ -35,47 +48,51 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
     
-    def get_token(self, obj):
-        refresh = RefreshToken.for_user(obj)
-        return {
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }
+    def get_bacoin(self, obj):
+        return obj.calculate_bacoin()
+    
+    def validate_username(self, value):
+        errors = []
+        
+        if len(value) > 32:
+            errors.append("Username must be less than 32 characters.")
+
+        if User.objects.filter(username=value).exists():
+            errors.append("Username is in use.")
+
+        if errors:
+            raise serializers.ValidationError(errors)
+        
+        return value
+
+    def validate(self, data):
+        if data['password'] != data['confirm_password']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'bacoin', 'token')
+        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'wallets', 'reminders', 'plays', 'bacoin')
 
-
-class WalletSerializer(serializers.ModelSerializer):
-
-    user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all()
-    )
-
-    wallet_name = serializers.CharField(
-        required = True,
-    )
-
-    balance = serializers.SerializerMethodField()
+class UserUpdateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False, validators=[validate_password])
+    
+    confirm_password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
-        model = Wallet
-        fields = ('user', 'id', 'wallet_name', 'balance')
+        model = User
+        fields = ('id', 'username', 'email', 'password', 'confirm_password')
 
-    def create(self, validated_data):
+    def validate(self, data):
+        if 'password' in data and data['password'] != data.pop('confirm_password', None):
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
 
-        instance = Wallet.objects.create(
-            user = validated_data.get('user'),
-            wallet_name = validated_data.get('wallet_name'),
-        )
-
-        return instance
-    
-    def get_balance(self, obj):
-        return obj.calculate_balance()
-    
-    def update_name(self, instance, validated_data):
-        instance.name = validated_data.get('wallet_name', instance.wallet_name)
+    def update(self, instance, validated_data):
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+        password = validated_data.get('password', None)
+        if password:
+            instance.set_password(password)
         instance.save()
         return instance

@@ -1,7 +1,5 @@
 from pathlib import Path
 from datetime import timedelta
-import os
-import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -33,8 +31,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'userAPI',
-    'appSettings',
-    'logAPI'
+    'logAPI', 
+    'quizAPI'
 ]
 
 MIDDLEWARE = [
@@ -76,11 +74,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd6dpcim7mt44ha', # Database name
-        'USER': 'u14prf8k1fmh5', # Database user
-        'PASSWORD': 'p8f34173e6ee544ab897872f9358b9db05bcc69c186515ff33778cece06541a15', # Database password
+        'NAME': 'd6dpcim7mt44ha', # name
+        'USER': 'u14prf8k1fmh5', # user
+        'PASSWORD': 'p8f34173e6ee544ab897872f9358b9db05bcc69c186515ff33778cece06541a15', #  password
         'HOST': 'c9uss87s9bdb8n.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com', # RDS endpoint
-        'PORT': '5432', # Port
+        'PORT': '5432', # port
     }
 }
 
