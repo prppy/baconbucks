@@ -7,7 +7,7 @@ import { Context } from '../components/GlobalContext';
 export default function NewWalletScreen(props) {
 
     const globalContext = useContext(Context);
-    const { userObj, domain } = globalContext;
+    const { userObj, domain, fetchData } = globalContext;
 
     const [ walletName, setWalletName ] = useState("");
 
@@ -20,13 +20,13 @@ export default function NewWalletScreen(props) {
         }
 
         let body = JSON.stringify({
-                "wallet_name": walletName
+                "name": walletName
         });
         console.log('Fetch Body:', body);
 
         console.log('Fetch URL:', `${domain}/api/v1.0/user/create-wallet/`);
 
-        fetchData('api/v1.0/user/create-wallet', 'POST', body)
+        fetchData('api/v1.0/user/create-wallet/', 'POST', body)
         .then(response => {
             console.log('Fetch Response Status:', response.status);
             return response.json();

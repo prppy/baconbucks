@@ -13,11 +13,14 @@ export default function SignUpScreen(props) {
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [confirm, setConfirm] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
 
     const navigation = useNavigation();
 
+    const handleLogIn = () => {
+        navigation.goBack();
+    };
 
     const handleSignUp = async () => {
         try {
@@ -98,8 +101,8 @@ export default function SignUpScreen(props) {
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <SafeAreaView>
-                <KeyboardAvoidingView style={styles.background} behavior='padding'>
+            <SafeAreaView style={styles.background}>
+                <KeyboardAvoidingView  behavior='padding'>
                     <Image 
                         style={styles.logo} 
                         source={require('../assets/images/LOGO_Light.png')} />
@@ -154,8 +157,8 @@ export default function SignUpScreen(props) {
                             style={styles.username}
                             placeholder="Type here"
                             placeholderTextColor={styles.username.color}
-                            value={confirm}
-                            onChangeText={setConfirm}
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
                             secureTextEntry="true" 
                             autoCapitalize='none'
                             minLength={8}

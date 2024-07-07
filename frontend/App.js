@@ -14,12 +14,12 @@ const RootStack = createStackNavigator();
 const MainApp = () => {
 
     const globalContext = useContext(Context);
-    const { isLoggedIn, userObj, theme } = globalContext;
+    const { userObj, theme } = globalContext;
 
     return (
         <NavigationContainer ref={navigationRef}>
             <RootStack.Navigator initialRouteName="LogInStack">
-                {(!isLoggedIn || !userObj) ? (
+                {(!userObj) ? (
                         <RootStack.Screen name="LogInStack" options={{ headerShown: false }} component={LogInStack} />
                     ) : (
                         <RootStack.Screen name="HomeTabs" options={{ headerShown: false }} component={HomeTabs} />

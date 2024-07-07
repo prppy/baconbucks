@@ -10,7 +10,7 @@ import { Context } from "../components/GlobalContext";
 export default function SettingsScreen(props) {
 
     const globalContext = useContext(Context);
-    const { setIsLoggedIn, userObj, theme, toggleTheme } = globalContext;
+    const { setuserObj, userObj, theme, toggleTheme } = globalContext;
     const navigation = useNavigation();
 
     const [isPressed, setIsPressed] = useState(false); //for dark mode
@@ -21,7 +21,7 @@ export default function SettingsScreen(props) {
     }; //handles the change in icon when toggling from light mode to dark mode
 
     const handleLogOut = () => {
-        setIsLoggedIn(false);
+        setuserObj();
     }; 
 
     const [isModal1Visible, setModal1Visible] = useState(false);
