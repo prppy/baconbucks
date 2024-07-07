@@ -8,7 +8,7 @@ import { Keyboard } from 'react-native';
 
 export default function LogInScreen() {
     const globalContext = useContext(Context);
-    const { isLoggedIn, setIsLoggedIn, domain, userObj, setUserObj, setToken } = globalContext;
+    const { domain, setUserObj, setToken, fetchData } = globalContext;
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -18,38 +18,48 @@ export default function LogInScreen() {
 
     const navigation = useNavigation();
 
-    const handleLogIn = () => {
-
-        if (username && password) {
-            
-            let body = JSON.stringify({
-                'username': username,
-                'password': password
+    const handleLogIn = async () => {
+        try {
+            body = JSON.stringify({
+                "username": username,
+                "password": password
             })
 
-            fetch(`${domain}/api/v1.0/user/login-user/`, { 
-                method: 'POST' , 
-                headers: { 'Content-Type': 'application/json' },
+            console.log('Fetch Body:', body);
+
+            // log-in
+            let logInResponse = await fetch(`${domain}/api/v1.0/user/login/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: body
-            })
-            .then(res => {
-                if (res.ok) {
-                    return res.json()
-                } else {
-                    setError("Username and Password does not match")
-                    throw res.json()
-                }
-            })
-            .then(json => {
-                setUserObj(json);
-                setToken(json.token.access);
-                setIsLoggedIn(true);
-            })
-            .catch(error => {
-                console.log(error);
             });
-        } else {
-            setError("Username or Password is empty");
+
+            if (!logInResponse.ok) {
+                let errorResponse = await logInResponse.json();
+                throw errorResponse;
+            }
+
+            let loginJson = await logInResponse.json();
+            console.log('Login Response:', loginJson);
+
+            setToken(loginJson.access);
+            console.log('User logged in successfully.');
+
+            // fetch user data using the token
+            const user = await fetchData('api/v1.0/user/get-user/', 'GET');
+            console.log('User Data:', user);
+    
+            // set userObj in state
+            setUserObj(user);
+
+        } catch (logInError) {
+            const errorMessages = Object.keys(logInError).map(key => {
+                return `${key}: ${logInError[key].join(', ')}`;
+            });
+            console.log(errorMessages);
+            setError(errorMessages);
         }
     };
 

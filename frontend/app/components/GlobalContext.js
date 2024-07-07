@@ -6,8 +6,6 @@ const Context = createContext();
 
 const Provider = ({ children }) => {
     const [domain, setDomain] = useState("https://baconbuck-heroku-9f95201c7a14.herokuapp.com");
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [appSettings, setAppSettings] = useState({});
     const [userObj, setUserObj] = useState()
 
     const systemTheme = useColorScheme();
@@ -71,7 +69,7 @@ const Provider = ({ children }) => {
     
             const response = await fetch(`${domain}/${url}`, options);
     
-            if (response.ok) {
+            if (response.ok) { 
                 const data = await response.json();
                 console.log('Data fetched successfully:', data);
                 return data;
@@ -107,16 +105,13 @@ const Provider = ({ children }) => {
 
     const globalContext = {
         domain,
-        isLoggedIn,
-        setIsLoggedIn, 
-        appSettings, 
-        setAppSettings,
         userObj, 
         setUserObj,
         setToken,
         fetchData, 
         theme, 
         toggleTheme,
+        getToken
     };
 
     return <Context.Provider value={globalContext}>{children}</Context.Provider>;

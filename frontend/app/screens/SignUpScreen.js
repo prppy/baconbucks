@@ -8,7 +8,7 @@ import { Context } from '../components/GlobalContext';
 export default function SignUpScreen(props) {
 
     const globalContext = useContext(Context);
-    const { setIsLoggedIn, domain, setUserObj, setToken } = globalContext;
+    const { domain, setUserObj, setToken, fetchData } = globalContext;
 
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -19,52 +19,77 @@ export default function SignUpScreen(props) {
     const navigation = useNavigation();
 
 
-    const handleLogIn = () => {
-        navigation.goBack();
-    };
+    const handleSignUp = async () => {
+        try {
+            let body = JSON.stringify({ 
+                "username": username, 
+                "email": email, 
+                "password": password, 
+                "confirm_password": confirmPassword
+            });
+    
+            console.log('Fetch Body:', body);
+    
+            // sign-up
+            let signUpResponse = await fetch(`${domain}/api/v1.0/user/signup/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: body
+            });
+    
+            if (!signUpResponse.ok) {
+                let errorResponse = await signUpResponse.json();
+                throw errorResponse;
+            }
+    
+            let signUpJson = await signUpResponse.json();
+            console.log('Sign Up Response:', signUpJson);
+    
+            // login after successful sign-up
+            let loginBody = JSON.stringify({
+                "username": username, 
+                "password": password
+            });
+    
+            console.log('Fetch Log In Body:', loginBody);
+    
+            let loginResponse = await fetch(`${domain}/api/v1.0/user/login/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: loginBody
+            });
+    
+            if (!loginResponse.ok) {
+                let loginError = await loginResponse.json();
+                throw loginError;
+            }
+    
+            let loginJson = await loginResponse.json();
+            console.log('Login Response:', loginJson);
+    
+            // set access token
+            setToken(loginJson.access);
+            console.log('User created successfully and logged in.');
+    
+            // fetch user data using the token
+            const user = await fetchData('api/v1.0/user/get-user/', 'GET');
+            console.log('User Data:', user);
+    
+            // set userObj in state
+            setUserObj(user);
 
-    const handleSignUp = () => {
-        console.log('Username:', username);
-        console.log('Email:', email);
-        console.log('Password:', password);
-        console.log('Confirm Password:', confirm);
-
-        if (password !== confirm) {
-            setError("Passwords do not match!");
-            return;
+    
+        } catch (signUpError) {
+            const errorMessages = Object.keys(signUpError).map(key => {
+                return `${key}: ${signUpError[key].join(', ')}`;
+            });
+            console.log(errorMessages);
+            setError(errorMessages);
         }
-
-
-        let body = JSON.stringify({ 
-            "username": username, 
-            "email": email, 
-            "password": password 
-        });
-        console.log('Fetch Body:', body);
-
-        console.log('Fetch URL:', `${domain}/api/v1.0/user/create-user/`);
-
-        fetch(`${domain}/api/v1.0/user/create-user/`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: body
-        })
-        .then(response => {
-            console.log('Fetch Response Status:', response.status);
-            return response.json();
-        })
-        .then(json => {
-            console.log('Fetch Response JSON:', json);
-            setUserObj(json);
-            setToken(json.access);
-            setIsLoggedIn(true);
-        })
-        .catch(error => {
-            console.error('Error during sign-up:', error);
-            Alert.alert('Error', 'Failed to sign up. Please try again.');
-        });
     };
 
     const dismissKeyboard = () => {

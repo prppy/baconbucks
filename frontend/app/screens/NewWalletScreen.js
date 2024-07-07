@@ -26,14 +26,7 @@ export default function NewWalletScreen(props) {
 
         console.log('Fetch URL:', `${domain}/api/v1.0/user/create-wallet/`);
 
-        fetch(`${domain}/api/v1.0/user/create-wallet/`, { 
-            method: 'POST' , 
-            headers: { 
-                'Content-Type': 'application/json' , 
-                'Authorization': 'Bearer ${userObj.access}' 
-            },
-            body: body
-        })
+        fetchData('api/v1.0/user/create-wallet', 'POST', body)
         .then(response => {
             console.log('Fetch Response Status:', response.status);
             return response.json();
