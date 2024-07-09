@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button, ScrollView} from "react-native";
 import moment from 'moment';
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-modal";
+import { Context } from "../components/GlobalContext";
 
 export default function ChallengesScreen(props) {
     const todayDate = moment().format('MMMM Do YYYY');
@@ -24,6 +25,11 @@ export default function ChallengesScreen(props) {
       };
     const toggleModal2 = () => setModal2Visible(!isModal2Visible);
     const toggleModal3 = () => setModal3Visible(!isModal3Visible);
+    
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -40,7 +46,7 @@ export default function ChallengesScreen(props) {
                 <Image source={require('../assets/images/quizroadmap.png')} style={styles.roadmap} />
                 <View style={styles.buttonContainer1}>
                     <TouchableOpacity onPress={toggleModal1}>
-                        <Ionicons name="location-sharp" size={50} color={colors.darkPink} />
+                        <Ionicons name="location-sharp" size={50} color={"#DF4B75"} />
                     </TouchableOpacity>
                     
                 </View>
@@ -48,13 +54,13 @@ export default function ChallengesScreen(props) {
 
                 <View style={styles.buttonContainer2}>
                     <TouchableOpacity onPress={toggleModal2}>
-                        <Ionicons name="location-sharp" size={50} color={colors.darkPink} />
+                        <Ionicons name="location-sharp" size={50} color={"#DF4B75"} />
                     </TouchableOpacity>
                 </View>
 
                 <View style={styles.buttonContainer3}>
                     <TouchableOpacity onPress={toggleModal3}>
-                        <Ionicons name="location-sharp" size={50} color={colors.darkPink} />
+                        <Ionicons name="location-sharp" size={50} color={"#DF4B75"} />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -100,18 +106,18 @@ export default function ChallengesScreen(props) {
     );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'center',
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         padding: 20,
     },
     challengebox: {
         width: '90%',
         padding: 20,
-        backgroundColor: '#f6dde7',
+        backgroundColor: themeColors.row,
         borderColor: '#ccc',
         borderRadius: 10,
         shadowColor: '#171717',
@@ -119,14 +125,14 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
-        marginTop: 10,
+        marginTop: 60,
         height: 120,
         alignItems: 'left',
       },
       quizbox: {
         width: '90%',
         padding: 20,
-        backgroundColor: '#f6dde7',
+        backgroundColor: themeColors.row,
         borderColor: '#ccc',
         borderRadius: 10,
         shadowColor: '#171717',
@@ -142,10 +148,11 @@ const styles = StyleSheet.create({
       dateText: {
         fontSize: 18,
         fontWeight: 'bold',
+        color: themeColors.headertext,
       },
       infoText: {
         fontSize: 16,
-        color: '#333',
+        color: themeColors.headertext,
         marginTop: 10,
       },
     buttonContainer1: {
@@ -165,9 +172,11 @@ const styles = StyleSheet.create({
     },
     headertext: {
         fontSize: 20,
-        marginRight: 235,
-        marginTop: 15,
         fontWeight: 'bold',
+        position: 'absolute',
+        top: 70,
+        left: 30,
+        color: themeColors.headertext,
     },
     roadmap: {
         width: '100%',
@@ -178,7 +187,7 @@ const styles = StyleSheet.create({
         width: 200, 
         height: 200,
         borderRadius: 10,
-        backgroundColor: colors.lightPink,
+        backgroundColor: '#F4D5E1',
         justifyContent: 'flex-start',
         alignItems: 'center',
         padding: 20,
@@ -201,7 +210,7 @@ const styles = StyleSheet.create({
         height: 30,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.darkPink,
+        backgroundColor: '#df4b75',
         borderRadius: 5,
     }
 });

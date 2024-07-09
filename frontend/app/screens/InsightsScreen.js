@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import PieChart from 'react-native-pie-chart';
 import colors from "../config/colors";
+import { Context } from "../components/GlobalContext";
 
 
 export default function InsightsScreen(props) {
     const navigation = useNavigation();
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     const handleSavings = () => {
         navigation.navigate("Earnings");
@@ -17,7 +22,7 @@ export default function InsightsScreen(props) {
 
     const widthAndHeight = 250;
     const series = [50, 30, 20];
-    const sliceColor = [colors.darkPink, '#c84369', '#e56e90'];
+    const sliceColor = ["#DF4B75", '#c84369', '#e56e90'];
 
     const [boxVisible, setBoxVisible] = useState(null);
 
@@ -36,7 +41,7 @@ export default function InsightsScreen(props) {
             <View style={styles.subheadercontainer}>
                 <TouchableOpacity
                 style={[styles.subheaderbtn,, {
-                    backgroundColor: boxVisible === 1 ? colors.darkPink : '#eb93ac'
+                    backgroundColor: boxVisible === 1 ? "#DF4B75" : '#eb93ac'
                   }]}
                 onPress={() => setBoxVisible(1)}
                 >
@@ -45,7 +50,7 @@ export default function InsightsScreen(props) {
                 <View style={styles.spacing}></View>
                 <TouchableOpacity
                 style={[styles.subheaderbtn,, {
-                    backgroundColor: boxVisible === 2 ? colors.darkPink : '#eb93ac'
+                    backgroundColor: boxVisible === 2 ? "#DF4B75" : '#eb93ac'
                   }]}
                 onPress={() => setBoxVisible(2)}
                 >
@@ -88,10 +93,10 @@ export default function InsightsScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     background: {
         flex: 1, 
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         justifyContent: "flex-start",  
         alignItems: "center", 
     },
@@ -120,12 +125,13 @@ const styles = StyleSheet.create({
         marginLeft: 15,
         marginTop: 10,
         fontWeight: 'bold',
+        color: themeColors.headertext,
     },
 
     box: {
         width: 170,
         height: 150, 
-        backgroundColor: '#f6dde7',
+        backgroundColor: themeColors.row,
         borderRadius: 10,
         shadowColor: '#171717',
         shadowOffset: { width: 0, height: 2 },
@@ -134,15 +140,18 @@ const styles = StyleSheet.create({
     },
     headertext: {
         fontSize: 20,
-        marginRight: 270,
-        marginTop: 15,
+        position: 'absolute',
+        top: 70,
+        left: 30,
         fontWeight: 'bold',
+        color: themeColors.headertext,
     },
 
     summarytext: {
         fontSize: 15,
         marginRight: 175,
-        marginTop: 10,
+        marginTop: 60,
+        color: themeColors.headertext,
     },
     subheadercontainer: {
         flexDirection: 'row',
@@ -152,10 +161,10 @@ const styles = StyleSheet.create({
     },
     spacing:{
         width: 7,
-        color: colors.lightPink,
+        color: themeColors.background
     },
     subheaderbtn: {
-        backgroundColor: colors.darkPink,
+        backgroundColor: themeColors.buttons,
         padding: 10,
         borderRadius: 5,
     },
@@ -166,14 +175,14 @@ const styles = StyleSheet.create({
     expensebox: {
         height: 50,
         width: '90%',
-        color: 'f6dde7',
+        color: themeColors.row,
         justifyContent: 'center',
         alignItems: 'flex-start',
         marginLeft: 10,
     },
     expensecontainer: {
         width: '90%',
-        backgroundColor: '#f6dde7',
+        backgroundColor: themeColors.row,
         shadowColor: '#171717',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
@@ -183,6 +192,7 @@ const styles = StyleSheet.create({
     },
     expensetext: {
         fontSize: 16,
+        color: themeColors.headertext,
     },
     separator: {
         width: '100%',

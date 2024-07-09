@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import colors from "../config/colors";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Context } from "../components/GlobalContext";
 
 export default function ResultsScreen(props) {
     const navigation = useNavigation();
@@ -12,6 +13,11 @@ export default function ResultsScreen(props) {
     const handleRetry = () => {
         navigation.replace('ChallengesScreen');
     };
+
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     return (
         <SafeAreaView style={styles.background}>
@@ -29,15 +35,15 @@ export default function ResultsScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     background: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
     },
     container: {
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         width: "90%",
         borderRadius: 20,
         padding: 20,
@@ -45,7 +51,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 50,
-        color: colors.darkPink,
+        color: themeColors.buttons,
     },
     textWrapper: {
         flexDirection: "row",
@@ -55,11 +61,11 @@ const styles = StyleSheet.create({
     },
     score: {
         fontSize: 100,
-        color: colors.darkPink,
+        color: themeColors.buttons,
         fontWeight: "bold",
     },
     btnReset: {
-        backgroundColor: colors.darkPink,
+        backgroundColor: themeColors.buttons,
         paddingHorizontal: 5,
         paddingVertical: 15,
         width: "50%",

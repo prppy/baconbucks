@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button, Animated, ScrollView } from "react-native";
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
 import data from "../assets/QuizData";
 import ProgressBar from "../assets/ProgressBar";
 import Questions from "../assets/Questions";
+import { Context } from "../components/GlobalContext";
 
 export default function QuizScreen(props) {
     const navigation = useNavigation();
     const allQuestions = data;
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [progress, setProgress] = useState(new Animated.Value(1));
@@ -129,7 +134,7 @@ export default function QuizScreen(props) {
                         style={[
                             styles.btnNext,
                             {
-                                backgroundColor: !currentOptionSelected ? "#cfcdcc" : colors.darkPink,
+                                backgroundColor: !currentOptionSelected ? "#cfcdcc" : "#DF4B75",
                             },
                         ]}
                         disabled={!currentOptionSelected}
@@ -146,10 +151,10 @@ export default function QuizScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     safeArea: {
         flex: 1,
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
     },
     container: {
         flex: 1,

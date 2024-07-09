@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext } from "react";
 import * as SecureStore from 'expo-secure-store';
 import { useColorScheme } from 'react-native';
+import colors from '../config/colors';
 
 const Context = createContext();
 
@@ -9,7 +10,7 @@ const Provider = ({ children }) => {
     const [userObj, setUserObj] = useState()
 
     const systemTheme = useColorScheme();
-    const [theme, setTheme] = useState(systemTheme);
+    const [isLightTheme, setIsLightTheme] = useState(systemTheme === 'light');
 
     const setToken = async (token) => {
         await SecureStore.setItemAsync('access_token', token);
@@ -95,12 +96,12 @@ const Provider = ({ children }) => {
     };
 
     const toggleTheme = () => {
-        setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+        setIsLightTheme(prevTheme => !prevTheme);
     };
 
     useEffect( () => { 
         initTest();
-        setTheme(systemTheme);
+        setIsLightTheme(systemTheme === 'light');
     }, [systemTheme]);
 
     const globalContext = {
@@ -109,7 +110,7 @@ const Provider = ({ children }) => {
         setUserObj,
         setToken,
         fetchData, 
-        theme, 
+        isLightTheme, 
         toggleTheme,
         getToken
     };

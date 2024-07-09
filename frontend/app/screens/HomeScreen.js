@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import React, { useState, useContext } from "react";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button, ScrollView} from "react-native";
+import moment from 'moment';
 import colors from "../config/colors";
+import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-modal";
+import { Context } from "../components/GlobalContext";
 
 
 export default function HomeScreen(props) {
@@ -25,18 +27,23 @@ export default function HomeScreen(props) {
         setIsVisible(false);
     }
 
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
+
     return (
         <SafeAreaView style={styles.background}>
             <Text style={styles.headertext}>Home</Text>
 
             <View style={styles.buttonContainer}>
                 <TouchableOpacity onPress={toggleModal}>
-                    <Ionicons name="add-circle" size={50} color={colors.darkPink} />
+                    <Ionicons name="add-circle" size={50} color={themeColors.buttons} />
                 </TouchableOpacity>
                 <Modal 
                     isVisible={isVisible} 
                     onBackdropPress={toggleModal}
-                    backdropColor="black"
+                    backdropColor={themeColors.backdrop}
                     backdropOpacity={0.3}
                 >
                     <View style={styles.modalContent}>
@@ -57,18 +64,20 @@ export default function HomeScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     background: {
         flex: 1, 
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         justifyContent: "flex-start",  
         alignItems: "center", 
     },
     headertext: {
         fontSize: 20,
-        marginRight: 270,
-        marginTop: 15,
+        position: 'absolute',
+        top: 70,
+        left: 30,
         fontWeight: 'bold',
+        color: themeColors.headertext,
     },
     buttonContainer: {
         position: 'absolute',
@@ -83,7 +92,7 @@ const styles = StyleSheet.create({
         width: 150, 
         height: 40,
         borderRadius: 5,
-        backgroundColor: colors.lightPink,
+        backgroundColor: '#F4D5E1',
         justifyContent: 'center',
         alignItems: 'flex-start',
         left: 100, 

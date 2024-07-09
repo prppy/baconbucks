@@ -7,7 +7,9 @@ import { Context } from '../components/GlobalContext';
 export default function NewWalletScreen(props) {
 
     const globalContext = useContext(Context);
-    const { userObj, domain, fetchData } = globalContext;
+    const { userObj, domain, fetchData, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     const [ walletName, setWalletName ] = useState("");
 
@@ -67,17 +69,17 @@ export default function NewWalletScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'left',
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         paddingHorizontal: 20,
         paddingVertical: 15,
     }, 
     inputContainer: {
-        width: '100%',
+        width: 350,
         backgroundColor: 'white',
         borderRadius: 5,
         marginBottom: 10,
@@ -88,6 +90,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         marginBottom: 10,
+        color: themeColors.headertext,
     },
     inputtext: {
         fontSize: 15,
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
     savebutn: {
         width: 100,
         height: 30,
-        backgroundColor: colors.darkPink,
+        backgroundColor: themeColors.buttons,
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
@@ -138,7 +141,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     savetext: {
-        color: 'white',
+        color: themeColors.whitetext,
         fontSize: 15,
     }
 });

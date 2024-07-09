@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import colors from "../config/colors";
 import axios from 'axios';
 import moment from 'moment';
+import { Context } from "../components/GlobalContext";
 
 export default function NewReminderScreen(props) {
     const [selectedDate, setSelectedDate] = useState(null);
@@ -97,6 +98,10 @@ export default function NewReminderScreen(props) {
         setTimePickerVisible(true);
     };
 
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -156,19 +161,19 @@ export default function NewReminderScreen(props) {
 }
 
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'left',
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         paddingHorizontal: 20,
         paddingVertical: 15,
     },
     text: {
         fontFamily: "System",
         fontSize: 15,
-        color: colors.darkPink,
+        color: themeColors.headertext,
     },
     buttonText: {
         fontSize: 18,
@@ -179,7 +184,7 @@ const styles = StyleSheet.create({
     date: {
         fontFamily: "System",
         fontSize: 15,
-        color: colors.darkPink,
+        color: 'black',
     },
     dateBox: {
         backgroundColor: 'white',
@@ -191,7 +196,7 @@ const styles = StyleSheet.create({
         width: '100%',
     },
     dateText: {
-        color: colors.darkPink,
+        color: 'black',
         fontSize: 15,
     },
     selectDateButtonText: {
@@ -213,7 +218,7 @@ const styles = StyleSheet.create({
     savebutn: {
         width: 100,
         height: 30,
-        backgroundColor: colors.darkPink,
+        backgroundColor: themeColors.buttons,
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
@@ -222,6 +227,6 @@ const styles = StyleSheet.create({
         left: 210,
     },
     savetext: {
-        color: 'white',
+        color: themeColors.whitetext,
     }
 });

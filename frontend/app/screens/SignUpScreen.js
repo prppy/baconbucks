@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, Keyboard, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
-import colors from '../config/colors';
+// import colors from '../config/colors';
 import { Context } from '../components/GlobalContext';
 
 export default function SignUpScreen(props) {
@@ -184,7 +184,7 @@ export default function SignUpScreen(props) {
 const styles = StyleSheet.create({
     background: {
         flex: 1, 
-        backgroundColor: colors.darkPink,
+        backgroundColor: "#DF4B75",
         justifyContent: "center",  
         alignItems: "center", 
     },
@@ -199,13 +199,13 @@ const styles = StyleSheet.create({
     text: {
         fontFamily: "System", 
         fontSize: 15, 
-        color: colors.lightPink, 
+        color: "#F4D5E1", 
     }, 
 
     username: {
         fontFamily: "System", 
         fontSize: 15,
-        color: colors.darkPink, 
+        color: "#DF4B75", 
     }, 
 
     padding: {
@@ -222,14 +222,14 @@ const styles = StyleSheet.create({
         width: 300, 
         height: 30,
         borderRadius: 4, 
-        backgroundColor: colors.lightPink,
+        backgroundColor: "#F4D5E1",
         marginBottom: 20
     },
 
     loginbutn: {
         width: 100, 
         height: 30,
-        backgroundColor: colors.lightPink,
+        backgroundColor: "#F4D5E1",
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
@@ -238,6 +238,6 @@ const styles = StyleSheet.create({
 
     logintext: {
         fontSize: 15, 
-        color: colors.darkPink,
+        color: "#DF4B75",
     }
 })

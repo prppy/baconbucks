@@ -1,8 +1,9 @@
-import React, { useState} from "react";
+import React, { useState, useContext} from "react";
 import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInput, TouchableOpacity, Button, FlatList, KeyboardAvoidingView, Keyboard } from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../config/colors";
 import Modal from 'react-native-modal';
+import { Context } from "../components/GlobalContext";
 
 export default function NewTransactionScreen(props) {
     const [number, setNumber] = useState('');
@@ -12,7 +13,7 @@ export default function NewTransactionScreen(props) {
 
     const handleInputChange = (text) => {
         // Regular expression to allow numbers with up to 2 decimal places
-        const regex = /^\d*\.?\d{0,2}$/;
+        const regex = /^#ccc\d*\.?\d{0,2}$/;
     
         // Validate the input
         if (regex.test(text)) {
@@ -50,6 +51,11 @@ export default function NewTransactionScreen(props) {
         Keyboard.dismiss();
     };
 
+    const globalContext = useContext(Context);
+    const { userObj, isLightTheme } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const styles = createStyles(themeColors);
+
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <KeyboardAvoidingView style={styles.container}>
@@ -61,7 +67,6 @@ export default function NewTransactionScreen(props) {
                     onChangeText={handleInputChange}
                     keyboardType="numeric"
                     placeholder="Enter number"
-                    placeholdertext={styles.placeholdertext}
                 />
                 </View>
                 
@@ -98,12 +103,12 @@ export default function NewTransactionScreen(props) {
     );
 }
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
         alignItems: 'left',
-        backgroundColor: colors.lightPink,
+        backgroundColor: themeColors.background,
         paddingHorizontal: 20,
         paddingVertical: 15,
     }, 
@@ -119,16 +124,18 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 18,
         marginBottom: 10,
+        color: themeColors.headertext,
     },
     inputtext: {
         fontSize: 15,
         marginLeft: 10,
+        color: 'gray',
     },
     placeholdertext: {
        paddingHorizontal: 10,
-        borderRadius: 5,
-        fontSize: 15,
-        color: '#ccc', 
+       borderRadius: 5,
+       fontSize: 15,
+       color: '', 
     },
     selectedOption: {
         flexDirection: 'row',
@@ -159,7 +166,7 @@ const styles = StyleSheet.create({
     savebutn: {
         width: 100,
         height: 30,
-        backgroundColor: colors.darkPink,
+        backgroundColor: themeColors.buttons,
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     savetext: {
-        color: 'white',
+        color: themeColors.whitetext,
         fontSize: 15,
     }
 });
