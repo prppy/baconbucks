@@ -1,10 +1,11 @@
 import React, { useState, useContext} from "react";
-import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInput, TouchableOpacity, Button, FlatList, KeyboardAvoidingView, Keyboard } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInput, TouchableOpacity, Button, FlatList, KeyboardAvoidingView, Keyboard} from "react-native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../config/colors";
 import Modal from 'react-native-modal';
 import { Context } from "../components/GlobalContext";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import moment from 'moment';
 
 export default function NewTransactionScreen(props) {
     const [number, setNumber] = useState('');
@@ -35,13 +36,14 @@ export default function NewTransactionScreen(props) {
 
     const handleInputChange = (text) => {
         // Regular expression to allow numbers with up to 2 decimal places
-        const regex = /^#ccc\d*\.?\d{0,2}$/;
+        const regex = /^\d*\.?\d{0,2}$/;
     
         // Validate the input
         if (regex.test(text)) {
-          setNumber(text);
+            setNumber(text);
         }
-      };
+    };
+    
 
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
@@ -81,21 +83,22 @@ export default function NewTransactionScreen(props) {
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <KeyboardAvoidingView style={styles.container}>
-            <Text style={styles.text}>Date</Text>
-            <TouchableOpacity style={styles.inputContainer} onPress={handleDatePress}>
-                {selectedDate ? (
-                    <Text style={styles.dateText}>{moment(selectedDate).format("MMMM D, YYYY")}</Text>
-                ) : (
-                    <Text style={styles.selectDateButtonText}>Select a date</Text>
-                )}
-            </TouchableOpacity>
-            <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                date={selectedDate || new Date()}
-                onConfirm={handleDateConfirm}
-                onCancel={hideDatePicker}
-            />
+                <Text style={styles.text}>Date</Text>
+                <TouchableOpacity style={styles.inputContainer} onPress={handleDatePress}>
+                    {selectedDate ? (
+                        <Text style={styles.dateText}>{moment(selectedDate).format("MMMM D, YYYY")}</Text>
+                    ) : (
+                        <Text style={styles.selectDateButtonText}>Select a date</Text>
+                    )}
+                </TouchableOpacity>
+                <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    date={selectedDate || new Date()}
+                    onConfirm={handleDateConfirm}
+                    onCancel={hideDatePicker}
+                />
+
                 <Text style={styles.text}>Amount</Text>
                 <View style={styles.inputContainer}>
                 <TextInput
@@ -159,14 +162,13 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'left',
     },
     text: {
-        fontSize: 18,
+        fontSize: 14,
         marginBottom: 5,
         color: themeColors.headertext,
     },
     inputtext: {
         fontSize: 15,
         marginLeft: 10,
-        color: 'gray',
     },
     placeholdertext: {
        paddingHorizontal: 10,
@@ -219,6 +221,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     dateText: {
         color: 'black',
         fontSize: 15,
+        marginLeft: 10,
     },
     selectDateButtonText: {
         color: '#ccc',
