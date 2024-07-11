@@ -10,7 +10,7 @@ const palettes = {
 
 export default colors = {
     light: {
-        background: '#F4D5E1', //light pink to dark pink
+        background: '#F4D5E1', //light pink to black
         row: '#f6dde7', //pale pink to dark gray for containers 
         headertext: 'black', //black to white
         buttons: '#df4b75', //dark pink to light pink

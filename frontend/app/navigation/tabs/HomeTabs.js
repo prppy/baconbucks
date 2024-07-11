@@ -5,7 +5,7 @@ import colors from '../../config/colors';
 import { HomeStack } from '../stacks/HomeStack';
 import { RemindersStack } from '../stacks/RemindersStack';
 import { SettingsStack } from '../stacks/SettingsStack';
-import { ChallengesStack } from '../stacks/ChallengesStack';
+import { MissionsStack } from "../stacks/MissionsStack";
 import CommunityScreen from '../../screens/CommunityScreen';
 import { InsightsStack } from '../stacks/InsightsStack';
 
@@ -25,8 +25,8 @@ export const HomeTabs = () => {
           iconName = focused ? 'pie-chart' : 'pie-chart-outline';
         } else if (route.name === 'Reminders') {
           iconName = focused ? 'notifications' : 'notifications-outline';
-        } else if (route.name === 'Challenges') {
-          iconName = focused ? 'game-controller' : 'game-controller-outline'
+        } else if (route.name === 'Missions') {
+          iconName = focused ? 'rocket' : 'rocket-outline'
         } else if (route.name === 'Community') {
           iconName = focused ? 'people' : 'people-outline';
         } else if (route.name === 'Settings') {
@@ -41,7 +41,7 @@ export const HomeTabs = () => {
       <Tab.Screen name="Home" options={{ headerShown: false }} component={HomeStack} />
       <Tab.Screen name="Insights" options={{ headerShown: false }} component={InsightsStack} />
       <Tab.Screen name="Reminders" options={{ headerShown: false }} component={RemindersStack} />
-      <Tab.Screen name="Challenges" options={{ headerShown: false }} component={ChallengesStack} />
+      <Tab.Screen name="Missions" options={{ headerShown: false }} component={MissionsStack} />
       <Tab.Screen name="Community" options={{ headerShown: false }} component={CommunityScreen} />
       <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
     </Tab.Navigator>

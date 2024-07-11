@@ -26,13 +26,9 @@ export default function SettingsScreen(props) {
         setuserObj();
     }; 
 
-    const [isModal1Visible, setModal1Visible] = useState(false);
-    const [isModal2Visible, setModal2Visible] = useState(false);
-    const [isModal3Visible, setModal3Visible] = useState(false);
-
-    const toggleModal1 = () => setModal1Visible(!isModal1Visible); //username
-    const toggleModal2 = () => setModal2Visible(!isModal2Visible); //email
-    const toggleModal3 = () => setModal3Visible(!isModal3Visible); //password
+    const handleMyAccount = () => {
+        navigation.navigate("My Account");
+    };
 
     return (
         <SafeAreaView style={styles.background}>
@@ -40,112 +36,21 @@ export default function SettingsScreen(props) {
 
             {/* Profile pic */}
             <View style={styles.pfp}></View>
-            <TouchableOpacity style={styles.editpfp}>
-                <Ionicons 
-                    name="pencil" 
-                    size={18} 
-                    color={themeColors.whitetext} />
-            </TouchableOpacity>
+
+            <Text style={styles.username}>{userObj.username}</Text>
             
-            {/* Username */}
+            {/* My Account */}
             <View style={styles.row}>
-                <Text style={styles.rowheader}>username</Text>
-                <Text style={styles.rowcontent}>{userObj.username}</Text>
-                <TouchableOpacity style={styles.button} onPress={toggleModal1}>
+                <Text style={styles.rowheader}>my account</Text>
+                <Text style={styles.rowcontent}>profile</Text>
+                <TouchableOpacity style={styles.button} onPress={handleMyAccount}>
                     <Ionicons 
-                        name='pencil'
+                        name='chevron-forward-sharp'
                         size={20}
                         color={themeColors.settingsicons}
                     />
                 </TouchableOpacity>
             </View> 
-            <Modal 
-            isVisible={isModal1Visible} 
-            onBackdropPress={toggleModal1}
-            >
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalHeader}>New username</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Type here"
-                        // value={username}
-                        // onChangeText={setnewusername}
-                        secureTextEntry="false"
-                        autoCapitalize='none'
-                        maxLength={50}
-                    />
-                    <TouchableOpacity style={styles.savebtn}>
-                        <Text style={styles.btntext}>Save</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
-
-            {/* Email */}
-            <View style={styles.row}>
-                <Text style={styles.rowheader}>email</Text>
-                <Text style={styles.rowcontent}>{userObj.email}</Text>
-                <TouchableOpacity style={styles.button} onPress={toggleModal2}>
-                    <Ionicons 
-                        name='pencil'
-                        size={20}
-                        color={themeColors.settingsicons}
-                    />
-                </TouchableOpacity>
-            </View> 
-            <Modal 
-            isVisible={isModal2Visible} 
-            onBackdropPress={toggleModal2}
-            >
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalHeader}>New email</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Type here"
-                        // value={username}
-                        // onChangeText={setnewusername}
-                        secureTextEntry="false"
-                        autoCapitalize='none'
-                        maxLength={100}
-                    />
-                    <TouchableOpacity style={styles.savebtn}>
-                        <Text style={styles.btntext}>Save</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
-
-            {/* Password */}
-            <View style={styles.row}>
-                <Text style={styles.rowheader}>password</Text>
-                <Text style={styles.rowcontent}>{userObj.password}</Text>
-                
-                <TouchableOpacity style={styles.button} onPress={toggleModal3}>
-                    <Ionicons 
-                        name='pencil'
-                        size={20}
-                        color={themeColors.settingsicons}
-                    />
-                </TouchableOpacity>
-            </View> 
-            <Modal 
-            isVisible={isModal3Visible} 
-            onBackdropPress={toggleModal3}
-            >
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalHeader}>New password</Text>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Type here"
-                        // value={username}
-                        // onChangeText={setnewusername}
-                        secureTextEntry="false"
-                        autoCapitalize='none'
-                        maxLength={50}
-                    />
-                    <TouchableOpacity style={styles.savebtn}>
-                        <Text style={styles.btntext}>Save</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
 
             {/* Dark mode */}
             <View style={styles.row}>
@@ -172,19 +77,6 @@ export default function SettingsScreen(props) {
                     />
                 </TouchableOpacity>
             </View> 
-
-            {/* Delete my account */}
-            <View style={styles.row}>
-                <Text style={styles.rowheader}>my account</Text>
-                <Text style={styles.rowcontent}>delete account</Text>
-                <TouchableOpacity style={styles.button}>
-                    <Ionicons 
-                        name='trash-outline'
-                        size={20}
-                        color={themeColors.settingsicons}
-                    />
-                </TouchableOpacity>
-            </View>
 
             {/* Logout */}
             <TouchableOpacity style={styles.logoutbtn} onPress={handleLogOut}>
@@ -223,9 +115,9 @@ const createStyles = (themeColors) => StyleSheet.create({
         height: 65,
     },
     pfp: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
+        width: 110,
+        height: 110,
+        borderRadius: 55,
         backgroundColor: '#ccc',
         marginTop: 70,
         shadowColor: '#171717',
@@ -233,16 +125,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         shadowOpacity: 0.2,
         shadowRadius: 2,
         elevation: 5,
-    },
-    editpfp: {
-        width: 26,
-        height: 26,
-        borderRadius: 13,
-        backgroundColor: themeColors.buttons,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 90,
-        bottom: 30,
+        marginBottom: 10,
     },
     headertext: {
         fontSize: 20,
@@ -329,5 +212,10 @@ const createStyles = (themeColors) => StyleSheet.create({
         width: '100%',
         marginTop: 10,
         padding: 10,
-    }
+    },
+    username: {
+        fontSize: 24,
+        marginBottom: 10,
+        color: themeColors.headertext,
+    },
 })
