@@ -4,12 +4,34 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import colors from "../config/colors";
 import Modal from 'react-native-modal';
 import { Context } from "../components/GlobalContext";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 export default function NewTransactionScreen(props) {
     const [number, setNumber] = useState('');
-    
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [isDatePickerVisible, setDatePickerVisible] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
+
+    const showDatePicker = () => {
+        setDatePickerVisible(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisible(false);
+    };
+
+    const handleDateConfirm = (date) => {
+        if (date) {
+            setSelectedDate(date);
+        }
+        hideDatePicker();
+    };
+
+    const handleDatePress = () => {
+        // Show the date picker when the date area is pressed
+        setDatePickerVisible(true);
+    };
 
     const handleInputChange = (text) => {
         // Regular expression to allow numbers with up to 2 decimal places
@@ -59,6 +81,21 @@ export default function NewTransactionScreen(props) {
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <KeyboardAvoidingView style={styles.container}>
+            <Text style={styles.text}>Date</Text>
+            <TouchableOpacity style={styles.inputContainer} onPress={handleDatePress}>
+                {selectedDate ? (
+                    <Text style={styles.dateText}>{moment(selectedDate).format("MMMM D, YYYY")}</Text>
+                ) : (
+                    <Text style={styles.selectDateButtonText}>Select a date</Text>
+                )}
+            </TouchableOpacity>
+            <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                date={selectedDate || new Date()}
+                onConfirm={handleDateConfirm}
+                onCancel={hideDatePicker}
+            />
                 <Text style={styles.text}>Amount</Text>
                 <View style={styles.inputContainer}>
                 <TextInput
@@ -123,7 +160,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     text: {
         fontSize: 18,
-        marginBottom: 10,
+        marginBottom: 5,
         color: themeColors.headertext,
     },
     inputtext: {
@@ -135,7 +172,7 @@ const createStyles = (themeColors) => StyleSheet.create({
        paddingHorizontal: 10,
        borderRadius: 5,
        fontSize: 15,
-       color: '', 
+       color: '#ccc', 
     },
     selectedOption: {
         flexDirection: 'row',
@@ -165,7 +202,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     savebutn: {
         width: 100,
-        height: 30,
+        height: 40,
         backgroundColor: themeColors.buttons,
         borderRadius: 4,
         alignItems: "center",
@@ -178,5 +215,14 @@ const createStyles = (themeColors) => StyleSheet.create({
     savetext: {
         color: themeColors.whitetext,
         fontSize: 15,
-    }
+    },
+    dateText: {
+        color: 'black',
+        fontSize: 15,
+    },
+    selectDateButtonText: {
+        color: '#ccc',
+        fontSize: 15,
+        paddingHorizontal: 10,
+    },
 });

@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-modal";
 import { Context } from "../components/GlobalContext";
 
-export default function ChallengesScreen(props) {
+export default function MissionsScreen(props) {
     const todayDate = moment().format('MMMM Do YYYY');
     const navigation = useNavigation();
     const handleQuiz = (day) => {
@@ -33,7 +33,7 @@ export default function ChallengesScreen(props) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Text style={styles.headertext}>Challenges</Text>
+            <Text style={styles.headertext}>Missions</Text>
             
             <View style={styles.challengebox}>
                 <Text style={styles.dateText}>{todayDate}</Text>
