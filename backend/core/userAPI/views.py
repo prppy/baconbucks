@@ -5,6 +5,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User, Wallet
 from .serializers import UserSerializer, WalletSerializer, UserUpdateSerializer
+from logAPI.models import Transaction
+from logAPI.serializers import TransactionSerializer
 
 # Create your views here.
 
@@ -105,20 +107,16 @@ class WalletCreateView(APIView):
         return Response(wallet_serializer.errors, status=400)
     
 class WalletDetailView(APIView):
-    # get a specific wallet of current user
+    # get all wallets of current user
     def get(self, request, format=None):
         user = request.user
-        name = request.data.get('name')
-        
-        if not name:
-            return Response('Wallet name is required', status=400)
         
         try:
-            wallet = Wallet.objects.get(user=user, name=name)
-            wallet_serializer = WalletSerializer(wallet)
+            wallets = Wallet.objects.filter(user=user)
+            wallet_serializer = WalletSerializer(wallets, many=True)
             return Response(wallet_serializer.data, status=200)
         except Wallet.DoesNotExist:
-            return Response('Wallet not found', status=404)
+            return Response('Wallet not found', status=404)    
     
 class WalletDeleteView(APIView):
     # delete current wallet
