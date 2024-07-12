@@ -18,7 +18,7 @@ class Transaction(models.Model):
     ]
 
     TYPE_CHOICES = [
-        ("SP", "Spending"), 
+        ("EA", "Earning"), 
         ("EX", "Expense")
     ]
 

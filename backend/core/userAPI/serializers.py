@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 
 from .models import User, Wallet
+from logAPI.models import Transaction
 from logAPI.serializers import ReminderSerializer, TransactionSerializer
 from quizAPI.serializers import PlaySerializer
 
@@ -24,6 +25,10 @@ class WalletSerializer(serializers.ModelSerializer):
     def get_balance(self, obj):
         return obj.calculate_balance()
     
+    def get_transactions(self, obj):
+        transactions = Transaction.objects.filter(wallet=obj).order_by('-date')[:5]
+        return TransactionSerializer(transactions, many=True).data
+    
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         min_length=8,
@@ -34,9 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
         write_only=True
     )
     bacoin = serializers.SerializerMethodField()
-    wallets = WalletSerializer(many=True, read_only=True)
-    reminders = ReminderSerializer(many=True, read_only=True)
-    plays = PlaySerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -72,7 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'wallets', 'reminders', 'plays', 'bacoin')
+        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'bacoin')
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, validators=[validate_password])
