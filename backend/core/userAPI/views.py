@@ -25,7 +25,7 @@ class UserSignUpView(APIView):
             user = user_serializer.save()
 
             # create the user's first wallet!
-            Wallet.objects.create(user=user.id, name="Wallet #1")
+            Wallet.objects.create(user=user, name="Wallet #1")
 
             return Response("User created successfully", status=201)
         
