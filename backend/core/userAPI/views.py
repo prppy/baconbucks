@@ -110,13 +110,13 @@ class WalletDetailView(APIView):
     # get all wallets of current user
     def get(self, request, format=None):
         user = request.user
-        
+
         try:
             wallets = Wallet.objects.filter(user=user)
             wallet_serializer = WalletSerializer(wallets, many=True)
             return Response(wallet_serializer.data, status=200)
         except Wallet.DoesNotExist:
-            return Response('Wallet not found', status=404)    
+            return Response('Wallet not found', status=404)
     
 class WalletDeleteView(APIView):
     # delete current wallet

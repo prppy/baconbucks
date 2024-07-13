@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
+from datetime import date
 
 from .models import User, Wallet
 from logAPI.models import Transaction
@@ -9,25 +10,20 @@ from quizAPI.serializers import PlaySerializer
 # Create your serializers here.
 
 class WalletSerializer(serializers.ModelSerializer):
-    transactions = TransactionSerializer(many=True, read_only=True)
+    transactions = serializers.SerializerMethodField()
     balance = serializers.SerializerMethodField()
 
     class Meta:
         model = Wallet
-        fields = ('id', 'name', 'user', 'transactions', 'balance')
+        fields = ['id', 'name', 'user', 'transactions', 'balance']
 
-    def create(self, validated_data):
-        user = validated_data.pop('user')
-        name = validated_data.get('name')
-        instance = Wallet.objects.create(user=user, name=name)
-        return instance
+    def get_transactions(self, obj):
+        today = date.today()
+        transactions = obj.transactions.filter(date__lte=today).order_by('-date')[:5]
+        return TransactionSerializer(transactions, many=True).data
 
     def get_balance(self, obj):
         return obj.calculate_balance()
-    
-    def get_transactions(self, obj):
-        transactions = Transaction.objects.filter(wallet=obj).order_by('-date')[:5]
-        return TransactionSerializer(transactions, many=True).data
     
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
