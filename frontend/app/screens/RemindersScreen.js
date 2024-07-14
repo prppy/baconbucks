@@ -16,9 +16,10 @@ export default function RemindersScreen(props) {
     };
 
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
 
     const [selectedDate, setSelectedDate] = useState(null);
@@ -90,10 +91,11 @@ export default function RemindersScreen(props) {
 }
 
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: themeColors.background,
+        alignItems: 'flex-start',
     },
     calendarContainer: {
         flex: 1,
@@ -104,6 +106,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 2,
+        paddingLeft: 20,
     },
     buttonContainer: {
         position: 'absolute',
@@ -135,13 +138,13 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'center',
     },
     selectedDateText: {
-        fontSize: 16,
-        marginBottom: 10,
+        fontSize: fontSizes.sixteen,
+        marginBottom: 0,
         marginLeft: 20,
         color: themeColors.headertext,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         position: 'absolute',
         top: 70,
         left: 30,
@@ -149,10 +152,9 @@ const createStyles = (themeColors) => StyleSheet.create({
         color: themeColors.headertext,
     },
     fetchedreminders: {
-        marginBottom: 20,
-        fontSize: 14,
         marginBottom: 280,
-        marginRight: 145,
+        fontSize: fontSizes.fourteen,
         color: themeColors.headertext,
+        paddingLeft: 20,
     }
 });

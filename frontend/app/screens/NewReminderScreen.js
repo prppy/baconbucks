@@ -99,9 +99,10 @@ export default function NewReminderScreen(props) {
     };
 
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -161,7 +162,7 @@ export default function NewReminderScreen(props) {
 }
 
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -172,18 +173,18 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     text: {
         fontFamily: "System",
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         color: themeColors.headertext,
     },
     buttonText: {
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'center',
     },
     date: {
         fontFamily: "System",
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         color: 'black',
     },
     dateBox: {
@@ -197,11 +198,11 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     dateText: {
         color: 'black',
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
     },
     selectDateButtonText: {
         color: '#ccc',
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
     },
     textbox: {
         alignContent: "center",
@@ -228,5 +229,6 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     savetext: {
         color: themeColors.whitetext,
+        fontSize: fontSizes.fourteen,
     }
 });
