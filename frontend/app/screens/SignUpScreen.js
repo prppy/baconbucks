@@ -200,12 +200,16 @@ const styles = StyleSheet.create({
         fontFamily: "System", 
         fontSize: 15, 
         color: "#F4D5E1", 
+        marginLeft: 'auto',
+        marginRight: 'auto',
     }, 
 
     username: {
         fontFamily: "System", 
         fontSize: 15,
         color: "#DF4B75", 
+        marginLeft: 'auto',
+        marginRight: 'auto',
     }, 
 
     padding: {
@@ -223,7 +227,8 @@ const styles = StyleSheet.create({
         height: 30,
         borderRadius: 4, 
         backgroundColor: "#F4D5E1",
-        marginBottom: 20
+        marginBottom: 20,
+        textAlign: 'center',
     },
 
     loginbutn: {
@@ -233,7 +238,9 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         alignItems: "center",
         justifyContent: "center",
-        marginBottom: 10
+        marginBottom: 10,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     }, 
 
     logintext: {

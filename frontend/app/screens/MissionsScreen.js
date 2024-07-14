@@ -27,9 +27,10 @@ export default function MissionsScreen(props) {
     const toggleModal3 = () => setModal3Visible(!isModal3Visible);
     
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     return (
         <SafeAreaView style={styles.container}>
@@ -106,7 +107,7 @@ export default function MissionsScreen(props) {
     );
 };
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -128,8 +129,8 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginTop: 60,
         height: 120,
         alignItems: 'left',
-      },
-      quizbox: {
+    },
+    quizbox: {
         width: '90%',
         padding: 20,
         backgroundColor: themeColors.row,
@@ -144,34 +145,34 @@ const createStyles = (themeColors) => StyleSheet.create({
         height: 380,
         alignItems: 'left',
         position: 'relative',
-      },
-      dateText: {
-        fontSize: 18,
+    },
+    dateText: {
+        fontSize: fontSizes.eighteen,
         fontWeight: 'bold',
         color: themeColors.headertext,
-      },
-      infoText: {
-        fontSize: 16,
+    },
+    infoText: {
+        fontSize: fontSizes.sixteen,
         color: themeColors.headertext,
         marginTop: 10,
-      },
+    },
     buttonContainer1: {
         position: 'absolute',
-        top: 120,
+        top: 132,
         right: 220,
     },
     buttonContainer2: {
         position: 'absolute',
-        top: 200,
+        top: 210,
         right: 160,
     },
     buttonContainer3: {
         position: 'absolute',
-        top: 280,
+        top: 290,
         right: 100,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         fontWeight: 'bold',
         position: 'absolute',
         top: 70,
@@ -184,8 +185,8 @@ const createStyles = (themeColors) => StyleSheet.create({
         bottom: 50,
     },
     modalContent: {
-        width: 200, 
-        height: 200,
+        width: fontSizes.twohundred, 
+        height: fontSizes.twohundred,
         borderRadius: 10,
         backgroundColor: '#F4D5E1',
         justifyContent: 'flex-start',
@@ -196,13 +197,13 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     btntext: {
         color: 'white',
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
     },
     modalHeader: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
     },
     modaltext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         padding: 10,
     },
     playbtn: {
@@ -212,5 +213,6 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#df4b75',
         borderRadius: 5,
+        marginTop: 'auto',
     }
 });

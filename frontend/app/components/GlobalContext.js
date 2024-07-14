@@ -21,17 +21,29 @@ const Provider = ({ children }) => {
         eighteen: 18,
         twenty: 20,
         twentyfour: 24,
+        twohundred: 200, //to adjust width & height of modal
     };
 
     const getLargerFontSizes = () => {
         const largerFontSizes = {};
         for (const key in defaultFontSizes) {
             if (defaultFontSizes.hasOwnProperty(key)) {
-                largerFontSizes[key] = defaultFontSizes[key] + 4;
+                const originalSize = defaultFontSizes[key];
+                let adjustedSize = originalSize;
+    
+                // Adjust font size based on specific conditions
+                if (originalSize === 200) {
+                    adjustedSize += 30; // Add 30 to font size 200
+                } else {
+                    adjustedSize += 4; // Default adjustment for other sizes
+                }
+    
+                largerFontSizes[key] = adjustedSize;
             }
         }
         return largerFontSizes;
     };
+    
 
     const setToken = async (token) => {
         await SecureStore.setItemAsync('access_token', token);
