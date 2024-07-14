@@ -76,9 +76,10 @@ export default function NewTransactionScreen(props) {
     };
 
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -143,7 +144,7 @@ export default function NewTransactionScreen(props) {
     );
 }
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'flex-start',
@@ -162,18 +163,18 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'left',
     },
     text: {
-        fontSize: 14,
+        fontSize: fontSizes.fourteen,
         marginBottom: 5,
         color: themeColors.headertext,
     },
     inputtext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         marginLeft: 10,
     },
     placeholdertext: {
        paddingHorizontal: 10,
        borderRadius: 5,
-       fontSize: 15,
+       fontSize: fontSizes.fifteen,
        color: '#ccc', 
     },
     selectedOption: {
@@ -183,7 +184,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     selectedOptionLabel: {
         marginLeft: 10,
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
     },
     modalContent: {
         backgroundColor: 'white',
@@ -200,7 +201,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     optionLabel: {
         marginLeft: 10,
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
     },
     savebutn: {
         width: 100,
@@ -216,16 +217,16 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     savetext: {
         color: themeColors.whitetext,
-        fontSize: 15,
+        fontSize: fontSizes.fourteen,
     },
     dateText: {
         color: 'black',
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         marginLeft: 10,
     },
     selectDateButtonText: {
         color: '#ccc',
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         paddingHorizontal: 10,
     },
 });
