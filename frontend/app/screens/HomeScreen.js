@@ -23,9 +23,10 @@ export default function HomeScreen(props) {
     }
 
     const globalContext = useContext(Context);
-    const { userObj, domain, fetchData, isLightTheme } = globalContext;
+    const { userObj, domain, fetchData, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
     const [ walletName, setWalletName ] = useState("");
 
     const handleNewWallet = () => {
@@ -67,52 +68,57 @@ export default function HomeScreen(props) {
                 <Text style={styles.headertext}>Home</Text>
                 
                 <View style={styles.section}>
-                    <Text style={styles.sectionheader}>Wallets</Text>
-                    <TouchableOpacity style={styles.addwallet} onPress={toggleModal}>
-                        <Ionicons name="add-circle" size={25} color={themeColors.buttons} />
-                    </TouchableOpacity> 
-                    <View style={styles.separator} />
-                    <Text style={styles.walletname}>Wallet 1</Text>
-                
-                    <Modal 
-                        isVisible={isVisible} 
-                        onBackdropPress={toggleModal}
-                        backdropColor={themeColors.backdrop}
-                        backdropOpacity={0.3}
-                    >
-                        <View style={styles.modalContent}>
-                            <Text style={styles.modalHeader}>New Wallet</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Type here"
-                                // value={wallet}
-                                // onChangeText={setnewwallet}
-                                secureTextEntry="false"
-                                autoCapitalize='none'
-                                maxLength={50}
-                            />
-                            <TouchableOpacity style={styles.savebtn}>
-                                <Text style={styles.btntext}>Save</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Modal>
+                    <View style={styles.headersection}>
+                        <Text style={styles.sectionheader}>Wallet 1</Text>
+                        <TouchableOpacity style={styles.viewwallet}>
+                            <Ionicons name="folder-open-outline" size={20} color={themeColors.row} />
+                        </TouchableOpacity> 
+                        <TouchableOpacity style={styles.addtransaction} onPress={handleNewTransaction}>
+                            <Ionicons name="add" size={20} color={themeColors.row} />
+                        </TouchableOpacity> 
+                    </View>
+
+                    <View style={styles.transactionssection}>
+                        <Text style={styles.walletname}>Transaction 1</Text>
+                        <View style={styles.separator} />
+                        <Text style={styles.walletname}>Transaction 2</Text>
+                        <View style={styles.separator} />
+                        <Text style={styles.walletname}>Transaction 3</Text>
+                    </View>
                 </View>
                 
-                <View style={styles.section}>
-                    <Text style={styles.sectionheader}>Transactions</Text>
-                    <TouchableOpacity style={styles.addwallet} onPress={handleNewTransaction}>
-                        <Ionicons name="add-circle" size={25} color={themeColors.buttons} />
-                    </TouchableOpacity> 
-                    <View style={styles.separator} />
-                    <Text style={styles.walletname}>Expense XXX</Text>
-                </View>
+                <TouchableOpacity style={styles.addwallet} onPress={toggleModal}>
+                    <Ionicons name="add-circle" size={35} color={themeColors.buttons} />
+                </TouchableOpacity> 
+                <Modal 
+                    isVisible={isVisible} 
+                    onBackdropPress={toggleModal}
+                    backdropColor={themeColors.backdrop}
+                    backdropOpacity={0.3}
+                >
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalHeader}>New Wallet</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Type here"
+                            // value={wallet}
+                            // onChangeText={setnewwallet}
+                            secureTextEntry="false"
+                            autoCapitalize='none'
+                            maxLength={50}
+                        />
+                        <TouchableOpacity style={styles.savebtn}>
+                            <Text style={styles.btntext}>Save</Text>
+                        </TouchableOpacity>
+                    </View>
+                </Modal>
             </SafeAreaView>
         </TouchableWithoutFeedback>
         
     );
 }
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     background: {
         flex: 1, 
         backgroundColor: themeColors.background,
@@ -121,7 +127,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         padding: 20,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         position: 'absolute',
         top: 70,
         left: 30,
@@ -140,11 +146,11 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginRight: 'auto',
     },
     modalHeader: {
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         marginRight: 'auto',
     },
     modaltext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         padding: 10,
     },
     savebtn: {
@@ -158,7 +164,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     btntext: {
         color: 'white',
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
     },
     input: {
         backgroundColor: 'white',
@@ -170,16 +176,25 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     section: {
         width: '90%',
-        backgroundColor: themeColors.row,
-        height: 100,
-        borderRadius: 10,
+        height: 200,
         top: 60,
         padding: 10,
         marginBottom: 20,
     },
+    headersection: {
+        backgroundColor: themeColors.buttons,
+        borderTopLeftRadius: 10,
+        borderTopRightRadius: 10,
+    },
+    transactionssection: {
+        backgroundColor: themeColors.row,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
+    },
     sectionheader: {
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         padding: 10,
+        color: themeColors.row,
     },
     separator: {
         width: '100%',
@@ -187,13 +202,24 @@ const createStyles = (themeColors) => StyleSheet.create({
         backgroundColor: '#808080',
     },
     walletname: {
-        fontSize: 14,
+        fontSize: fontSizes.fourteen,
         padding: 10,
+        color: themeColors.headertext,
+    },
+    addtransaction: {
+        position: 'absolute',
+        left: 300,
+        top: 10,
     },
     addwallet: {
         position: 'absolute',
-        left: 310,
-        top: 15,
+        bottom: 20,
+        right: 20,
+    },
+    viewwallet: {
+        position: 'absolute',
+        left: 270,
+        top: 10,
     }
 
 })
