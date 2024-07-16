@@ -10,9 +10,10 @@ import { Context } from "../components/GlobalContext";
 export default function CommunityScreen(props) {
     const navigation = useNavigation();
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     return (
         <SafeAreaView style={styles.background}>
@@ -27,7 +28,7 @@ export default function CommunityScreen(props) {
     )
 };
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     background: {
         flex: 1,
         padding: 20,
@@ -36,7 +37,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'center',
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         fontWeight: 'bold',
         position: 'absolute',
         top: 70,
@@ -55,7 +56,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         height: 80,
     },
     rank: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
     },
     pfp: {
         width: 40,
@@ -72,12 +73,12 @@ const createStyles = (themeColors) => StyleSheet.create({
         left: 60,
     },
     username: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         position: 'absolute',
         left: 120,
     },
     bacoin: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         position: 'absolute',
         left: 330,
     }

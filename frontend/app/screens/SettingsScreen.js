@@ -1,34 +1,49 @@
 import React, { useContext, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-modal";
-
-import colors from "../config/colors";
 import { Context } from "../components/GlobalContext";
+import colors from "../config/colors";
 
 export default function SettingsScreen(props) {
-
     const globalContext = useContext(Context);
-    const { setuserObj, userObj, isLightTheme, toggleTheme, theme } = globalContext;
+    const { setuserObj, userObj, isLightTheme, toggleTheme, isLargeFont, defaultFontSizes, getLargerFontSizes, toggleFontSize } = globalContext;
     const navigation = useNavigation();
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
-    const [isPressed, setIsPressed] = useState(false); //for the dark mode icon
-
+    const [isPressed, setIsPressed] = useState(false); // for the dark mode icon
+    const [isModal1Visible, setModal1Visible] = useState(false); // font size modal
+    const [selectedFontSize, setSelectedFontSize] = useState(isLargeFont ? 'Larger' : 'Default'); // State to track selected font size
     const handlePress = () => {
         toggleTheme();
         setIsPressed(!isPressed);
-    }; //handles the change in icon when toggling from light mode to dark mode
+    };
+
+    const handleFontSizeChange = (size) => {
+        if (size === 'Larger') {
+            if (!isLargeFont) {
+                toggleFontSize();
+            }
+        } else {
+            if (isLargeFont) {
+                toggleFontSize();
+            }
+        }
+        setSelectedFontSize(size);
+    };
 
     const handleLogOut = () => {
         setuserObj();
-    }; 
+    };
 
     const handleMyAccount = () => {
         navigation.navigate("My Account");
     };
+
+    const toggleModal1 = () => setModal1Visible(!isModal1Visible);
 
     return (
         <SafeAreaView style={styles.background}>
@@ -37,7 +52,7 @@ export default function SettingsScreen(props) {
             {/* Profile pic */}
             <View style={styles.pfp}></View>
 
-            <Text style={styles.username}>{userObj.username}</Text>
+            <Text style={styles.username}>{userObj?.username || "Username"}</Text>
             
             {/* My Account */}
             <View style={styles.row}>
@@ -69,7 +84,7 @@ export default function SettingsScreen(props) {
             <View style={styles.row}>
                 <Text style={styles.rowheader}>accessibility</Text>
                 <Text style={styles.rowcontent}>font size</Text>
-                <TouchableOpacity style={styles.button}>
+                <TouchableOpacity style={styles.button} onPress={toggleModal1}>
                     <Ionicons 
                         name='resize'
                         size={20}
@@ -77,20 +92,54 @@ export default function SettingsScreen(props) {
                     />
                 </TouchableOpacity>
             </View> 
+            <Modal 
+                isVisible={isModal1Visible} 
+                onBackdropPress={toggleModal1}
+            >
+                <View style={styles.modalContent}>
+                    <Text style={styles.modalHeader}>Select font size</Text>
+                    <TouchableOpacity 
+                        style={styles.modalOptions}
+                        onPress={() => handleFontSizeChange('Default')}
+                        disabled={selectedFontSize === 'Default'}
+                    >
+                        <Ionicons 
+                            name={selectedFontSize === 'Default' ? 'radio-button-on-outline' : 'radio-button-off-outline'}
+                            size={20}
+                            color='black'
+                        />
+                        <Text style={styles.modaltext}>Default</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                        style={styles.modalOptions}
+                        onPress={() => handleFontSizeChange('Larger')}
+                        disabled={selectedFontSize === 'Larger'}
+                    >
+                        <Ionicons 
+                            name={selectedFontSize === 'Larger' ? 'radio-button-on-outline' : 'radio-button-off-outline'}
+                            size={20}
+                            color='black'
+                        />
+                        <Text style={styles.modaltext}>Large</Text>
+                    </TouchableOpacity>
+                    
+                </View>
+            </Modal>
 
             {/* Logout */}
             <TouchableOpacity style={styles.logoutbtn} onPress={handleLogOut}>
                 <Ionicons 
                     name="log-out-outline" 
                     size={20}
-                    color={'white'} />
+                    color={'white'} 
+                />
                 <Text style={styles.logouttext}>Log Out</Text>
             </TouchableOpacity>
         </SafeAreaView>
-    )
-};
+    );
+}
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     background: {
         flex: 1,
         padding: 20,
@@ -128,7 +177,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginBottom: 10,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         fontWeight: 'bold',
         position: 'absolute',
         top: 70,
@@ -141,14 +190,14 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     rowheader: {
         color: themeColors.headertext,
-        fontSize: 14,
+        fontSize: fontSizes.fourteen,
         position: 'absolute',
         top: 10,
         left: 20,
     },
     rowcontent: {
         color: themeColors.headertext,
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         position: 'absolute',
         top: 32,
         left: 20,
@@ -169,53 +218,38 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginTop: 15,
     },
     logouttext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         color: 'white',
         padding: 5,
     },
     modalContent: {
         width: 300, 
-        height: 170,
+        height: 160,
         borderRadius: 10,
         backgroundColor: '#F4D5E1',
         justifyContent: 'flex-start',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         padding: 20,
         marginLeft: 'auto',
         marginRight: 'auto',
     },
-    btntext: {
-        color: 'white',
-        fontSize: 16,
-    },
     modalHeader: {
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         marginRight: 'auto',
+        padding: 5,
     },
     modaltext: {
-        fontSize: 15,
-        padding: 10,
-    },
-    savebtn: {
-        width: 80,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#df4b75',
-        borderRadius: 5,
-        marginTop: 20,
-    },
-    input: {
-        backgroundColor: 'white',
-        borderRadius: 5,
-        height: 40,
-        width: '100%',
-        marginTop: 10,
-        padding: 10,
+        fontSize: fontSizes.fifteen,
+        padding: 5,
     },
     username: {
-        fontSize: 24,
+        fontSize: fontSizes.twentyfour,
         marginBottom: 10,
         color: themeColors.headertext,
     },
-})
+    modalOptions: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 5,
+    }
+});

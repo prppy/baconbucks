@@ -12,6 +12,39 @@ const Provider = ({ children }) => {
     const systemTheme = useColorScheme();
     const [isLightTheme, setIsLightTheme] = useState(systemTheme === 'light');
 
+    const [isLargeFont, setIsLargeFont] = useState(false);
+
+    const defaultFontSizes = {
+        fourteen: 14,
+        fifteen: 15,
+        sixteen: 16,
+        eighteen: 18,
+        twenty: 20,
+        twentyfour: 24,
+        twohundred: 200, //to adjust width & height of modal
+    };
+
+    const getLargerFontSizes = () => {
+        const largerFontSizes = {};
+        for (const key in defaultFontSizes) {
+            if (defaultFontSizes.hasOwnProperty(key)) {
+                const originalSize = defaultFontSizes[key];
+                let adjustedSize = originalSize;
+    
+                // Adjust font size based on specific conditions
+                if (originalSize === 200) {
+                    adjustedSize += 30; // Add 30 to font size 200
+                } else {
+                    adjustedSize += 4; // Default adjustment for other sizes
+                }
+    
+                largerFontSizes[key] = adjustedSize;
+            }
+        }
+        return largerFontSizes;
+    };
+    
+
     const setToken = async (token) => {
         await SecureStore.setItemAsync('access_token', token);
     };
@@ -99,6 +132,10 @@ const Provider = ({ children }) => {
         setIsLightTheme(prevTheme => !prevTheme);
     };
 
+    const toggleFontSize = () => {
+        setIsLargeFont(prevState => !prevState);
+    };
+
     useEffect( () => { 
         initTest();
         setIsLightTheme(systemTheme === 'light');
@@ -112,7 +149,11 @@ const Provider = ({ children }) => {
         fetchData, 
         isLightTheme, 
         toggleTheme,
-        getToken
+        getToken,
+        isLargeFont,
+        toggleFontSize,
+        getLargerFontSizes,
+        defaultFontSizes,
     };
 
     return <Context.Provider value={globalContext}>{children}</Context.Provider>;

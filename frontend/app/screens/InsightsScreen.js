@@ -9,9 +9,10 @@ import { Context } from "../components/GlobalContext";
 export default function InsightsScreen(props) {
     const navigation = useNavigation();
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     const handleSavings = () => {
         navigation.navigate("Earnings");
@@ -93,7 +94,7 @@ export default function InsightsScreen(props) {
     );
 }
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     background: {
         flex: 1, 
         backgroundColor: themeColors.background,
@@ -121,7 +122,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
 
     catheader: {
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
         marginLeft: 15,
         marginTop: 10,
         fontWeight: 'bold',
@@ -139,7 +140,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         shadowRadius: 2,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         position: 'absolute',
         top: 70,
         left: 30,
@@ -148,8 +149,9 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
 
     summarytext: {
-        fontSize: 15,
-        marginRight: 175,
+        fontSize: fontSizes.fifteen,
+        paddingLeft: 30,
+        marginRight: 'auto',
         marginTop: 60,
         color: themeColors.headertext,
     },
@@ -170,7 +172,7 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     subheader: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
     },
     expensebox: {
         height: 50,
@@ -191,7 +193,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginTop: 10,
     },
     expensetext: {
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
         color: themeColors.headertext,
     },
     separator: {

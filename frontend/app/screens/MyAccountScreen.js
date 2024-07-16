@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Modal from "react-native-modal";
@@ -10,12 +10,11 @@ import { Context } from "../components/GlobalContext";
 export default function MyAccountScreen(props) {
 
     const globalContext = useContext(Context);
-    const { setuserObj, userObj, isLightTheme, toggleTheme, theme } = globalContext;
+    const { setuserObj, userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
     const navigation = useNavigation();
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
-
-
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     const [isModal1Visible, setModal1Visible] = useState(false);
     const [isModal2Visible, setModal2Visible] = useState(false);
@@ -74,7 +73,10 @@ export default function MyAccountScreen(props) {
             {/* Email */}
             <View style={styles.row}>
                 <Text style={styles.rowheader}>email</Text>
-                <Text style={styles.rowcontent}>{userObj.email}</Text>
+                <ScrollView horizontal={true} style={styles.scrollview}>
+                    <Text style={styles.rowcontent}>{userObj.email}</Text>
+                </ScrollView>
+                
                 <TouchableOpacity style={styles.button} onPress={toggleModal2}>
                     <Ionicons 
                         name='pencil'
@@ -154,7 +156,7 @@ export default function MyAccountScreen(props) {
     )
 };
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     background: {
         flex: 1,
         padding: 20,
@@ -176,7 +178,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-end',
         padding: 20,
-        height: 65,
+        height: 80,
     },
     pfp: {
         width: 120,
@@ -201,7 +203,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         bottom: 30,
     },
     headertext: {
-        fontSize: 20,
+        fontSize: fontSizes.twenty,
         fontWeight: 'bold',
         position: 'absolute',
         top: 70,
@@ -214,17 +216,16 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     rowheader: {
         color: themeColors.headertext,
-        fontSize: 14,
+        fontSize: fontSizes.fourteen,
         position: 'absolute',
         top: 10,
         left: 20,
     },
     rowcontent: {
         color: themeColors.headertext,
-        fontSize: 18,
-        position: 'absolute',
-        top: 32,
-        left: 20,
+        fontSize: fontSizes.eighteen,
+        marginRight: 'auto',
+        paddingTop: 15,
     },
     logoutbtn: {
         flexDirection: 'row',
@@ -242,7 +243,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         marginTop: 15,
     },
     logouttext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         color: 'white',
         padding: 5,
     },
@@ -259,14 +260,14 @@ const createStyles = (themeColors) => StyleSheet.create({
     },
     btntext: {
         color: 'white',
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
     },
     modalHeader: {
-        fontSize: 18,
+        fontSize: fontSizes.eighteen,
         marginRight: 'auto',
     },
     modaltext: {
-        fontSize: 15,
+        fontSize: fontSizes.fifteen,
         padding: 10,
     },
     savebtn: {
@@ -285,5 +286,9 @@ const createStyles = (themeColors) => StyleSheet.create({
         width: '100%',
         marginTop: 10,
         padding: 10,
-    }
+    },
+    scrollview: {
+        maxWidth: '90%', // Adjust based on your layout
+        marginRight: 'auto',
+    },
 })
