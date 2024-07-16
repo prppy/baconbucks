@@ -22,7 +22,10 @@ class UserSignUpView(APIView):
         user_serializer = UserSerializer(data=user_data)
 
         if user_serializer.is_valid(raise_exception=False):
-            user_serializer.save()
+            user = user_serializer.save()
+
+            # create the user's first wallet!
+            Wallet.objects.create(user=user, name="Wallet #1")
 
             return Response("User created successfully", status=201)
         
@@ -110,13 +113,13 @@ class WalletDetailView(APIView):
     # get all wallets of current user
     def get(self, request, format=None):
         user = request.user
-        
+
         try:
             wallets = Wallet.objects.filter(user=user)
             wallet_serializer = WalletSerializer(wallets, many=True)
             return Response(wallet_serializer.data, status=200)
         except Wallet.DoesNotExist:
-            return Response('Wallet not found', status=404)    
+            return Response('Wallet not found', status=404)
     
 class WalletDeleteView(APIView):
     # delete current wallet

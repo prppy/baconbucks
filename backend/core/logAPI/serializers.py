@@ -6,19 +6,19 @@ from .models import Transaction, Reminder
 # Create your serializers here.
 
 class TransactionSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = Transaction
         fields = ['id', 'date', 'amount', 'type', 'category', 'repeating', 'frequency', 'wallet']
 
     def create(self, validated_data):
         amount = validated_data.get('amount', Decimal("0.00"))
-        if validated_data['type'] == 'EX':  # check if type is 'Expense'
-            amount = -abs(amount)  # set amount to negative of the original amount
+        if validated_data['type'] == 'EX':
+            amount = -abs(amount)
             validated_data['amount'] = amount
         instance = Transaction.objects.create(**validated_data)
         return instance
-    
+
     def update(self, instance, validated_data):
         instance.date = validated_data.get('date', instance.date)
         instance.amount = validated_data.get('amount', instance.amount)
