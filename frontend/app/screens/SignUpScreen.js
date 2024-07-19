@@ -8,7 +8,7 @@ import { Context } from '../components/GlobalContext';
 export default function SignUpScreen(props) {
 
     const globalContext = useContext(Context);
-    const { domain, setUserObj, setToken, fetchData } = globalContext;
+    const { domain, setUserObj, setToken, fetchData, setRefresh } = globalContext;
 
     const [username, setUserName] = useState("");
     const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export default function SignUpScreen(props) {
             console.log('Fetch Body:', body);
     
             // sign-up
-            let signUpResponse = await fetch(`${domain}/api/v1.0/user/signup/`, {
+            let signUpResponse = await fetch(`${domain}/user/signup/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -58,7 +58,7 @@ export default function SignUpScreen(props) {
     
             console.log('Fetch Log In Body:', loginBody);
     
-            let loginResponse = await fetch(`${domain}/api/v1.0/user/login/`, {
+            let loginResponse = await fetch(`${domain}/user/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -74,12 +74,13 @@ export default function SignUpScreen(props) {
             let loginJson = await loginResponse.json();
             console.log('Login Response:', loginJson);
     
-            // set access token
+            // set access and refresh token
             setToken(loginJson.access);
+            setRefresh(loginJson.refresh);
             console.log('User created successfully and logged in.');
     
             // fetch user data using the token
-            const user = await fetchData('api/v1.0/user/get-user/', 'GET');
+            const user = await fetchData('user/get-user/');
             console.log('User Data:', user);
     
             // set userObj in state
