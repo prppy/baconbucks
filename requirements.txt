@@ -1,0 +1,21 @@
+asgiref==3.8.1
+dj-database-url==0.5.0
+Django==3.2.25
+django-cors-headers==4.3.1
+django-heroku==0.3.1
+djangorestframework==3.15.1
+djangorestframework-jwt==1.11.0
+djangorestframework-simplejwt==5.3.1
+gunicorn==22.0.0
+mysqlclient==2.2.4
+packaging==24.1
+psycopg2==2.9.9
+psycopg2-binary==2.9.9
+PyJWT==1.7.1
+python-decouple==3.8
+pytz==2024.1
+pywatchman==2.0.0
+sqlparse==0.5.0
+typing_extensions==4.12.2
+wheel @ file:///opt/homebrew/Cellar/python%403.12/3.12.3/libexec/wheel-0.43.0-py3-none-any.whl#sha256=80a49545e5e5ef2abeb79ec254447300d41dfb76914fc65efa6da8dd0a766052
+whitenoise==6.7.0

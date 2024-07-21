@@ -6,7 +6,7 @@ import colors from '../config/colors';
 const Context = createContext();
 
 const Provider = ({ children }) => {
-    const [domain, setDomain] = useState("https://bacon-back-f128f474c8f0.herokuapp.com/api/v1.0");
+    const [domain, setDomain] = useState("https://backonbucks-05fec980cd2b.herokuapp.com/api/v1.0");
     const [userObj, setUserObj] = useState()
 
     const systemTheme = useColorScheme();
