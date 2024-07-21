@@ -33,6 +33,7 @@ const FinanceTrackerScreen = () => {
     const themeColors = isLightTheme ? colors.light : colors.dark;
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
     const styles = createStyles(themeColors, fontSizes);
+
     const [walletName, setWalletName] = useState("");
     const [walletData, setWalletData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -92,6 +93,7 @@ const FinanceTrackerScreen = () => {
                   date: trans.date,
                   amount: trans.amount,
                   category: trans.category,
+                  transType: trans.type,
               }))
             : []),
     ]);
@@ -103,9 +105,14 @@ const FinanceTrackerScreen = () => {
                     <View style={styles.walletBox}>
                         <TouchableOpacity
                             onPress={() => handleNavigateToWallet(item)}
-                            style={{ width: "75%" }}
+                            style={{ width: "75%", flexDirection: "row", alignItems: "center" }}
                         >
-                            <Text style={styles.walletName}>{item.name}</Text>
+                            <Ionicons
+                                name="wallet-outline"
+                                size={30}
+                                color={themeColors.buttons}
+                            />
+                            <Text style={{marginLeft: 15}}>{item.name}</Text>
                         </TouchableOpacity>
                         <View
                             style={{
@@ -143,6 +150,7 @@ const FinanceTrackerScreen = () => {
                 </View>
             );
         } else if (item.type === "transaction") {
+            const amountColor = item.transType === "EX" ? 'red' : item.transType === "EA" ? 'green' : themeColors.text;
             return (
                 <View style={styles.transBox}>
                     <Ionicons
@@ -151,7 +159,7 @@ const FinanceTrackerScreen = () => {
                         color={themeColors.buttons}
                     />
                     <Text style={styles.transaction}>{item.date}</Text>
-                    <Text style={styles.transaction}>{item.amount}</Text>
+                    <Text style={[styles.transaction, {color: amountColor}]}>{item.amount}</Text>
                 </View>
             );
         }
@@ -185,7 +193,8 @@ const FinanceTrackerScreen = () => {
     };
 
     const handleNavigateToWallet = (item) => {
-        navigation.navigate("Wallet", { wallet: item });
+        console.log(item);
+        navigation.navigate("ViewWallet", { wallet: item });
     };
 
     const handleNavigateToNewTransaction = (walletId, walletName) => {
@@ -231,12 +240,7 @@ const FinanceTrackerScreen = () => {
                 <Text style={styles.headertext}>Finance Tracker</Text>
 
                 <View
-                    style={{
-                        paddingTop: 60,
-                        width: "100%",
-                        padding: 30,
-                        flex: 1,
-                    }}
+                    style={styles.inner}
                 >
                     <View
                         style={{
@@ -245,22 +249,25 @@ const FinanceTrackerScreen = () => {
                             marginBottom: 20,
                         }}
                     >
-                        <View>
-                            <Text>Balance</Text>
+                        <View style={styles.centered}>
+                            <Text>BALANCE</Text>
                             <Text>insert balance</Text>
                         </View>
-                        <View>
-                            <Text>Income</Text>
+                        <View style={styles.verticalline}></View>
+                        <View style={styles.centered}>
+                            <Text>INCOME</Text>
                             <Text>insert income</Text>
                         </View>
-                        <View>
-                            <Text>Expense</Text>
+                        <View style={styles.verticalline}></View>
+                        <View style={styles.centered}>
+                            <Text>EXPENSE</Text>
                             <Text>insert expense</Text>
                         </View>
                     </View>
+                    <Text>Add your Wallets and Transactions here!</Text>
                     <FlatList
                         data={flattenedData}
-                        keyExtractor={(item) => item.id.toString()}
+                        keyExtractor={(item) => `${item.type}-${item.id}`}
                         renderItem={renderItem}
                     />
                 </View>
@@ -395,6 +402,21 @@ const createStyles = (themeColors, fontSizes) =>
         btntext: {
             color: "white",
             fontSize: fontSizes.sixteen,
+        },
+        verticalline: { 
+            borderLeftWidth: 1, 
+            borderLeftColor: themeColors.buttons
+        }, 
+        centered: {
+            justifyContent: "center", 
+            alignContent: "center", 
+            alignItems: "center"
+        }, 
+        inner: {
+            paddingTop: 60,
+            width: "100%",
+            padding: 30,
+            flex: 1,
         },
     });
 

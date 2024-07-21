@@ -20,12 +20,17 @@ import colors from "../config/colors";
 
 const NewTransactionScreen = () => {
     const globalContext = useContext(Context);
-    const { fetchData, isLightTheme } = globalContext;
-
-    const route = useRoute();
-    const { walletId, walletName } = route.params;
+    const {
+        fetchData,
+        isLightTheme,
+        isLargeFont,
+        defaultFontSizes,
+        getLargerFontSizes,
+    } = globalContext;
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { walletId, walletName } = route.params;
 
     const themeColors = isLightTheme ? colors.light : colors.dark;
 
@@ -103,23 +108,27 @@ const NewTransactionScreen = () => {
             );
             return;
         }
-    
+
         try {
             const formattedDate = formatDateForDjango(date.toISOString());
             const body = {
-                "date": formattedDate,
-                "amount": parseFloat(amount),
-                "type": type === "Expense" ? "EX" : "EA",
-                "category": category,
-                "repeating": repeating,
-                "wallet": walletId,
-                "description": description,
+                date: formattedDate,
+                amount: parseFloat(amount),
+                type: type === "Expense" ? "EX" : "EA",
+                category: category,
+                repeating: repeating,
+                wallet: walletId,
+                description: description,
             };
-    
+
             console.log(JSON.stringify(body));
-    
-            const responseJSON = await fetchData("log/create-trans/", "POST", body);
-    
+
+            const responseJSON = await fetchData(
+                "log/create-trans/",
+                "POST",
+                body
+            );
+
             navigation.navigate("FinanceTracker");
         } catch (error) {
             Alert.alert(

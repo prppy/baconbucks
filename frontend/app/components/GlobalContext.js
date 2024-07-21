@@ -116,7 +116,6 @@ const Provider = ({ children }) => {
                     return await response.json();
                 } else {
                     const errorMessage = await response.text();
-                    console.error('Failed to fetch data:', errorMessage);
                     throw new Error(errorMessage);
                 }
             };

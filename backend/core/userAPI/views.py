@@ -116,6 +116,9 @@ class WalletDetailView(APIView):
 
         try:
             wallets = Wallet.objects.filter(user=user)
+            if not wallets.exists():
+                return Response('Wallet not found', status=404)
+
             wallet_serializer = WalletSerializer(wallets, many=True)
             return Response(wallet_serializer.data, status=200)
         except Wallet.DoesNotExist:
