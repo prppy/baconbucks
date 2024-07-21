@@ -1,8 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 
-
-import HomeScreen from "../../screens/HomeScreen";
 import NewTransactionScreen from '../../screens/NewTransactionScreen';
 import NewWalletScreen from '../../screens/NewWalletScreen';
 import FinanceTrackerScreen from '../../screens/FinanceTrackerScreen';
