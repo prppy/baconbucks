@@ -16,7 +16,7 @@ SECRET_KEY = 'django-insecure-*l3-&&^@0u5m0fxo@-0z5rg9i!vv#q%6$83352k!6dnp(%10mf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['baconbuck-heroku-9f95201c7a14.herokuapp.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['bacon-back-f128f474c8f0.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -74,10 +74,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd6dpcim7mt44ha',
-        'USER': 'u14prf8k1fmh5',
-        'PASSWORD': 'p8f34173e6ee544ab897872f9358b9db05bcc69c186515ff33778cece06541a15',
-        'HOST': 'c9uss87s9bdb8n.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
+        'NAME': 'd8r5kvf640g9dp',
+        'USER': 'u37bi7fd5dnmab',
+        'PASSWORD': 'p866d1f85cb493961a78e49ac7d73c6b4016a9d59227f147419308f64579e77db',
+        'HOST': 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
         'PORT': '5432',
     }
 }
