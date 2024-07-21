@@ -14,6 +14,7 @@ export default colors = {
         row: '#f6dde7', //pale pink to dark gray for containers 
         headertext: 'black', //black to white
         buttons: '#df4b75', //dark pink to light pink
+        revbuttons: 'black', //light pink to dark pink
         settingsicons: '#808080', //pale gray to white for the settings icons
         whitetext: 'white', //white to black
         backdrop: 'black',
@@ -23,6 +24,7 @@ export default colors = {
         row: '#4d4d4d',
         headertext: 'white',
         buttons: '#f4d5e1',
+        revbuttons: '#df4b75',
         settingsicons: 'white',
         whitetext: 'black',
         backdrop: 'transparent',

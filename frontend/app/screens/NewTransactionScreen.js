@@ -5,13 +5,11 @@ import {
     TextInput,
     TouchableOpacity,
     Modal,
-    ScrollView,
     StyleSheet,
     TouchableWithoutFeedback,
     SafeAreaView,
-    KeyboardAvoidingView,
     Keyboard,
-    Alert
+    Alert,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -64,7 +62,7 @@ const NewTransactionScreen = () => {
     ];
 
     const handleDateConfirm = (selectedDate) => {
-        console.log(selectedDate)
+        console.log(selectedDate);
         setDate(selectedDate);
         setDatePickerVisibility(false);
     };
@@ -72,8 +70,8 @@ const NewTransactionScreen = () => {
     const formatDateForDjango = (isoDateString) => {
         const date = new Date(isoDateString);
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
     };
 
@@ -91,40 +89,43 @@ const NewTransactionScreen = () => {
     };
 
     const handleNewTransaction = async () => {
-        // Check if all required fields are filled
-        if (!amount || !category || !date || !description || !type || !repeating) {
-            Alert.alert("Validation Error", "Please fill in all required fields.");
-            return; // Exit the function early if validation fails
+        if (
+            !amount ||
+            !category ||
+            !date ||
+            !description ||
+            !type ||
+            !repeating
+        ) {
+            Alert.alert(
+                "Validation Error",
+                "Please fill in all required fields."
+            );
+            return;
         }
     
         try {
-            // Format date as required by Django
             const formattedDate = formatDateForDjango(date.toISOString());
+            const body = {
+                "date": formattedDate,
+                "amount": parseFloat(amount),
+                "type": type === "Expense" ? "EX" : "EA",
+                "category": category,
+                "repeating": repeating,
+                "wallet": walletId,
+                "description": description,
+            };
     
-            const body = JSON.stringify({
-                date: formattedDate,
-                amount: parseFloat(amount), // Ensure amount is a number
-                type: type === "Expense" ? "EX" : "EA",
-                category: category,
-                repeating: repeating,
-                wallet: walletId,
-                description: description
-            });
+            console.log(JSON.stringify(body));
     
-            // Fetch request to your API
-            const response = await fetchData("log/create-trans/", "POST", body);
+            const responseJSON = await fetchData("log/create-trans/", "POST", body);
     
-            // Check if the response is successful (status code in the range 200-299)
-            if (!response.ok) {
-                const errorData = await response.json(); // Assuming the server responds with a JSON error message
-                throw new Error(errorData.detail || 'An error occurred'); // Customize based on your error structure
-            }
-    
-            // Navigate to FinanceTracker on success
             navigation.navigate("FinanceTracker");
         } catch (error) {
-            // Handle errors and provide feedback
-            Alert.alert("Transaction Error", error.message || "An unexpected error occurred.");
+            Alert.alert(
+                "Transaction Error",
+                error.message || "An unexpected error occurred."
+            );
         }
     };
 
@@ -366,6 +367,7 @@ const createStyles = (themeColors) =>
         },
         typeText: {
             fontSize: 16,
+            color: themeColors.revbuttons,
         },
         amountBox: {
             justifyContent: "center",
@@ -386,6 +388,7 @@ const createStyles = (themeColors) =>
         label: {
             fontSize: 18,
             marginVertical: 8,
+            color: themeColors.headertext,
         },
         input: {
             borderWidth: 1,
