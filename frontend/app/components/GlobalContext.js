@@ -99,29 +99,43 @@ const Provider = ({ children }) => {
 
     const fetchData = async (url, method = 'GET', body = null) => {
         try {
-            let access_token = await getToken();
-            if (!access_token) {
-                access_token = await refreshToken(); // attempt to refresh token
-            }
-    
-            const options = {
-                method: method,
-                headers: {
-                    'Authorization': `Bearer ${access_token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: body ? JSON.stringify(body) : null,
+            // Function to attempt fetch with given token
+            const attemptFetch = async (token) => {
+                const options = {
+                    method: method,
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: body ? JSON.stringify(body) : null,
+                };
+        
+                const response = await fetch(`${domain}/${url}`, options);
+        
+                if (response.ok) {
+                    return await response.json();
+                } else {
+                    const errorMessage = await response.text();
+                    console.error('Failed to fetch data:', errorMessage);
+                    throw new Error(errorMessage);
+                }
             };
     
-            const response = await fetch(`${domain}/${url}`, options);
-    
-            if (response.ok) { 
-                const data = await response.json();
-                console.log('Data fetched successfully:', data);
-                return data;
-            } else {
-                console.error('Failed to fetch data:', response.statusText);
-                throw new Error(response.statusText);
+            // Try fetching with the current token
+            let access_token = await getToken();
+            try {
+                return await attemptFetch(access_token);
+            } catch (fetchError) {
+                // Check if the error indicates an invalid token
+                if (fetchError.message.includes('token_not_valid')) {
+                    // Attempt to refresh the token
+                    access_token = await refreshToken();
+                    // Retry fetch with the new token
+                    return await attemptFetch(access_token);
+                } else {
+                    // Re-throw any other errors
+                    throw fetchError;
+                }
             }
         } catch (error) {
             console.error('Error fetching data:', error.message);

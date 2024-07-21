@@ -19,7 +19,7 @@ class WalletSerializer(serializers.ModelSerializer):
 
     def get_transactions(self, obj):
         today = date.today()
-        transactions = obj.transactions.filter(date__lte=today).order_by('-date')[:5]
+        transactions = obj.transactions.filter(date__lte=today).order_by('-date')[:3]
         return TransactionSerializer(transactions, many=True).data
 
     def get_balance(self, obj):
