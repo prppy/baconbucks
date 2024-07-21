@@ -77,43 +77,79 @@ const FinanceTrackerScreen = () => {
         }
     };
 
-    const flattenedData = walletData.flatMap(wallet => [
-        { type: 'wallet', id: wallet.id, name: wallet.name, transactions: wallet.transactions },
-        ...(visibleWalletId === wallet.id ? wallet.transactions.map(trans => ({
-            type: 'transaction',
-            walletId: wallet.id,
-            id: trans.id,
-            date: trans.date,
-            amount: trans.amount,
-            category: trans.category,
-        })) : []),
+    const flattenedData = walletData.flatMap((wallet) => [
+        {
+            type: "wallet",
+            id: wallet.id,
+            name: wallet.name,
+            transactions: wallet.transactions,
+        },
+        ...(visibleWalletId === wallet.id
+            ? wallet.transactions.map((trans) => ({
+                  type: "transaction",
+                  walletId: wallet.id,
+                  id: trans.id,
+                  date: trans.date,
+                  amount: trans.amount,
+                  category: trans.category,
+              }))
+            : []),
     ]);
 
     const renderItem = ({ item }) => {
-        if (item.type === 'wallet') {
+        if (item.type === "wallet") {
             return (
                 <View>
                     <View style={styles.walletBox}>
-                        <TouchableOpacity onPress={() => handleNavigateToWallet(item)}>
+                        <TouchableOpacity
+                            onPress={() => handleNavigateToWallet(item)}
+                            style={{ width: "75%" }}
+                        >
                             <Text style={styles.walletName}>{item.name}</Text>
                         </TouchableOpacity>
-                        <View style={{flexDirection: "row", width: "25%", justifyContent: "space-evenly"}}>
-                            <TouchableOpacity onPress={() => handleNavigateToNewTransaction(item.id, item.name)}>
-                                <Ionicons name="add-circle-outline" size={30} color={themeColors.buttons} />
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                width: "25%",
+                                justifyContent: "space-evenly",
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() =>
+                                    handleNavigateToNewTransaction(
+                                        item.id,
+                                        item.name
+                                    )
+                                }
+                            >
+                                <Ionicons
+                                    name="add-circle-outline"
+                                    size={30}
+                                    color={themeColors.buttons}
+                                />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleViewRecent(item.id)}>
-                                <Ionicons name="folder-open-outline" size={30} color={themeColors.buttons} />
+                            <TouchableOpacity
+                                onPress={() => handleViewRecent(item.id)}
+                            >
+                                <Ionicons
+                                    name="folder-open-outline"
+                                    size={30}
+                                    color={themeColors.buttons}
+                                />
                             </TouchableOpacity>
                         </View>
-                        
                     </View>
                     {/* Insert additional spacing or styling if needed */}
                 </View>
             );
-        } else if (item.type === 'transaction') {
+        } else if (item.type === "transaction") {
             return (
                 <View style={styles.transBox}>
-                    <Ionicons name={getCategoryIcon(item.category)} size={24} color={themeColors.buttons} />
+                    <Ionicons
+                        name={getCategoryIcon(item.category)}
+                        size={24}
+                        color={themeColors.buttons}
+                    />
                     <Text style={styles.transaction}>{item.date}</Text>
                     <Text style={styles.transaction}>{item.amount}</Text>
                 </View>
@@ -135,7 +171,7 @@ const FinanceTrackerScreen = () => {
         }
 
         try {
-            const body = { "name": walletName };
+            const body = { name: walletName };
             console.log(JSON.stringify(body));
 
             const json = await fetchData("user/create-wallet/", "POST", body);
@@ -194,7 +230,14 @@ const FinanceTrackerScreen = () => {
             <SafeAreaView style={[styles.background, styles.centered]}>
                 <Text style={styles.headertext}>Finance Tracker</Text>
 
-                <View style={{ paddingTop: 60, width: "100%", padding: 30, flex: 1 }}>
+                <View
+                    style={{
+                        paddingTop: 60,
+                        width: "100%",
+                        padding: 30,
+                        flex: 1,
+                    }}
+                >
                     <View
                         style={{
                             flexDirection: "row",
