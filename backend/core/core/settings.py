@@ -1,6 +1,7 @@
 from pathlib import Path
 from datetime import timedelta
-
+import django_heroku
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -72,14 +73,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd8r5kvf640g9dp',
-        'USER': 'u37bi7fd5dnmab',
-        'PASSWORD': 'p866d1f85cb493961a78e49ac7d73c6b4016a9d59227f147419308f64579e77db',
-        'HOST': 'ccpa7stkruda3o.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
-    }
+    'default': dj_database_url.config(conn_max_age=600)
 }
 
 
@@ -159,3 +153,5 @@ AUTHENTICATION_BACKENDS = [
 
 # Custom user model
 AUTH_USER_MODEL = 'userAPI.User'
+
+django_heroku.settings(locals())
