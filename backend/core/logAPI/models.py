@@ -5,6 +5,11 @@ from userAPI.models import User, Wallet
 
 # Create your models here.
 
+from django.db import models
+from decimal import Decimal
+
+from userAPI.models import User, Wallet
+
 class Transaction(models.Model):
 
     CATEGORY_CHOICES = [
@@ -23,6 +28,7 @@ class Transaction(models.Model):
     ]
 
     FREQUENCY_CHOICES = [
+        ("N", "Never"),
         ("D", "Daily"),
         ("W", "Weekly"),
         ("M", "Monthly"),
@@ -37,15 +43,15 @@ class Transaction(models.Model):
 
     category = models.CharField(max_length=2, choices=CATEGORY_CHOICES,  blank=False, null=False)
 
-    repeating = models.BooleanField(default=False)
-
-    frequency = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, blank=True, null=True)
+    repeating = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, blank=True, null=True)
 
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions', blank=False, null=False)
 
+    description = models.CharField(max_length=256, blank=True)
+
     def save(self, *args, **kwargs):
-        if self.repeating and not self.frequency:
-            raise ValueError("If repeating is True, frequency must be specified.")
+        if self.repeating and self.repeating not in dict(self.FREQUENCY_CHOICES):
+            raise ValueError("Invalid frequency value.")
         super().save(*args, **kwargs)
 
 class Reminder(models.Model):
