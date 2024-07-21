@@ -42,7 +42,7 @@ class Transaction(models.Model):
 
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions', blank=False, null=False)
 
-    description = models.CharField(max_length=256)
+    description = models.CharField(max_length=256, blank=True)
 
     def save(self, *args, **kwargs):
         if self.repeating and self.repeating not in dict(self.FREQUENCY_CHOICES):
