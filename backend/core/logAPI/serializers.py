@@ -9,7 +9,7 @@ class TransactionSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Transaction
-        fields = ['id', 'date', 'amount', 'type', 'category', 'repeating', 'frequency', 'wallet']
+        fields = ['id', 'date', 'amount', 'type', 'category', 'repeating', 'wallet', 'description']
 
     def create(self, validated_data):
         amount = validated_data.get('amount', Decimal("0.00"))
@@ -25,8 +25,8 @@ class TransactionSerializer(serializers.ModelSerializer):
         instance.type = validated_data.get('type', instance.type)
         instance.category = validated_data.get('category', instance.category)
         instance.repeating = validated_data.get('repeating', instance.repeating)
-        instance.frequency = validated_data.get('frequency', instance.frequency)
         instance.wallet = validated_data.get('wallet', instance.wallet)
+        instance.description = validated_data.get('description', instance.description)
 
         if validated_data.get('type') == 'EX':
             instance.amount = -abs(validated_data.get('amount', instance.amount))
