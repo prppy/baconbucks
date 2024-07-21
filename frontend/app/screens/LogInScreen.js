@@ -8,7 +8,7 @@ import { Keyboard } from 'react-native';
 
 export default function LogInScreen() {
     const globalContext = useContext(Context);
-    const { domain, setUserObj, setToken, fetchData } = globalContext;
+    const { domain, setUserObj, setToken, setRefresh, fetchData, userObj } = globalContext;
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -28,7 +28,7 @@ export default function LogInScreen() {
             console.log('Fetch Body:', body);
 
             // log-in
-            let logInResponse = await fetch(`${domain}/api/v1.0/user/login/`, {
+            let logInResponse = await fetch(`${domain}/user/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -44,11 +44,13 @@ export default function LogInScreen() {
             let loginJson = await logInResponse.json();
             console.log('Login Response:', loginJson);
 
+            // set access and refresh token
             setToken(loginJson.access);
+            setRefresh(loginJson.refresh);
             console.log('User logged in successfully.');
 
             // fetch user data using the token
-            const user = await fetchData('api/v1.0/user/get-user/', 'GET');
+            const user = await fetchData('user/get-user/');
             console.log('User Data:', user);
     
             // set userObj in state

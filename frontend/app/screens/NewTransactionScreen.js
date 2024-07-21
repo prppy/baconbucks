@@ -1,232 +1,454 @@
-import React, { useState, useContext} from "react";
-import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInput, TouchableOpacity, Button, FlatList, KeyboardAvoidingView, Keyboard} from "react-native";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import colors from "../config/colors";
-import Modal from 'react-native-modal';
+import React, { useState, useContext } from "react";
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    SafeAreaView,
+    KeyboardAvoidingView,
+    Keyboard,
+    Alert
+} from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { Context } from "../components/GlobalContext";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import moment from 'moment';
+import colors from "../config/colors";
 
-export default function NewTransactionScreen(props) {
-    const [number, setNumber] = useState('');
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-    const [isModalVisible, setModalVisible] = useState(false);
-    const [selectedOption, setSelectedOption] = useState(null);
+const NewTransactionScreen = () => {
+    const globalContext = useContext(Context);
+    const { fetchData, isLightTheme } = globalContext;
 
-    const showDatePicker = () => {
-        setDatePickerVisible(true);
-    };
+    const route = useRoute();
+    const { walletId, walletName } = route.params;
 
-    const hideDatePicker = () => {
-        setDatePickerVisible(false);
-    };
+    const navigation = useNavigation();
 
-    const handleDateConfirm = (date) => {
-        if (date) {
-            setSelectedDate(date);
-        }
-        hideDatePicker();
-    };
+    const themeColors = isLightTheme ? colors.light : colors.dark;
 
-    const handleDatePress = () => {
-        // Show the date picker when the date area is pressed
-        setDatePickerVisible(true);
-    };
+    const styles = createStyles(themeColors);
 
-    const handleInputChange = (text) => {
-        // Regular expression to allow numbers with up to 2 decimal places
-        const regex = /^\d*\.?\d{0,2}$/;
-    
-        // Validate the input
-        if (regex.test(text)) {
-            setNumber(text);
-        }
-    };
-    
+    const [amount, setAmount] = useState("");
+    const [type, setType] = useState("Expense");
+    const [category, setCategory] = useState("");
+    const [categoryName, setCategoryName] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [repeating, setRepeating] = useState("N");
+    const [repeatingName, setRepeatingName] = useState("Never");
+    const [description, setDescription] = useState("");
+    const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+    const [repeatingModalVisible, setRepeatingModalVisible] = useState(false);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-    const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
-    
-    const selectOption = (option) => {
-        setSelectedOption(option);
-        toggleModal();
-    };
-
-    const renderOption = ({ item }) => (
-        <TouchableOpacity style={styles.option} onPress={() => selectOption(item)}>
-          <Ionicons name={item.icon} size={20} color="#000" />
-          <Text style={styles.optionLabel}>{item.label}</Text>
-        </TouchableOpacity>
-    );
-
-    const options = [
-        { id: '1', label: 'Salary', icon: 'logo-usd' },
-        { id: '2', label: 'Transport', icon: 'car-outline' },
-        { id: '3', label: 'Groceries', icon:'cart-outline' },
-        { id: '4', label: 'Food', icon: 'restaurant-outline' },
-        { id: '5', label: 'Entertainment', icon: 'film-outline' },
-        { id: '6', label: 'Rent', icon: 'home-outline' },
-        { id: '7', label: 'Top Up', icon: 'wallet-outline' },
+    const categories = [
+        { id: "SL", name: "Salary", icon: "cash-outline" },
+        { id: "GR", name: "Groceries", icon: "cart-outline" },
+        { id: "TR", name: "Transport", icon: "train-outline" },
+        { id: "RE", name: "Rent", icon: "home-outline" },
+        { id: "FD", name: "Food", icon: "fast-food-outline" },
+        { id: "EN", name: "Entertainment", icon: "tv-outline" },
+        { id: "TU", name: "TopUp", icon: "refresh-outline" },
     ];
+
+    const repeatingOptions = [
+        { id: "N", name: "Never" },
+        { id: "D", name: "Daily" },
+        { id: "W", name: "Weekly" },
+        { id: "M", name: "Monthly" },
+        { id: "Y", name: "Yearly" },
+    ];
+
+    const handleDateConfirm = (selectedDate) => {
+        console.log(selectedDate)
+        setDate(selectedDate);
+        setDatePickerVisibility(false);
+    };
+
+    const formatDateForDjango = (isoDateString) => {
+        const date = new Date(isoDateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    const handleAmountChange = (input) => {
+        // remove any non-digit characters
+        const sanitizedInput = input.replace(/\D/g, "");
+        // if input is empty, set amount to ""
+        if (sanitizedInput === "") {
+            setAmount("");
+            return;
+        }
+        // Format input to be in the format 0.00
+        const formattedAmount = (parseFloat(sanitizedInput) / 100).toFixed(2);
+        setAmount(formattedAmount);
+    };
+
+    const handleNewTransaction = async () => {
+        // Check if all required fields are filled
+        if (!amount || !category || !date || !description || !type || !repeating) {
+            Alert.alert("Validation Error", "Please fill in all required fields.");
+            return; // Exit the function early if validation fails
+        }
+    
+        try {
+            // Format date as required by Django
+            const formattedDate = formatDateForDjango(date.toISOString());
+    
+            const body = JSON.stringify({
+                date: formattedDate,
+                amount: parseFloat(amount), // Ensure amount is a number
+                type: type === "Expense" ? "EX" : "EA",
+                category: category,
+                repeating: repeating,
+                wallet: walletId,
+                description: description
+            });
+    
+            // Fetch request to your API
+            const response = await fetchData("log/create-trans/", "POST", body);
+    
+            // Check if the response is successful (status code in the range 200-299)
+            if (!response.ok) {
+                const errorData = await response.json(); // Assuming the server responds with a JSON error message
+                throw new Error(errorData.detail || 'An error occurred'); // Customize based on your error structure
+            }
+    
+            // Navigate to FinanceTracker on success
+            navigation.navigate("FinanceTracker");
+        } catch (error) {
+            // Handle errors and provide feedback
+            Alert.alert("Transaction Error", error.message || "An unexpected error occurred.");
+        }
+    };
 
     const dismissKeyboard = () => {
         Keyboard.dismiss();
     };
 
-    const globalContext = useContext(Context);
-    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
-    const themeColors = isLightTheme ? colors.light : colors.dark;
-    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
-    const styles = createStyles(themeColors, fontSizes);
-
     return (
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
-            <KeyboardAvoidingView style={styles.container}>
-                <Text style={styles.text}>Date</Text>
-                <TouchableOpacity style={styles.inputContainer} onPress={handleDatePress}>
-                    {selectedDate ? (
-                        <Text style={styles.dateText}>{moment(selectedDate).format("MMMM D, YYYY")}</Text>
-                    ) : (
-                        <Text style={styles.selectDateButtonText}>Select a date</Text>
-                    )}
+            <SafeAreaView style={styles.background}>
+                <Text style={styles.headertext}>
+                    New Transaction for {walletName}
+                </Text>
+                <View style={styles.typeSelector}>
+                    <TouchableOpacity
+                        onPress={() => setType("Expense")}
+                        style={[
+                            styles.typeButton,
+                            type === "Expense" && styles.selectedTypeButton,
+                        ]}
+                    >
+                        <Text style={styles.typeText}>EXPENSE</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => setType("Income")}
+                        style={[
+                            styles.typeButton,
+                            type === "Income" && styles.selectedTypeButton,
+                        ]}
+                    >
+                        <Text style={styles.typeText}>INCOME</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.amountBox}>
+                    <TextInput
+                        style={styles.amountInput}
+                        placeholder="0.00"
+                        keyboardType="numeric"
+                        value={amount}
+                        onChangeText={handleAmountChange}
+                    />
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <Text style={styles.label}>Category</Text>
+
+                    <TouchableOpacity
+                        onPress={() => setCategoryModalVisible(true)}
+                    >
+                        <Text style={styles.label}>
+                            {categoryName || "Select Category"}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.line}></View>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <Text style={styles.label}>Date</Text>
+
+                    <TouchableOpacity
+                        onPress={() => setDatePickerVisibility(true)}
+                    >
+                        <Text style={styles.label}>
+                            {date.toLocaleDateString()}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.line}></View>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <Text style={styles.label}>Repeating</Text>
+
+                    <TouchableOpacity
+                        onPress={() => setRepeatingModalVisible(true)}
+                    >
+                        <Text style={styles.label}>{repeatingName}</Text>
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.line}></View>
+
+                <View
+                    style={{
+                        flexDirection: "column",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                        paddingHorizontal: 20,
+                    }}
+                >
+                    <TextInput
+                        value={description}
+                        onChangeText={setDescription}
+                        placeholder="Notes"
+                        placeholderTextColor={themeColors.buttons}
+                        multiline={true}
+                        style={[
+                            {
+                                width: "100%",
+                                height: 200,
+                                color: themeColors.buttons,
+                                justifyContent: "flex-start",
+                            },
+                            styles.label,
+                        ]}
+                    />
+                </View>
+
+                <TouchableOpacity
+                    style={styles.saveButton}
+                    onPress={handleNewTransaction}
+                >
+                    <Text style={styles.saveButtonText}>Save</Text>
                 </TouchableOpacity>
+
+                {/* Modals */}
+                <Modal
+                    visible={categoryModalVisible}
+                    transparent={true}
+                    animationType="slide"
+                >
+                    <View style={styles.modalContainer}>
+                        <View style={styles.grid}>
+                            {categories.map((cat, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={styles.gridItem}
+                                    onPress={() => {
+                                        setCategory(cat.id);
+                                        setCategoryName(cat.name);
+                                        setCategoryModalVisible(false);
+                                    }}
+                                >
+                                    <Ionicons
+                                        name={cat.icon}
+                                        size={24}
+                                        color={themeColors.buttons}
+                                    />
+                                    <Text style={styles.modalItem}>
+                                        {cat.name}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    </View>
+                </Modal>
+
+                <Modal
+                    visible={repeatingModalVisible}
+                    transparent={true}
+                    animationType="slide"
+                >
+                    <View style={styles.modalContainer}>
+                        {repeatingOptions.map((rep, index) => (
+                            <TouchableOpacity
+                                key={index}
+                                style={styles.repItem}
+                                onPress={() => {
+                                    setRepeating(rep.id);
+                                    setRepeatingName(rep.name);
+                                    setRepeatingModalVisible(false);
+                                }}
+                            >
+                                <Text style={styles.label}>{rep.name}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </Modal>
+
                 <DateTimePickerModal
                     isVisible={isDatePickerVisible}
                     mode="date"
-                    date={selectedDate || new Date()}
                     onConfirm={handleDateConfirm}
-                    onCancel={hideDatePicker}
+                    onCancel={() => setDatePickerVisibility(false)}
                 />
-
-                <Text style={styles.text}>Amount</Text>
-                <View style={styles.inputContainer}>
-                <TextInput
-                    style={styles.inputtext}
-                    value={number}
-                    onChangeText={handleInputChange}
-                    keyboardType="numeric"
-                    placeholder="Enter number"
-                />
-                </View>
-                
-                
-
-                <Text style={styles.text}>Category</Text>
-                <View style={styles.inputContainer}>
-                    <TouchableOpacity style={styles.inputBox} onPress={toggleModal}>
-                    {selectedOption ? (
-                    <View style={styles.selectedOption}>
-                        <Ionicons name={selectedOption.icon} size={24} color="#000" />
-                        <Text style={styles.selectedOptionLabel}>{selectedOption.label}</Text>
-                    </View>
-                    ) : (
-                    <Text style={styles.placeholdertext}>Select an option</Text>
-                    )}
-                    </TouchableOpacity>
-
-                    <Modal isVisible={isModalVisible} onBackdropPress={toggleModal}>
-                        <View style={styles.modalContent}>
-                        <FlatList
-                            data={options}
-                            renderItem={renderOption}
-                            keyExtractor={(item) => item.id}
-                        />
-                        </View>
-                    </Modal>
-                </View>
-                <TouchableOpacity style={styles.savebutn}>
-                    <Text style={styles.savetext}>Add Transaction</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
+            </SafeAreaView>
         </TouchableWithoutFeedback>
     );
-}
+};
 
-const createStyles = (themeColors, fontSizes) => StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'left',
-        backgroundColor: themeColors.background,
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-    }, 
-    inputContainer: {
-        width: '100%',
-        backgroundColor: 'white',
-        borderRadius: 5,
-        marginBottom: 10,
-        height: 40,
-        justifyContent: 'center',
-        alignItems: 'left',
-    },
-    text: {
-        fontSize: fontSizes.fourteen,
-        marginBottom: 5,
-        color: themeColors.headertext,
-    },
-    inputtext: {
-        fontSize: fontSizes.fifteen,
-        marginLeft: 10,
-    },
-    placeholdertext: {
-       paddingHorizontal: 10,
-       borderRadius: 5,
-       fontSize: fontSizes.fifteen,
-       color: '#ccc', 
-    },
-    selectedOption: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 10,
-    },
-    selectedOptionLabel: {
-        marginLeft: 10,
-        fontSize: fontSizes.fifteen,
-    },
-    modalContent: {
-        backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    option: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-    },
-    optionLabel: {
-        marginLeft: 10,
-        fontSize: fontSizes.sixteen,
-    },
-    savebutn: {
-        width: 100,
-        height: 40,
-        backgroundColor: themeColors.buttons,
-        borderRadius: 4,
-        alignItems: "center",
-        justifyContent: "center",
-        width: '40%', // Adjust width as needed
-        height: 30,
-        left: 210,
-        marginTop: 15,
-    },
-    savetext: {
-        color: themeColors.whitetext,
-        fontSize: fontSizes.fourteen,
-    },
-    dateText: {
-        color: 'black',
-        fontSize: fontSizes.fifteen,
-        marginLeft: 10,
-    },
-    selectDateButtonText: {
-        color: '#ccc',
-        fontSize: fontSizes.fifteen,
-        paddingHorizontal: 10,
-    },
-});
+const createStyles = (themeColors) =>
+    StyleSheet.create({
+        background: {
+            flex: 1,
+            justifyContent: "flex-start",
+            backgroundColor: themeColors.background,
+            padding: 0,
+            flexDirection: "column",
+        },
+        headertext: {
+            fontSize: 20,
+            fontWeight: "bold",
+            position: "absolute",
+            top: 70,
+            left: 30,
+            color: themeColors.headertext,
+            paddingBottom: 20,
+        },
+        typeSelector: {
+            flexDirection: "row",
+            marginBottom: 20,
+            justifyContent: "center",
+            alignContent: "center",
+            paddingTop: 60,
+        },
+        typeButton: {
+            width: "30%",
+            alignItems: "center",
+            padding: 12,
+            borderWidth: 2,
+            borderColor: themeColors.buttons,
+            borderRadius: 40,
+            marginHorizontal: 20,
+        },
+        selectedTypeButton: {
+            backgroundColor: themeColors.buttons,
+        },
+        typeText: {
+            fontSize: 16,
+        },
+        amountBox: {
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "row",
+            alignSelf: "center",
+        },
+        amountInput: {
+            fontSize: 32,
+            fontWeight: "bold",
+            marginBottom: 16,
+            textAlign: "center",
+            borderBottomWidth: 1,
+            borderColor: themeColors.buttons,
+            color: themeColors.buttons,
+            paddingHorizontal: 20,
+        },
+        label: {
+            fontSize: 18,
+            marginVertical: 8,
+        },
+        input: {
+            borderWidth: 1,
+            borderColor: "#ccc",
+            marginBottom: 16,
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+        },
+        grid: {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "90%",
+            alignSelf: "center",
+        },
+        gridItem: {
+            width: "30%",
+            aspectRatio: 1,
+            alignItems: "center",
+            marginBottom: 20,
+            backgroundColor: themeColors.row,
+            justifyContent: "center",
+            alignContent: "center",
+            borderRadius: 10,
+        },
+        repItem: {
+            alignItems: "center",
+            marginBottom: 20,
+            backgroundColor: themeColors.row,
+            justifyContent: "center",
+            alignContent: "center",
+            borderRadius: 10,
+            width: "70%",
+        },
+        modalItem: {
+            marginTop: 8,
+            fontSize: 15,
+        },
+
+        saveButton: {
+            alignItems: "center",
+            padding: 12,
+            backgroundColor: themeColors.buttons,
+            borderRadius: 4,
+            width: "50%",
+            alignSelf: "center",
+        },
+        saveButtonText: {
+            color: "#fff",
+            fontSize: 16,
+        },
+        line: {
+            borderBottomColor: themeColors.buttons,
+            borderBottomWidth: 1,
+            marginVertical: 10,
+            marginHorizontal: 20,
+        },
+    });
+
+export default NewTransactionScreen;

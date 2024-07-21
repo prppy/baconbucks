@@ -6,7 +6,7 @@ import colors from '../config/colors';
 const Context = createContext();
 
 const Provider = ({ children }) => {
-    const [domain, setDomain] = useState("https://baconbuck-heroku-9f95201c7a14.herokuapp.com");
+    const [domain, setDomain] = useState("https://baconbuck-heroku-9f95201c7a14.herokuapp.com/api/v1.0");
     const [userObj, setUserObj] = useState()
 
     const systemTheme = useColorScheme();
@@ -53,18 +53,30 @@ const Provider = ({ children }) => {
         return await SecureStore.getItemAsync('access_token');
     };
 
-    const clearTokens = async () => {
+    const clearToken = async () => {
         await SecureStore.deleteItemAsync('access_token');
+    };
+    
+    const setRefresh = async (token) => {
+        await SecureStore.setItemAsync('refresh_token', token);
+    };
+
+    const getRefresh = async () => {
+        return await SecureStore.getItemAsync('refresh_token');
+    };
+
+    const clearRefresh = async () => {
+        await SecureStore.deleteItemAsync('refresh_token');
     };
 
     const refreshToken = async () => {
         try {
-            const refresh_token = await SecureStore.getItemAsync('refresh_token');
+            const refresh_token = await getRefresh();
             if (!refresh_token) {
                 throw new Error('Refresh token not found');
             }
     
-            const response = await fetch(`${domain}/api/token/refresh/`, {
+            const response = await fetch(`${domain}/token/refresh/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +86,7 @@ const Provider = ({ children }) => {
     
             if (response.ok) {
                 const { access } = await response.json();
-                await SecureStore.setItemAsync('access_token', access);
+                await setToken(access);
                 return access;
             } else {
                 throw new Error('Failed to refresh token');
@@ -87,9 +99,9 @@ const Provider = ({ children }) => {
 
     const fetchData = async (url, method = 'GET', body = null) => {
         try {
-            let access_token = await SecureStore.getItemAsync('access_token');
+            let access_token = await getToken();
             if (!access_token) {
-                access_token = await refreshToken(); // Attempt to refresh token
+                access_token = await refreshToken(); // attempt to refresh token
             }
     
             const options = {
@@ -118,7 +130,7 @@ const Provider = ({ children }) => {
     };
 
     const initTest = () => {
-        fetch(`${domain}/api/v1.0/user/test`, { method: 'GET' })
+        fetch(`${domain}/user/test`, { method: 'GET' })
             .then(res => res.ok ? res.json() : res.json())
             .then(json => {
                 console.log(json);
@@ -154,6 +166,7 @@ const Provider = ({ children }) => {
         toggleFontSize,
         getLargerFontSizes,
         defaultFontSizes,
+        setRefresh,
     };
 
     return <Context.Provider value={globalContext}>{children}</Context.Provider>;
