@@ -4,7 +4,7 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableWithoutFeedback, TextInp
 import colors from "../config/colors";
 import { Context } from '../components/GlobalContext';
 
-export default function NewWalletScreen(props) {
+const ViewWalletScreen = ({ route }) => {
 
     const globalContext = useContext(Context);
     const { userObj, domain, fetchData, isLightTheme } = globalContext;
@@ -13,34 +13,7 @@ export default function NewWalletScreen(props) {
 
     const [ walletName, setWalletName ] = useState("");
 
-    const handleNewWallet = () => {
-
-        console.log(walletName);
-
-        if (walletName === "") {
-            Alert.alert('Error', 'Please input a name.');
-        }
-
-        let body = JSON.stringify({
-                "name": walletName
-        });
-        console.log('Fetch Body:', body);
-
-        console.log('Fetch URL:', `${domain}/user/create-wallet/`);
-
-        fetchData('user/create-wallet/', 'POST', body)
-        .then(response => {
-            console.log('Fetch Response Status:', response.status);
-            return response.json();
-        })
-        .then(json => {
-            console.log('Fetch Response JSON:', json);
-        })
-        .catch(error => {
-            console.error('Error during create-wallet:', error);
-            Alert.alert('Error', 'Failed to create wallet. Please try again.');
-        });
-    }    
+        
 
     const dismissKeyboard = () => {
         Keyboard.dismiss();
@@ -145,3 +118,5 @@ const createStyles = (themeColors) => StyleSheet.create({
         fontSize: 15,
     }
 });
+
+export default ViewWalletScreen;
