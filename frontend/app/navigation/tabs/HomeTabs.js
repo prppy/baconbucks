@@ -7,7 +7,7 @@ import { RemindersStack } from '../stacks/RemindersStack';
 import { SettingsStack } from '../stacks/SettingsStack';
 import { MissionsStack } from "../stacks/MissionsStack";
 import CommunityScreen from '../../screens/CommunityScreen';
-import { InsightsStack } from '../stacks/InsightsStack';
+import { StatisticsStack } from '../stacks/StatisticsStack';
 
 
 const Tab = createBottomTabNavigator();
@@ -21,7 +21,7 @@ export const HomeTabs = () => {
 
         if (route.name === 'Home') {
           iconName = focused ? 'home' : 'home-outline';
-        } else if (route.name === 'Insights') {
+        } else if (route.name === 'Statistics') {
           iconName = focused ? 'pie-chart' : 'pie-chart-outline';
         } else if (route.name === 'Reminders') {
           iconName = focused ? 'notifications' : 'notifications-outline';
@@ -39,7 +39,7 @@ export const HomeTabs = () => {
     })}      
     >
       <Tab.Screen name="Home" options={{ headerShown: false }} component={HomeStack} />
-      <Tab.Screen name="Insights" options={{ headerShown: false }} component={InsightsStack} />
+      <Tab.Screen name="Statistics" options={{ headerShown: false }} component={StatisticsStack} />
       <Tab.Screen name="Reminders" options={{ headerShown: false }} component={RemindersStack} />
       <Tab.Screen name="Missions" options={{ headerShown: false }} component={MissionsStack} />
       <Tab.Screen name="Community" options={{ headerShown: false }} component={CommunityScreen} />

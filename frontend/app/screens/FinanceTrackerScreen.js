@@ -105,14 +105,18 @@ const FinanceTrackerScreen = () => {
                     <View style={styles.walletBox}>
                         <TouchableOpacity
                             onPress={() => handleNavigateToWallet(item)}
-                            style={{ width: "75%", flexDirection: "row", alignItems: "center" }}
+                            style={{
+                                width: "75%",
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
                         >
                             <Ionicons
                                 name="wallet-outline"
                                 size={30}
                                 color={themeColors.buttons}
                             />
-                            <Text style={{marginLeft: 15}}>{item.name}</Text>
+                            <Text style={{ marginLeft: 15 }}>{item.name}</Text>
                         </TouchableOpacity>
                         <View
                             style={{
@@ -150,7 +154,12 @@ const FinanceTrackerScreen = () => {
                 </View>
             );
         } else if (item.type === "transaction") {
-            const amountColor = item.transType === "EX" ? 'red' : item.transType === "EA" ? 'green' : themeColors.text;
+            const amountColor =
+                item.transType === "EX"
+                    ? "red"
+                    : item.transType === "EA"
+                    ? "green"
+                    : themeColors.text;
             return (
                 <View style={styles.transBox}>
                     <Ionicons
@@ -159,7 +168,9 @@ const FinanceTrackerScreen = () => {
                         color={themeColors.buttons}
                     />
                     <Text style={styles.transaction}>{item.date}</Text>
-                    <Text style={[styles.transaction, {color: amountColor}]}>{item.amount}</Text>
+                    <Text style={[styles.transaction, { color: amountColor }]}>
+                        {item.amount}
+                    </Text>
                 </View>
             );
         }
@@ -239,9 +250,7 @@ const FinanceTrackerScreen = () => {
             <SafeAreaView style={[styles.background, styles.centered]}>
                 <Text style={styles.headertext}>Finance Tracker</Text>
 
-                <View
-                    style={styles.inner}
-                >
+                <View style={styles.inner}>
                     <View
                         style={{
                             flexDirection: "row",
@@ -403,15 +412,15 @@ const createStyles = (themeColors, fontSizes) =>
             color: "white",
             fontSize: fontSizes.sixteen,
         },
-        verticalline: { 
-            borderLeftWidth: 1, 
-            borderLeftColor: themeColors.buttons
-        }, 
+        verticalline: {
+            borderLeftWidth: 1,
+            borderLeftColor: themeColors.buttons,
+        },
         centered: {
-            justifyContent: "center", 
-            alignContent: "center", 
-            alignItems: "center"
-        }, 
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+        },
         inner: {
             paddingTop: 60,
             width: "100%",

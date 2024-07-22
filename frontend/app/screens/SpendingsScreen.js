@@ -7,6 +7,8 @@ export default function SpendingsScreen(props) {
     return (
         <SafeAreaView>
             <Text>spendings screen goes here</Text>
+
+
         </SafeAreaView>
     );
 }
