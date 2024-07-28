@@ -4,16 +4,12 @@ import {
     StyleSheet,
     Text,
     View,
-    TouchableOpacity,
     Dimensions,
-    Modal,
-    Picker,
     ActivityIndicator,
 } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from "@react-navigation/native";
-import PieChart from "react-native-pie-chart";
-import LineChart from 'react-native-chart-kit'; // Import the chart library
-import DatePicker from 'react-native-datepicker'; // Import the date picker library
+import { PieChart, LineChart } from "react-native-chart-kit"; // Fixed import statement
 
 import colors from "../config/colors";
 import { Context } from "../components/GlobalContext";
@@ -48,7 +44,12 @@ const StatisticsScreen = () => {
     const fetchStatistics = async () => {
         setIsLoading(true);
         try {
-            const json = await fetchData("user/get-statistics/", "POST", { type, dateRange, wallet });
+            const response = await fetchData("user/get-statistics/", "GET", {
+                type: type,
+                period: dateRange,
+                wallet_id: wallet
+            });
+            const json = await response.json(); // Added response parsing
             setNetWorth(json.net_worth);
             setCategoryData(json.category_data);
             setNetWorthTrend(json.net_worth_trend);
@@ -59,12 +60,13 @@ const StatisticsScreen = () => {
         }
     };
 
-    const pieChartData = categoryData.map(cat => ({
+    const pieChartData = categoryData.map((cat, index) => ({
         name: cat.category,
         amount: cat.amount,
         color: cat.color,
         legendFontColor: "#7F7F7F",
         legendFontSize: 15,
+        key: index.toString() // Added unique key
     }));
 
     const chartConfig = {
@@ -95,25 +97,25 @@ const StatisticsScreen = () => {
                         style={styles.picker}
                         onValueChange={(itemValue) => setType(itemValue)}
                     >
-                        <Picker.Item label="Expense" value="Expense" />
-                        <Picker.Item label="Income" value="Income" />
+                        <Picker.Item label="Expense" value="Expense" key="expense" />
+                        <Picker.Item label="Income" value="Income" key="income" />
                     </Picker>
                     <Picker
                         selectedValue={dateRange}
                         style={styles.picker}
                         onValueChange={(itemValue) => setDateRange(itemValue)}
                     >
-                        <Picker.Item label="Week" value="week" />
-                        <Picker.Item label="Month" value="month" />
-                        <Picker.Item label="Year" value="year" />
-                        <Picker.Item label="All" value="all" />
+                        <Picker.Item label="Week" value="week" key="week" />
+                        <Picker.Item label="Month" value="month" key="month" />
+                        <Picker.Item label="Year" value="year" key="year" />
+                        <Picker.Item label="All" value="all" key="all" />
                     </Picker>
                     <Picker
                         selectedValue={wallet}
                         style={styles.picker}
                         onValueChange={(itemValue) => setWallet(itemValue)}
                     >
-                        <Picker.Item label="All Wallets" value="all" />
+                        <Picker.Item label="All Wallets" value="all" key="all_wallets" />
                         {/* Add wallet options here */}
                     </Picker>
                 </View>
@@ -123,7 +125,7 @@ const StatisticsScreen = () => {
                     data={{
                         labels: netWorthTrend.map(point => point.date),
                         datasets: [{
-                            data: netWorthTrend.map(point => point.value),
+                            data: netWorthTrend.map(point => point.balance), // Changed to 'balance'
                         }],
                     }}
                     width={Dimensions.get("window").width - 40}
@@ -133,10 +135,10 @@ const StatisticsScreen = () => {
                 />
                 {/* Display Pie Chart for Category Breakdown */}
                 <PieChart
+                    data={pieChartData}
                     width={Dimensions.get("window").width - 40}
                     height={220}
                     chartConfig={chartConfig}
-                    data={pieChartData}
                 />
             </View>
         </SafeAreaView>

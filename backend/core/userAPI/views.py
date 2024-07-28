@@ -179,13 +179,14 @@ class WalletUpdateView(APIView):
         
         return Response(serializer.errors, status=400)
 
+
 class StatisticsDashboardView(APIView):
     def get(self, request, format=None):
         user = request.user
-        filter_type = request.query_params.get('type', 'EA')  # 'EA' for income, 'EX' for expense
+        filter_type = request.query_params.get('type', 'EX')  # 'EX' for expense, 'EA' for income
         filter_period = request.query_params.get('period', 'all')  # 'week', 'month', 'year', 'all'
         wallet_id = request.query_params.get('wallet_id', None)  # Filter by wallet if provided
-        
+
         today = date.today()
         start_date = self.get_start_date(filter_period, today)
 
@@ -194,7 +195,7 @@ class StatisticsDashboardView(APIView):
             date__gte=start_date,
             type=filter_type
         )
-        if wallet_id:
+        if wallet_id and wallet_id != 'all':
             transactions = transactions.filter(wallet_id=wallet_id)
 
         # Net Worth Calculation
@@ -204,7 +205,7 @@ class StatisticsDashboardView(APIView):
         # Net Worth Trend
         net_worth_trend = []
         for i in range(1, 13):  # For the past 12 months, adjust as needed
-            month_start = today.replace(day=1) - timedelta(days=30*i)
+            month_start = today.replace(day=1) - timedelta(days=30 * i)
             month_end = month_start.replace(day=1) + timedelta(days=31)
             monthly_balance = sum(
                 wallet.calculate_balance()
@@ -215,22 +216,34 @@ class StatisticsDashboardView(APIView):
 
         # Transactions Breakdown
         category_breakdown = transactions.values('category').annotate(total=Sum('amount'))
-        category_data = {
-            'labels': [cat['category'] for cat in category_breakdown],
-            'data': [cat['total'] for cat in category_breakdown],
-        }
+        category_data = [
+            {'category': cat['category'], 'amount': cat['total'], 'color': self.get_color_for_category(cat['category'])}
+            for cat in category_breakdown
+        ]
 
         return Response({
             'net_worth': net_worth,
             'net_worth_trend': net_worth_trend,
-            'category_data': category_data,
-        }, status=200)
+            'category_data': category_data
+        })
 
     def get_start_date(self, period, today):
         if period == 'week':
-            return today - timedelta(days=7)
+            return today - timedelta(weeks=1)
         elif period == 'month':
             return today - timedelta(days=30)
         elif period == 'year':
             return today - timedelta(days=365)
-        return today - timedelta(days=365*10)  # Default to 10 years for 'all'
+        return date.min
+
+    def get_color_for_category(self, category):
+        color_map = {
+            'Salary': '#ffcd56',
+            'Transport': '#ff6384',
+            'Groceries': '#36a2eb',
+            'Food': '#4bc0c0',
+            'Entertainment': '#9966ff',
+            'Rent': '#c9cbcf',
+            'Top Up': '#ff9f40'
+        }
+        return color_map.get(category, '#000000')  # Default color if category not in map
