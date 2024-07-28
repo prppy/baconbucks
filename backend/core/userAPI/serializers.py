@@ -9,6 +9,7 @@ from quizAPI.serializers import PlaySerializer
 
 # Create your serializers here.
 
+
 class WalletSerializer(serializers.ModelSerializer):
     transactions = serializers.SerializerMethodField()
     balance = serializers.SerializerMethodField()
@@ -19,8 +20,18 @@ class WalletSerializer(serializers.ModelSerializer):
 
     def get_transactions(self, obj):
         today = date.today()
-        transactions = obj.transactions.filter(date__lte=today).order_by('-date')[:3]
-        return TransactionSerializer(transactions, many=True).data
+        
+        # Fetch today's transactions
+        todays_transactions = obj.transactions.filter(date=today).order_by('-date')
+        
+        # Fetch the latest transactions excluding today's transactions
+        latest_transactions = obj.transactions.exclude(date=today).order_by('-date')[:3 - todays_transactions.count()]
+        
+        # Combine both querysets and ensure it's ordered by date
+        combined_transactions = list(todays_transactions) + list(latest_transactions)
+        combined_transactions_sorted = sorted(combined_transactions, key=lambda x: x.date, reverse=True)[:3]
+
+        return TransactionSerializer(combined_transactions_sorted, many=True).data
 
     def get_balance(self, obj):
         return obj.calculate_balance()
