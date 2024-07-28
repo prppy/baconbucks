@@ -98,7 +98,6 @@ const NewTransactionScreen = () => {
             !amount ||
             !category ||
             !date ||
-            !description ||
             !type ||
             !repeating
         ) {

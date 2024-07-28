@@ -36,6 +36,9 @@ const FinanceTrackerScreen = () => {
 
     const [walletName, setWalletName] = useState("");
     const [walletData, setWalletData] = useState([]);
+    const [totalIncome, setTotalIncome] = useState(0);
+    const [totalExpense, setTotalExpense] = useState(0);
+    const [totalBalance, setTotalBalance] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState();
     const [isVisible, setIsVisible] = useState(false);
@@ -70,7 +73,10 @@ const FinanceTrackerScreen = () => {
         setIsLoading(true);
         try {
             const json = await fetchData("user/get-wallet/");
-            setWalletData(json);
+            setWalletData(json.wallets);
+            setTotalIncome(json.total_income);
+            setTotalExpense(json.total_expense);
+            setTotalBalance(json.total_balance);
         } catch (error) {
             setError(error.message || "Failed to fetch wallet data");
         } finally {
@@ -259,26 +265,27 @@ const FinanceTrackerScreen = () => {
                         }}
                     >
                         <View style={styles.centered}>
-                            <Text>BALANCE</Text>
+                            <Text style={{fontWeight:"bold", fontSize:20}}>BALANCE</Text>
                             <Text>insert balance</Text>
                         </View>
                         <View style={styles.verticalline}></View>
                         <View style={styles.centered}>
-                            <Text>INCOME</Text>
+                            <Text style={{fontWeight:"bold", color: "green", fontSize:20}}>INCOME</Text>
                             <Text>insert income</Text>
                         </View>
                         <View style={styles.verticalline}></View>
                         <View style={styles.centered}>
-                            <Text>EXPENSE</Text>
+                            <Text style={{fontWeight:"bold", color: "red", fontSize:20}}>EXPENSE</Text>
                             <Text>insert expense</Text>
                         </View>
                     </View>
-                    <Text>Add your Wallets and Transactions here!</Text>
+                    <Text style={{fontWeight:"bold", fontSize:18, marginBottom: 20, alignSelf: "center", textAlign: "center"}}>Wallets</Text>
                     <FlatList
                         data={flattenedData}
                         keyExtractor={(item) => `${item.type}-${item.id}`}
                         renderItem={renderItem}
                     />
+                    <Text style={{fontWeight:"bold", fontSize:15, marginBottom: 50, alignSelf: "center", textAlign: "center", color: themeColors.buttons}}>Add a Wallet and Transactions to begin!</Text>
                 </View>
                 <TouchableOpacity
                     style={styles.addwallet}
