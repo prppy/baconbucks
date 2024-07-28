@@ -2,11 +2,12 @@ from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.db.models import Sum
+from datetime import date, timedelta
 
 from .models import User, Wallet
 from .serializers import UserSerializer, WalletSerializer, UserUpdateSerializer
 from logAPI.models import Transaction
-from logAPI.serializers import TransactionSerializer
 
 # Create your views here.
 
@@ -177,3 +178,59 @@ class WalletUpdateView(APIView):
             return Response({"detail": "Wallet updated successfully"}, status=200)
         
         return Response(serializer.errors, status=400)
+
+class StatisticsDashboardView(APIView):
+    def get(self, request, format=None):
+        user = request.user
+        filter_type = request.query_params.get('type', 'EA')  # 'EA' for income, 'EX' for expense
+        filter_period = request.query_params.get('period', 'all')  # 'week', 'month', 'year', 'all'
+        wallet_id = request.query_params.get('wallet_id', None)  # Filter by wallet if provided
+        
+        today = date.today()
+        start_date = self.get_start_date(filter_period, today)
+
+        transactions = Transaction.objects.filter(
+            wallet__user=user,
+            date__gte=start_date,
+            type=filter_type
+        )
+        if wallet_id:
+            transactions = transactions.filter(wallet_id=wallet_id)
+
+        # Net Worth Calculation
+        wallets = Wallet.objects.filter(user=user)
+        net_worth = sum(wallet.calculate_balance() for wallet in wallets)
+
+        # Net Worth Trend
+        net_worth_trend = []
+        for i in range(1, 13):  # For the past 12 months, adjust as needed
+            month_start = today.replace(day=1) - timedelta(days=30*i)
+            month_end = month_start.replace(day=1) + timedelta(days=31)
+            monthly_balance = sum(
+                wallet.calculate_balance()
+                for wallet in wallets
+                if wallet.transactions.filter(date__range=[month_start, month_end]).exists()
+            )
+            net_worth_trend.append({'date': month_start.strftime('%Y-%m'), 'balance': monthly_balance})
+
+        # Transactions Breakdown
+        category_breakdown = transactions.values('category').annotate(total=Sum('amount'))
+        category_data = {
+            'labels': [cat['category'] for cat in category_breakdown],
+            'data': [cat['total'] for cat in category_breakdown],
+        }
+
+        return Response({
+            'net_worth': net_worth,
+            'net_worth_trend': net_worth_trend,
+            'category_data': category_data,
+        }, status=200)
+
+    def get_start_date(self, period, today):
+        if period == 'week':
+            return today - timedelta(days=7)
+        elif period == 'month':
+            return today - timedelta(days=30)
+        elif period == 'year':
+            return today - timedelta(days=365)
+        return today - timedelta(days=365*10)  # Default to 10 years for 'all'

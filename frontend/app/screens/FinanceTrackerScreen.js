@@ -280,7 +280,6 @@ const FinanceTrackerScreen = () => {
                             <Text style={{fontWeight:"bold", color: "red", fontSize:18, marginTop: 10}}>{totalExpense}</Text>
                         </View>
                     </View>
-                    <Text style={{fontWeight:"bold", fontSize:20, marginBottom: 20, alignSelf: "center", textAlign: "center"}}>Wallets</Text>
                     <View style={{flex: 1, borderColor: themeColors.buttons, borderWidth: 1, borderRadius: 10}}>
                         <FlatList
                             data={flattenedData}
@@ -288,7 +287,9 @@ const FinanceTrackerScreen = () => {
                             renderItem={renderItem}
                         />
                     </View>
-                    <Text style={{fontWeight:"bold", fontSize:15, marginBottom: 50, alignSelf: "center", textAlign: "center", color: themeColors.buttons}}>Add a Wallet and Transactions to begin!</Text>
+                    <View style={{height: 40, justifyContent: "center", marginTop: 20}}>
+                    <Text style={{fontWeight:"bold", fontSize:15, color: themeColors.buttons}}>Add a Wallet and Transactions to begin!</Text>
+                    </View>
                 </View>
                 <TouchableOpacity
                     style={styles.addwallet}

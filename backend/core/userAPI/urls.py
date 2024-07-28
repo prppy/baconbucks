@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import TestView, UserSignUpView, UserLoginView, UserDetailView, UserDeleteView, UserUpdateView, WalletCreateView, WalletDetailView, WalletDeleteView, WalletUpdateView
+from .views import TestView, UserSignUpView, UserLoginView, UserDetailView, UserDeleteView, UserUpdateView, WalletCreateView, WalletDetailView, WalletDeleteView, WalletUpdateView, StatisticsDashboardView
 
 urlpatterns = [
     path('test/', TestView.as_view()),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('get-wallet/', WalletDetailView.as_view()),
     path('delete-wallet/<int:pk>/', WalletDeleteView.as_view()),
     path('update-wallet/<int:pk>/', WalletUpdateView.as_view()),
+    path('get-statistics/', StatisticsDashboardView.as_view()),
 ]
 
 # localhost:8000/api/v1.0/user/
