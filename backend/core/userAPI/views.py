@@ -119,8 +119,28 @@ class WalletDetailView(APIView):
             if not wallets.exists():
                 return Response('Wallet not found', status=404)
 
+            total_income = 0
+            total_expense = 0
+
+            for wallet in wallets:
+                transactions = wallet.transactions.all()
+                for transaction in transactions:
+                    if transaction.type == 'EA':
+                        total_income += transaction.amount
+                    elif transaction.type == 'EX':
+                        total_expense += transaction.amount
+
+            total_balance = total_income - total_expense
+
             wallet_serializer = WalletSerializer(wallets, many=True)
-            return Response(wallet_serializer.data, status=200)
+            response_data = {
+                'wallets': wallet_serializer.data,
+                'total_income': total_income,
+                'total_expense': total_expense,
+                'total_balance': total_balance,
+            }
+
+            return Response(response_data, status=200)
         except Wallet.DoesNotExist:
             return Response('Wallet not found', status=404)
     
