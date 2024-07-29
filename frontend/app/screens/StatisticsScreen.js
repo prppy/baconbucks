@@ -59,10 +59,13 @@ const StatisticsDashboardScreen = () => {
             setNetWorthHistory(json.net_worth_history);
             setPiggyBankData(json.piggy_bank);
             setWalletOptions(json.wallet_options);
+
+            console.log("Net Worth History:", netWorthHistory);
+            console.log("Piggy Bank Data:", piggyBankData);
         } catch (error) {
             console.error("Error fetching statistics data:", error);
             setError(error.message || "Failed to fetch trans data");
-        } finally{
+        } finally {
             setIsLoading(false);
         }
     };
@@ -78,6 +81,28 @@ const StatisticsDashboardScreen = () => {
     const handleWalletFilterChange = (filter) => {
         setWalletFilter(filter);
     };
+
+    const categories = [
+        { id: "SL", name: "Salary", icon: "cash-outline" },
+        { id: "GR", name: "Groceries", icon: "cart-outline" },
+        { id: "TR", name: "Transport", icon: "train-outline" },
+        { id: "RE", name: "Rent", icon: "home-outline" },
+        { id: "FD", name: "Food", icon: "fast-food-outline" },
+        { id: "EN", name: "Entertainment", icon: "tv-outline" },
+        { id: "TU", name: "TopUp", icon: "refresh-outline" },
+    ];
+
+    const getCategory = (id) =>
+        categories.find((category) => category.id === id);
+
+    const formattedData = piggyBankData.map((item) => {
+        const category = getCategory(item.category);
+        return {
+            name: category ? category.name : item.category,
+            amount: item.amount,
+            color: category ? category.color : "#ccc", // Use valid color or placeholder if no category found
+        };
+    });
 
     if (isLoading) {
         return (
@@ -173,7 +198,7 @@ const StatisticsDashboardScreen = () => {
                                             },
                                         ],
                                     }}
-                                    width={screenWidth - 40}
+                                    width="100%"
                                     height={220}
                                     chartConfig={chartConfig}
                                 />
@@ -186,43 +211,46 @@ const StatisticsDashboardScreen = () => {
                     </View>
 
                     <View style={styles.piggyBankContainer}>
-                        <Text style={styles.piggyBankHeader}>Piggy Bank</Text>
-                        <View style={styles.filterContainer}>
+                        <Text style={styles.netWorthText}>Piggy Bank</Text>
+                        <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={true}
+                            contentContainerStyle={
+                                styles.walletOptionsContainer
+                            }
+                        >
                             <TouchableOpacity
                                 onPress={() => handleWalletFilterChange("all")}
+                                style={[
+                                    styles.walletButton,
+                                    walletFilter === "all" &&
+                                        styles.selectedWalletButton,
+                                ]}
                             >
-                                <Text
-                                    style={
-                                        walletFilter === "all"
-                                            ? styles.activeFilter
-                                            : styles.filter
-                                    }
-                                >
-                                    All Wallets
-                                </Text>
+                                <Text style={styles.label}>All Wallets</Text>
                             </TouchableOpacity>
+
                             {walletOptions.map((wallet) => (
                                 <TouchableOpacity
                                     key={wallet.id}
                                     onPress={() =>
                                         handleWalletFilterChange(wallet.id)
                                     }
+                                    style={[
+                                        styles.walletButton,
+                                        walletFilter === wallet.id &&
+                                            styles.selectedWalletButton,
+                                    ]}
                                 >
-                                    <Text
-                                        style={
-                                            walletFilter === wallet.id
-                                                ? styles.activeFilter
-                                                : styles.filter
-                                        }
-                                    >
+                                    <Text style={styles.label}>
                                         {wallet.name}
                                     </Text>
                                 </TouchableOpacity>
                             ))}
-                        </View>
+                        </ScrollView>
+
                         <PieChart
                             data={piggyBankData}
-                            width={screenWidth - 40}
                             height={220}
                             chartConfig={chartConfig}
                             accessor="amount"
@@ -238,14 +266,27 @@ const StatisticsDashboardScreen = () => {
 };
 
 const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    backgroundColor: "#ffffff",
+    backgroundGradientFrom: "#ffffff",
+    backgroundGradientTo: "#ffffff",
+    decimalPlaces: 2,
+    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
     strokeWidth: 2,
-    barPercentage: 0.5,
-    useShadowColorFromDataset: false,
+    propsForDots: {
+        r: "6",
+        strokeWidth: "2",
+        stroke: "#ffa726",
+    },
+    propsForLabels: {
+        fontSize: "12",
+        fontWeight: "bold",
+    },
+    propsForBackgroundLines: {
+        strokeDasharray: "",
+        strokeWidth: 0.5,
+        stroke: "#e3e3e3",
+    },
 };
 
 const createStyles = (themeColors, fontSizes) =>
@@ -306,6 +347,7 @@ const createStyles = (themeColors, fontSizes) =>
             color: themeColors.secondary,
             fontSize: fontSizes.medium,
             marginHorizontal: 5,
+            alignSelf: "center",
         },
         activeFilter: {
             color: themeColors.primary,
@@ -313,26 +355,43 @@ const createStyles = (themeColors, fontSizes) =>
             marginHorizontal: 5,
         },
         netWorthContainer: {
-            alignItems: "center",
+            width: "100%",
+            marginBottom: 20,
         },
         netWorthText: {
+            fontSize: 18,
             fontWeight: "bold",
-            fontSize: 15,
             color: themeColors.buttons,
-            marginBottom: 10,
+            alignSelf: "center",
+            marginBottom: 20,
         },
         netWorthAmount: {
-            color: themeColors.primary,
             fontSize: fontSizes.large,
+            color: themeColors.primary,
+            textAlign: "center",
             marginVertical: 10,
         },
         piggyBankContainer: {
-            marginVertical: 20,
+            width: "100%",
             alignItems: "center",
         },
-        piggyBankHeader: {
-            color: themeColors.primary,
-            fontSize: fontSizes.medium,
+        walletOptionsContainer: {
+            flexDirection: "row",
+            marginBottom: 20,
+            justifyContent: "space-between",
+            alignContent: "center",
+        },
+        walletButton: {
+            alignItems: "center",
+            alignContent: "center",
+            padding: 12,
+            borderWidth: 2,
+            borderColor: themeColors.buttons,
+            borderRadius: 40,
+            marginRight: 10,
+        },
+        selectedWalletButton: {
+            backgroundColor: themeColors.buttons,
         },
     });
 

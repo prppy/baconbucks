@@ -156,7 +156,6 @@ const FinanceTrackerScreen = () => {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {/* Insert additional spacing or styling if needed */}
                 </View>
             );
         } else if (item.type === "transaction") {

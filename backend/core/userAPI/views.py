@@ -215,20 +215,40 @@ class StatisticsDashboardView(APIView):
             day_income = day_transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
             cumulative_net_worth += (day_income - day_expense)
-            net_worth_history.append({'label': day.strftime('%A'), 'value': cumulative_net_worth})
+            net_worth_history.append({'label': day.strftime('%a'), 'value': cumulative_net_worth})
 
         net_worth_history.reverse()  # Ensure the history is in ascending order
 
         # Prepare piggy bank data
         piggy_bank = transactions.values('category').annotate(amount=Sum('amount')).order_by('-amount')
 
+        # Convert category codes to names and colors
+        categories = {
+            "SL": {"name": "Salary", "color": "#f39c12"},    # example color
+            "GR": {"name": "Groceries", "color": "#27ae60"},
+            "TR": {"name": "Transport", "color": "#3498db"},
+            "RE": {"name": "Rent", "color": "#e74c3c"},
+            "FD": {"name": "Food", "color": "#9b59b6"},
+            "EN": {"name": "Entertainment", "color": "#e67e22"},
+            "TU": {"name": "TopUp", "color": "#2ecc71"},
+        }
+        
+        piggy_bank_data = []
+        for item in piggy_bank:
+            category = categories.get(item['category'], {"name": "Unknown", "color": "#95a5a6"})
+            piggy_bank_data.append({
+                'name': category['name'],
+                'amount': item['amount'],
+                'color': category['color']
+            })
+
         # Get wallet options
         wallets = Wallet.objects.filter(user=request.user)
         wallet_options = WalletSerializer(wallets, many=True).data
-
+        
         return Response({
             'net_worth': net_worth,
             'net_worth_history': net_worth_history,
-            'piggy_bank': list(piggy_bank),
+            'piggy_bank': piggy_bank_data,
             'wallet_options': wallet_options,
         }, status=200)
