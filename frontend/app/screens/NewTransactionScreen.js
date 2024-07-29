@@ -213,6 +213,7 @@ const NewTransactionScreen = () => {
                             onChangeText={setDescription}
                             placeholder="Notes"
                             placeholderTextColor={themeColors.buttons}
+                            autoCapitalize="none"
                             multiline={true}
                             style={[
                                 {

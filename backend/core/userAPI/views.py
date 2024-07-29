@@ -131,7 +131,7 @@ class WalletDetailView(APIView):
                     elif transaction.type == 'EX':
                         total_expense += transaction.amount
 
-            total_balance = total_income - total_expense
+            total_balance = total_income + total_expense
 
             wallet_serializer = WalletSerializer(wallets, many=True)
             response_data = {
