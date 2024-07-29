@@ -1,234 +1,183 @@
 import React, { useState, useContext } from "react";
-import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from "react-native";
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import colors from "../config/colors";
-import axios from 'axios';
-import moment from 'moment';
+import {
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    Modal,
+    StyleSheet,
+    TouchableWithoutFeedback,
+    SafeAreaView,
+    Keyboard,
+    Alert,
+} from "react-native";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 import { Context } from "../components/GlobalContext";
+import colors from "../config/colors";
 
-export default function NewReminderScreen(props) {
-    const [selectedDate, setSelectedDate] = useState(null);
-    const [selectedTime, setSelectedTime] = useState(null);
-    const [isDatePickerVisible, setDatePickerVisible] = useState(false);
-    const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-    const [note, setNote] = useState("");
-
-
-    const showDatePicker = () => {
-        setDatePickerVisible(true);
-    };
-
-
-    const hideDatePicker = () => {
-        setDatePickerVisible(false);
-    };
-
-
-    const showTimePicker = () => {
-        setTimePickerVisible(true);
-    };
-
-
-    const hideTimePicker = () => {
-        setTimePickerVisible(false);
-    };
-
-
-    const handleDateConfirm = (date) => {
-        if (date) {
-            setSelectedDate(date);
-        }
-        hideDatePicker();
-    };
-
-
-    const handleTimeConfirm = (time) => {
-        if (time) {
-            setSelectedTime(time);
-        }
-        hideTimePicker();
-    };
-
-
-    const handleSaveReminder = () => {
-        if (!selectedDate || !selectedTime || !note) {
-            Alert.alert('Error', 'Please select date, time, and enter a reminder note.');
-            return;
-        }
-
-
-        // Prepare data object to send to backend
-        const reminderData = {
-            date: selectedDate,
-            time: selectedTime,
-            note: note,
-        };
-
-
-        // Replace with your backend API endpoint
-        const backendUrl = 'http://192.168.1.248';
-        const apiUrl = `${backendUrl}/api/reminders/saveReminder/`;
-
-
-        // Example using axios to send POST request
-        axios.post(apiUrl, reminderData)
-            .then(response => {
-                console.log('Reminder saved successfully:', response.data);
-                Alert.alert('Success', 'Reminder saved successfully.');
-                // Clear inputs after successful save if needed
-                setSelectedDate(null);
-                setSelectedTime(null);
-                setNote("");
-            })
-            .catch(error => {
-                console.error('Error saving reminder:', error);
-                Alert.alert('Error', 'Failed to save reminder. Please try again later.');
-            });
-    };
-
-
-    const handleDatePress = () => {
-        // Show the date picker when the date area is pressed
-        setDatePickerVisible(true);
-    };
-
-
-    const handleTimePress = () => {
-        // Show the time picker when the time area is pressed
-        setTimePickerVisible(true);
-    };
-
+const NewReminderScreen = () => {
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme, isLargeFont, defaultFontSizes, getLargerFontSizes } = globalContext;
+    const {
+        fetchData,
+        isLightTheme,
+        isLargeFont,
+        defaultFontSizes,
+        getLargerFontSizes,
+    } = globalContext;
+
+    const navigation = useNavigation();
+    const route = useRoute();
+
     const themeColors = isLightTheme ? colors.light : colors.dark;
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
     const styles = createStyles(themeColors, fontSizes);
 
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
+
     return (
-        <SafeAreaView style={styles.container}>
-            <Text style={styles.text}>Date</Text>
-            <TouchableOpacity style={styles.dateBox} onPress={handleDatePress}>
-                {selectedDate ? (
-                    <Text style={styles.dateText}>{moment(selectedDate).format("MMMM D, YYYY")}</Text>
-                ) : (
-                    <Text style={styles.selectDateButtonText}>Select a date</Text>
-                )}
-            </TouchableOpacity>
-            <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                date={selectedDate || new Date()}
-                onConfirm={handleDateConfirm}
-                onCancel={hideDatePicker}
-            />
-
-
-            <Text style={styles.text}>Time</Text>
-            <TouchableOpacity style={styles.dateBox} onPress={handleTimePress}>
-                {selectedTime ? (
-                    <Text style={styles.dateText}>{moment(selectedTime).format("HH:mm")}</Text>
-                ) : (
-                    <Text style={styles.selectDateButtonText}>Select a time</Text>
-                )}
-            </TouchableOpacity>
-            <DateTimePickerModal
-                isVisible={isTimePickerVisible}
-                mode="time"
-                date={selectedTime || new Date()}
-                onConfirm={handleTimeConfirm}
-                onCancel={hideTimePicker}
-            />
-
-
-
-
-            <Text style={styles.text}>Reminder</Text>
-            <View style={styles.textbox}>
-                <TextInput
-                    style={styles.date}
-                    placeholder="Type here"
-                    value={note}
-                    onChangeText={setNote}
-                    secureTextEntry="false"
-                    autoCapitalize='none'
-                    maxLength={50}
-                ></TextInput>
-            </View>
-            <TouchableOpacity style={styles.savebutn}>
-                <Text style={styles.savetext}>Add Reminder</Text>
-            </TouchableOpacity>
-        </SafeAreaView>
+        <TouchableWithoutFeedback onPress={dismissKeyboard}>
+            <SafeAreaView style={styles.background}>
+                <Text style={styles.headertext}>New Reminder</Text>
+                <View style={styles.inner}></View>
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
     );
-}
+};
 
+const createStyles = (themeColors, fontSizes) =>
+    StyleSheet.create({
+        background: {
+            flex: 1,
+            justifyContent: "flex-start",
+            backgroundColor: themeColors.background,
+            padding: 0,
+            flexDirection: "column",
+        },
+        headertext: {
+            fontSize: 20,
+            fontWeight: "bold",
+            position: "absolute",
+            top: 70,
+            left: 30,
+            color: themeColors.headertext,
+            paddingBottom: 20,
+        },
+        inner: {
+            paddingTop: 60,
+            width: "100%",
+            padding: 30,
+            flex: 1,
+        },
+        typeSelector: {
+            flexDirection: "row",
+            marginBottom: 20,
+            justifyContent: "space-evenly",
+            alignContent: "center",
+            width: "100%",
+        },
+        typeButton: {
+            width: "30%",
+            alignItems: "center",
+            padding: 12,
+            borderWidth: 2,
+            borderColor: themeColors.buttons,
+            borderRadius: 40,
+        },
+        selectedTypeButton: {
+            backgroundColor: themeColors.buttons,
+        },
+        typeText: {
+            fontSize: 16,
+            color: themeColors.revbuttons,
+        },
+        amountBox: {
+            justifyContent: "center",
+            alignContent: "center",
+            flexDirection: "row",
+            alignSelf: "center",
+        },
+        amountInput: {
+            fontSize: 32,
+            fontWeight: "bold",
+            marginBottom: 16,
+            textAlign: "center",
+            borderBottomWidth: 1,
+            borderColor: themeColors.buttons,
+            color: themeColors.buttons,
+            paddingHorizontal: 20,
+        },
+        label: {
+            fontSize: 18,
+            marginVertical: 8,
+            color: themeColors.headertext,
+        },
+        input: {
+            borderWidth: 1,
+            borderColor: "#ccc",
+            marginBottom: 16,
+        },
+        modalContainer: {
+            flex: 1,
+            justifyContent: "center",
+            alignContent: "center",
+            alignItems: "center",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            paddingHorizontal: 15,
+        },
+        grid: {
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "90%",
+            alignSelf: "center",
+        },
+        gridItem: {
+            width: "30%",
+            aspectRatio: 1,
+            alignItems: "center",
+            marginBottom: 20,
+            backgroundColor: themeColors.row,
+            justifyContent: "center",
+            alignContent: "center",
+            borderRadius: 10,
+        },
+        repItem: {
+            alignItems: "center",
+            marginBottom: 20,
+            backgroundColor: themeColors.row,
+            justifyContent: "center",
+            alignContent: "center",
+            borderRadius: 10,
+            width: "70%",
+        },
+        modalItem: {
+            marginTop: 8,
+            fontSize: 15,
+        },
 
-const createStyles = (themeColors, fontSizes) => StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'flex-start',
-        alignItems: 'left',
-        backgroundColor: themeColors.background,
-        paddingHorizontal: 20,
-        paddingVertical: 15,
-    },
-    text: {
-        fontFamily: "System",
-        fontSize: fontSizes.fifteen,
-        color: themeColors.headertext,
-    },
-    buttonText: {
-        fontSize: fontSizes.eighteen,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center',
-    },
-    date: {
-        fontFamily: "System",
-        fontSize: fontSizes.fifteen,
-        color: 'black',
-    },
-    dateBox: {
-        backgroundColor: 'white',
-        padding: 10,
-        borderRadius: 5,
-        marginBottom: 20,
-        justifyContent: 'center',
-        alignItems: 'left',
-        width: '100%',
-    },
-    dateText: {
-        color: 'black',
-        fontSize: fontSizes.fifteen,
-    },
-    selectDateButtonText: {
-        color: '#ccc',
-        fontSize: fontSizes.fifteen,
-    },
-    textbox: {
-        alignContent: "center",
-        justifyContent: "flex-start",
-        alignItems: "left",
-        paddingHorizontal: 10,
-        paddingVertical: 10,
-        width: 350,
-        height: 100,
-        borderRadius: 4,
-        backgroundColor: 'white',
-        marginBottom: 20
-    },
-    savebutn: {
-        width: 100,
-        height: 30,
-        backgroundColor: themeColors.buttons,
-        borderRadius: 4,
-        alignItems: "center",
-        justifyContent: "center",
-        width: '40%', // Adjust width as needed
-        height: 30,
-        left: 210,
-    },
-    savetext: {
-        color: themeColors.whitetext,
-        fontSize: fontSizes.fourteen,
-    }
-});
+        saveButton: {
+            alignItems: "center",
+            padding: 12,
+            backgroundColor: themeColors.buttons,
+            borderRadius: 4,
+            width: "50%",
+            alignSelf: "center",
+        },
+        saveButtonText: {
+            color: "#fff",
+            fontSize: 16,
+        },
+        line: {
+            borderBottomColor: themeColors.buttons,
+            borderBottomWidth: 1,
+            marginVertical: 10,
+        },
+    });
+
+export default NewReminderScreen;

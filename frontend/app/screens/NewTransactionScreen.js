@@ -33,8 +33,8 @@ const NewTransactionScreen = () => {
     const { walletId, walletName } = route.params;
 
     const themeColors = isLightTheme ? colors.light : colors.dark;
-
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     const [amount, setAmount] = useState("");
     const [type, setType] = useState("Expense");
@@ -199,13 +199,12 @@ const NewTransactionScreen = () => {
 
                     <View style={styles.line}></View>
 
-                    
-
                     <View
                         style={{
                             flexDirection: "column",
                             justifyContent: "space-between",
                             alignItems: "flex-start",
+                            marginBottom: 10
                         }}
                     >
                         <TextInput
@@ -221,6 +220,9 @@ const NewTransactionScreen = () => {
                                     height: 200,
                                     color: themeColors.buttons,
                                     justifyContent: "flex-start",
+                                    backgroundColor: themeColors.row,
+                                    padding: 10,
+                                    borderRadius: 10,
                                 },
                                 styles.label,
                             ]}
@@ -307,7 +309,7 @@ const createStyles = (themeColors) =>
             marginBottom: 20,
             justifyContent: "space-evenly",
             alignContent: "center",
-            width: "100%"
+            width: "100%",
         },
         typeButton: {
             width: "30%",

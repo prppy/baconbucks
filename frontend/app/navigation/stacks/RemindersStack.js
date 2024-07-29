@@ -8,8 +8,8 @@ const Stack = createStackNavigator();
 
 export const RemindersStack = () => {
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="RemindersScreen" options={{ headerShown: false }} component={RemindersScreen} />
+        <Stack.Navigator initialRouteName="Reminders"  screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Reminders" component={RemindersScreen} />
             <Stack.Screen name="NewReminder" component={NewReminderScreen} />
         </Stack.Navigator>
     );
