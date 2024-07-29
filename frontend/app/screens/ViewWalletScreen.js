@@ -232,7 +232,7 @@ const createStyles = (themeColors) =>
             backgroundColor: themeColors.row,
             padding: 20,
             borderRadius: 10,
-            marginVertical: 10,
+            marginTop: 10,
             alignItems: "center",
             alignSelf: "center",
             flexDirection: "row",

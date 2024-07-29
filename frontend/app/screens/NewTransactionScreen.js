@@ -63,7 +63,6 @@ const NewTransactionScreen = () => {
         { id: "D", name: "Daily" },
         { id: "W", name: "Weekly" },
         { id: "M", name: "Monthly" },
-        { id: "Y", name: "Yearly" },
     ];
 
     const handleDateConfirm = (selectedDate) => {

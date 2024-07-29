@@ -51,20 +51,30 @@ class Transaction(models.Model):
         }
         
         delta = frequency_map.get(self.repeating)
-        
+
+        # Set the maximum date for the year
+        end_of_year = self.date.replace(month=12, day=31)
         next_date = self.date + delta
 
-        while next_date.year == self.date.year:
-            Transaction.objects.create(
-                date=next_date,
-                amount=self.amount,
-                type=self.type,
-                category=self.category,
-                repeating=self.repeating,
-                wallet=self.wallet,
-                description=self.description
-            )
+        # Create transactions until the end of the year
+        while next_date <= end_of_year:
+            try:
+                Transaction.objects.create(
+                    date=next_date,
+                    amount=self.amount,
+                    type=self.type,
+                    category=self.category,
+                    repeating=self.repeating,
+                    wallet=self.wallet,
+                    description=self.description
+                )
+            except Exception as e:
+                # Log or handle error
+                print(f"Error creating transaction: {e}")
+            
+            # Move to the next occurrence
             next_date += delta
+
 
 class Reminder(models.Model):
     date = models.DateField()
