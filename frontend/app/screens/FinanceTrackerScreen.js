@@ -505,7 +505,7 @@ const createStyles = (themeColors, fontSizes) =>
             alignItems: "center",
         },
         inner: {
-            marginTop: 60,
+            paddingTop: 60,
             width: "100%",
             padding: 30,
             flex: 1,

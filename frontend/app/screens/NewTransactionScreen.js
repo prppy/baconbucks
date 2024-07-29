@@ -41,11 +41,8 @@ const NewTransactionScreen = () => {
     const [category, setCategory] = useState("");
     const [categoryName, setCategoryName] = useState("");
     const [date, setDate] = useState(new Date());
-    const [repeating, setRepeating] = useState("N");
-    const [repeatingName, setRepeatingName] = useState("Never");
     const [description, setDescription] = useState("");
     const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-    const [repeatingModalVisible, setRepeatingModalVisible] = useState(false);
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const categories = [
@@ -58,15 +55,7 @@ const NewTransactionScreen = () => {
         { id: "TU", name: "TopUp", icon: "refresh-outline" },
     ];
 
-    const repeatingOptions = [
-        { id: "N", name: "Never" },
-        { id: "D", name: "Daily" },
-        { id: "W", name: "Weekly" },
-        { id: "M", name: "Monthly" },
-    ];
-
     const handleDateConfirm = (selectedDate) => {
-        console.log(selectedDate);
         setDate(selectedDate);
         setDatePickerVisibility(false);
     };
@@ -93,13 +82,7 @@ const NewTransactionScreen = () => {
     };
 
     const handleNewTransaction = async () => {
-        if (
-            !amount ||
-            !category ||
-            !date ||
-            !type ||
-            !repeating
-        ) {
+        if (!amount || !category || !date || !type) {
             Alert.alert(
                 "Validation Error",
                 "Please fill in all required fields."
@@ -114,7 +97,6 @@ const NewTransactionScreen = () => {
                 amount: parseFloat(amount),
                 type: type === "Expense" ? "EX" : "EA",
                 category: category,
-                repeating: repeating,
                 wallet: walletId,
                 description: description,
             };
@@ -146,190 +128,150 @@ const NewTransactionScreen = () => {
                 <Text style={styles.headertext}>
                     New Transaction for {walletName}
                 </Text>
-                <View style={styles.typeSelector}>
-                    <TouchableOpacity
-                        onPress={() => setType("Expense")}
-                        style={[
-                            styles.typeButton,
-                            type === "Expense" && styles.selectedTypeButton,
-                        ]}
+                <View style={styles.inner}>
+                    <View style={styles.typeSelector}>
+                        <TouchableOpacity
+                            onPress={() => setType("Expense")}
+                            style={[
+                                styles.typeButton,
+                                type === "Expense" && styles.selectedTypeButton,
+                            ]}
+                        >
+                            <Text style={styles.typeText}>EXPENSE</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => setType("Income")}
+                            style={[
+                                styles.typeButton,
+                                type === "Income" && styles.selectedTypeButton,
+                            ]}
+                        >
+                            <Text style={styles.typeText}>INCOME</Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={styles.amountBox}>
+                        <TextInput
+                            style={styles.amountInput}
+                            placeholder="0.00"
+                            keyboardType="numeric"
+                            value={amount}
+                            onChangeText={handleAmountChange}
+                        />
+                    </View>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
                     >
-                        <Text style={styles.typeText}>EXPENSE</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => setType("Income")}
-                        style={[
-                            styles.typeButton,
-                            type === "Income" && styles.selectedTypeButton,
-                        ]}
+                        <Text style={styles.label}>Category</Text>
+
+                        <TouchableOpacity
+                            onPress={() => setCategoryModalVisible(true)}
+                        >
+                            <Text style={styles.label}>
+                                {categoryName || "Select Category"}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={styles.line}></View>
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
                     >
-                        <Text style={styles.typeText}>INCOME</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.amountBox}>
-                    <TextInput
-                        style={styles.amountInput}
-                        placeholder="0.00"
-                        keyboardType="numeric"
-                        value={amount}
-                        onChangeText={handleAmountChange}
-                    />
-                </View>
+                        <Text style={styles.label}>Date</Text>
 
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingHorizontal: 20,
-                    }}
-                >
-                    <Text style={styles.label}>Category</Text>
+                        <TouchableOpacity
+                            onPress={() => setDatePickerVisibility(true)}
+                        >
+                            <Text style={styles.label}>
+                                {date.toLocaleDateString()}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
 
-                    <TouchableOpacity
-                        onPress={() => setCategoryModalVisible(true)}
+                    <View style={styles.line}></View>
+
+                    
+
+                    <View
+                        style={{
+                            flexDirection: "column",
+                            justifyContent: "space-between",
+                            alignItems: "flex-start",
+                        }}
                     >
-                        <Text style={styles.label}>
-                            {categoryName || "Select Category"}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.line}></View>
-
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingHorizontal: 20,
-                    }}
-                >
-                    <Text style={styles.label}>Date</Text>
-
-                    <TouchableOpacity
-                        onPress={() => setDatePickerVisibility(true)}
-                    >
-                        <Text style={styles.label}>
-                            {date.toLocaleDateString()}
-                        </Text>
-                    </TouchableOpacity>
-                </View>
-
-                <View style={styles.line}></View>
-
-                <View
-                    style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        paddingHorizontal: 20,
-                    }}
-                >
-                    <Text style={styles.label}>Repeating</Text>
+                        <TextInput
+                            value={description}
+                            onChangeText={setDescription}
+                            placeholder="Notes"
+                            placeholderTextColor={themeColors.buttons}
+                            multiline={true}
+                            style={[
+                                {
+                                    width: "100%",
+                                    height: 200,
+                                    color: themeColors.buttons,
+                                    justifyContent: "flex-start",
+                                },
+                                styles.label,
+                            ]}
+                        />
+                    </View>
 
                     <TouchableOpacity
-                        onPress={() => setRepeatingModalVisible(true)}
+                        style={styles.saveButton}
+                        onPress={handleNewTransaction}
                     >
-                        <Text style={styles.label}>{repeatingName}</Text>
+                        <Text style={styles.saveButtonText}>Save</Text>
                     </TouchableOpacity>
-                </View>
 
-                <View style={styles.line}></View>
-
-                <View
-                    style={{
-                        flexDirection: "column",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        paddingHorizontal: 20,
-                    }}
-                >
-                    <TextInput
-                        value={description}
-                        onChangeText={setDescription}
-                        placeholder="Notes"
-                        placeholderTextColor={themeColors.buttons}
-                        multiline={true}
-                        style={[
-                            {
-                                width: "100%",
-                                height: 200,
-                                color: themeColors.buttons,
-                                justifyContent: "flex-start",
-                            },
-                            styles.label,
-                        ]}
-                    />
-                </View>
-
-                <TouchableOpacity
-                    style={styles.saveButton}
-                    onPress={handleNewTransaction}
-                >
-                    <Text style={styles.saveButtonText}>Save</Text>
-                </TouchableOpacity>
-
-                {/* Modals */}
-                <Modal
-                    visible={categoryModalVisible}
-                    transparent={true}
-                    animationType="slide"
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.grid}>
-                            {categories.map((cat, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    style={styles.gridItem}
-                                    onPress={() => {
-                                        setCategory(cat.id);
-                                        setCategoryName(cat.name);
-                                        setCategoryModalVisible(false);
-                                    }}
-                                >
-                                    <Ionicons
-                                        name={cat.icon}
-                                        size={24}
-                                        color={themeColors.buttons}
-                                    />
-                                    <Text style={styles.modalItem}>
-                                        {cat.name}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
+                    {/* Modals */}
+                    <Modal
+                        visible={categoryModalVisible}
+                        transparent={true}
+                        animationType="slide"
+                    >
+                        <View style={styles.modalContainer}>
+                            <View style={styles.grid}>
+                                {categories.map((cat, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        style={styles.gridItem}
+                                        onPress={() => {
+                                            setCategory(cat.id);
+                                            setCategoryName(cat.name);
+                                            setCategoryModalVisible(false);
+                                        }}
+                                    >
+                                        <Ionicons
+                                            name={cat.icon}
+                                            size={35}
+                                            color={themeColors.buttons}
+                                        />
+                                        <Text style={styles.modalItem}>
+                                            {cat.name}
+                                        </Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
                         </View>
-                    </View>
-                </Modal>
+                    </Modal>
 
-                <Modal
-                    visible={repeatingModalVisible}
-                    transparent={true}
-                    animationType="slide"
-                >
-                    <View style={styles.modalContainer}>
-                        {repeatingOptions.map((rep, index) => (
-                            <TouchableOpacity
-                                key={index}
-                                style={styles.repItem}
-                                onPress={() => {
-                                    setRepeating(rep.id);
-                                    setRepeatingName(rep.name);
-                                    setRepeatingModalVisible(false);
-                                }}
-                            >
-                                <Text style={styles.label}>{rep.name}</Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </Modal>
-
-                <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={handleDateConfirm}
-                    onCancel={() => setDatePickerVisibility(false)}
-                />
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleDateConfirm}
+                        onCancel={() => setDatePickerVisibility(false)}
+                    />
+                </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -353,12 +295,18 @@ const createStyles = (themeColors) =>
             color: themeColors.headertext,
             paddingBottom: 20,
         },
+        inner: {
+            paddingTop: 60,
+            width: "100%",
+            padding: 30,
+            flex: 1,
+        },
         typeSelector: {
             flexDirection: "row",
             marginBottom: 20,
-            justifyContent: "center",
+            justifyContent: "space-evenly",
             alignContent: "center",
-            paddingTop: 60,
+            width: "100%"
         },
         typeButton: {
             width: "30%",
@@ -367,7 +315,6 @@ const createStyles = (themeColors) =>
             borderWidth: 2,
             borderColor: themeColors.buttons,
             borderRadius: 40,
-            marginHorizontal: 20,
         },
         selectedTypeButton: {
             backgroundColor: themeColors.buttons,
@@ -408,6 +355,7 @@ const createStyles = (themeColors) =>
             alignContent: "center",
             alignItems: "center",
             backgroundColor: "rgba(0, 0, 0, 0.5)",
+            paddingHorizontal: 15,
         },
         grid: {
             flexDirection: "row",
@@ -457,7 +405,6 @@ const createStyles = (themeColors) =>
             borderBottomColor: themeColors.buttons,
             borderBottomWidth: 1,
             marginVertical: 10,
-            marginHorizontal: 20,
         },
     });
 

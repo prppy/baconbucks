@@ -8,7 +8,7 @@ from .models import Transaction, Reminder
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
-        fields = ['id', 'date', 'amount', 'type', 'category', 'repeating', 'wallet', 'description']
+        fields = ['id', 'date', 'amount', 'type', 'category', 'wallet', 'description']
 
     def create(self, validated_data):
         amount = validated_data.get('amount', Decimal("0.00"))
@@ -23,7 +23,6 @@ class TransactionSerializer(serializers.ModelSerializer):
         instance.amount = validated_data.get('amount', instance.amount)
         instance.type = validated_data.get('type', instance.type)
         instance.category = validated_data.get('category', instance.category)
-        instance.repeating = validated_data.get('repeating', instance.repeating)
         instance.wallet = validated_data.get('wallet', instance.wallet)
         instance.description = validated_data.get('description', instance.description)
 
@@ -36,7 +35,7 @@ class TransactionSerializer(serializers.ModelSerializer):
 class ReminderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reminder
-        fields = ['id', 'date', 'name', 'description', 'repeating', 'user']
+        fields = ['id', 'date', 'name', 'description', 'user']
 
     def create(self, validated_data):
         instance = Reminder.objects.create(**validated_data)
@@ -46,7 +45,6 @@ class ReminderSerializer(serializers.ModelSerializer):
         instance.date = validated_data.get('date', instance.date)
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
-        instance.repeating = validated_data.get('repeating', instance.repeating)
 
         instance.save()
         return instance

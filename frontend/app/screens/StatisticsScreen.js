@@ -194,7 +194,7 @@ const StatisticsDashboardScreen = () => {
                                     styles.selectedWalletButton,
                             ]}
                         >
-                            <Text style={styles.label}>All Wallets</Text>
+                            <Text style={[styles.label, {marginHorizontal: 15}]}>All</Text>
                         </TouchableOpacity>
 
                         {walletOptions.map((wallet) => (
