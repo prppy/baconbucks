@@ -211,7 +211,7 @@ class StatisticsDashboardView(APIView):
         cumulative_net_worth = 0
         for i in range(7):
             day = end_date - timedelta(days=i)
-            day_transactions = transactions.filter(date__date=day.date())
+            day_transactions = transactions.filter(date=day.date())
             day_income = day_transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
             cumulative_net_worth += (day_income - day_expense)

@@ -5,6 +5,7 @@ import {
     Text,
     View,
     TouchableOpacity,
+    ActivityIndicator,
     ScrollView,
     Dimensions,
 } from "react-native";
@@ -39,6 +40,9 @@ const StatisticsDashboardScreen = () => {
     const [walletFilter, setWalletFilter] = useState("all");
     const [walletOptions, setWalletOptions] = useState([]);
 
+    const [error, setError] = useState();
+    const [isLoading, setIsLoading] = useState(true);
+
     useFocusEffect(
         useCallback(() => {
             fetchStatisticsData();
@@ -46,6 +50,7 @@ const StatisticsDashboardScreen = () => {
     );
 
     const fetchStatisticsData = async () => {
+        setIsLoading(true);
         try {
             const json = await fetchData(
                 `user/get-statistics/?time=${timeFilter}&wallet=${walletFilter}`
@@ -56,6 +61,9 @@ const StatisticsDashboardScreen = () => {
             setWalletOptions(json.wallet_options);
         } catch (error) {
             console.error("Error fetching statistics data:", error);
+            setError(error.message || "Failed to fetch trans data");
+        } finally{
+            setIsLoading(false);
         }
     };
 
@@ -70,6 +78,35 @@ const StatisticsDashboardScreen = () => {
     const handleWalletFilterChange = (filter) => {
         setWalletFilter(filter);
     };
+
+    if (isLoading) {
+        return (
+            <SafeAreaView
+                style={[
+                    styles.background,
+                    { justifyContent: "center", alignContent: "center" },
+                ]}
+            >
+                <ActivityIndicator
+                    size="large"
+                    color={themeColors.headertext}
+                />
+            </SafeAreaView>
+        );
+    }
+
+    if (error) {
+        return (
+            <SafeAreaView
+                style={[
+                    styles.background,
+                    { justifyContent: "center", alignContent: "center" },
+                ]}
+            >
+                <Text>{error}</Text>
+            </SafeAreaView>
+        );
+    }
 
     return (
         <SafeAreaView style={[styles.background, styles.centered]}>
