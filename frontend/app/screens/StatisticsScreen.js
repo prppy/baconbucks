@@ -15,8 +15,6 @@ import { PieChart, LineChart } from "react-native-chart-kit";
 import { Context } from "../components/GlobalContext";
 import colors from "../config/colors";
 
-const screenWidth = Dimensions.get("window").width - 30;
-
 const StatisticsDashboardScreen = () => {
     const navigation = useNavigation();
     const globalContext = useContext(Context);
@@ -32,7 +30,7 @@ const StatisticsDashboardScreen = () => {
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
     const styles = createStyles(themeColors, fontSizes);
 
-    const [timeFilter, setTimeFilter] = useState("month");
+    const [timeFilter, setTimeFilter] = useState("all");
     const [netWorth, setNetWorth] = useState(0);
     const [netWorthHistory, setNetWorthHistory] = useState([]);
     const [showNetWorthGraph, setShowNetWorthGraph] = useState(false);
@@ -41,6 +39,7 @@ const StatisticsDashboardScreen = () => {
     const [walletOptions, setWalletOptions] = useState([]);
     const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(true);
+    const [chartWidth, setChartWidth] = useState(0);
 
     useFocusEffect(
         useCallback(() => {
@@ -115,6 +114,17 @@ const StatisticsDashboardScreen = () => {
         setWalletFilter(filter);
     };
 
+    const chartConfig = {
+        backgroundGradientFrom: "#ffffff", // or use transparent for no gradient
+        backgroundGradientFromOpacity: 0, // ensures no opacity for background gradient
+        backgroundGradientTo: "#ffffff", // or use transparent for no gradient
+        backgroundGradientToOpacity: 0, // ensures no opacity for background gradient
+        color: () => themeColors.buttons,
+        strokeWidth: 2,
+        barPercentage: 0.5,
+        useShadowColorFromDataset: false, // optional, removes shadow
+    };
+
     return (
         <SafeAreaView style={[styles.background, styles.centered]}>
             <Text style={styles.headertext}>Statistics Dashboard</Text>
@@ -123,7 +133,22 @@ const StatisticsDashboardScreen = () => {
                     contentContainerStyle={styles.scrollViewContent}
                     showsVerticalScrollIndicator={true}
                 >
-                    <View style={styles.filterContainer}>
+                    <View
+                        style={styles.filterContainer}
+                        onLayout={(event) =>
+                            setChartWidth(event.nativeEvent.layout.width)
+                        }
+                    >
+                        <TouchableOpacity
+                            onPress={() => handleTimeFilterChange("all")}
+                            style={[
+                                styles.typeButton,
+                                timeFilter === "all" &&
+                                    styles.selectedTypeButton,
+                            ]}
+                        >
+                            <Text style={styles.label}>All</Text>
+                        </TouchableOpacity>
                         <TouchableOpacity
                             onPress={() => handleTimeFilterChange("week")}
                             style={[
@@ -154,110 +179,114 @@ const StatisticsDashboardScreen = () => {
                         >
                             <Text style={styles.label}>Year</Text>
                         </TouchableOpacity>
+                    </View>
+
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={true}
+                        contentContainerStyle={styles.walletOptionsContainer}
+                    >
                         <TouchableOpacity
-                            onPress={() => handleTimeFilterChange("all")}
+                            onPress={() => handleWalletFilterChange("all")}
                             style={[
-                                styles.typeButton,
-                                timeFilter === "all" &&
-                                    styles.selectedTypeButton,
+                                styles.walletButton,
+                                walletFilter === "all" &&
+                                    styles.selectedWalletButton,
                             ]}
                         >
-                            <Text style={styles.label}>All</Text>
+                            <Text style={styles.label}>All Wallets</Text>
                         </TouchableOpacity>
-                    </View>
 
-                    <View style={styles.netWorthContainer}>
-                        <Text style={styles.netWorthText}>Net Worth</Text>
-                        <TouchableOpacity onPress={handleNetWorthClick}>
-                            {showNetWorthGraph ? (
-                                <LineChart
-                                    data={{
-                                        labels: netWorthHistory.map(
-                                            (item) => item.label
-                                        ),
-                                        datasets: [
-                                            {
-                                                data: netWorthHistory.map(
-                                                    (item) => item.value
-                                                ),
-                                            },
-                                        ],
-                                    }}
-                                    width={screenWidth - 30}
-                                    height={220}
-                                    chartConfig={chartConfig}
-                                />
-                            ) : (
-                                <Text style={styles.netWorthAmount}>
-                                    {netWorth}
-                                </Text>
-                            )}
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.piggyBankContainer}>
-                        <Text style={styles.netWorthText}>Piggy Bank</Text>
-                        <ScrollView
-                            horizontal
-                            showsHorizontalScrollIndicator={true}
-                            contentContainerStyle={
-                                styles.walletOptionsContainer
-                            }
-                        >
+                        {walletOptions.map((wallet) => (
                             <TouchableOpacity
-                                onPress={() => handleWalletFilterChange("all")}
+                                key={wallet.id}
+                                onPress={() =>
+                                    handleWalletFilterChange(wallet.id)
+                                }
                                 style={[
                                     styles.walletButton,
-                                    walletFilter === "all" &&
+                                    walletFilter === wallet.id &&
                                         styles.selectedWalletButton,
                                 ]}
                             >
-                                <Text style={styles.label}>All Wallets</Text>
+                                <Text style={styles.label}>{wallet.name}</Text>
                             </TouchableOpacity>
+                        ))}
+                    </ScrollView>
 
-                            {walletOptions.map((wallet) => (
-                                <TouchableOpacity
-                                    key={wallet.id}
-                                    onPress={() =>
-                                        handleWalletFilterChange(wallet.id)
-                                    }
-                                    style={[
-                                        styles.walletButton,
-                                        walletFilter === wallet.id &&
-                                            styles.selectedWalletButton,
-                                    ]}
+                    <View style={styles.line}></View>
+
+                    <TouchableOpacity
+                        onPress={handleNetWorthClick}
+                        style={{ width: "100%" }}
+                    >
+                        {showNetWorthGraph ? (
+                            <LineChart
+                                data={{
+                                    labels: netWorthHistory.map(
+                                        (item) => item.label
+                                    ),
+                                    datasets: [
+                                        {
+                                            data: netWorthHistory.map(
+                                                (item) => item.value
+                                            ),
+                                        },
+                                    ],
+                                }}
+                                width={chartWidth}
+                                height={220}
+                                chartConfig={chartConfig}
+                            />
+                        ) : (
+                            <View
+                                style={{
+                                    width: "70%",
+                                    height: 200,
+                                    backgroundColor: themeColors.row,
+                                    alignSelf: "center",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    borderRadius: 10,
+                                    shadowColor: themeColors.settingsicons,
+                                    shadowOffset: { width: 5, height: 10 },
+                                    shadowOpacity: 0.5,
+                                    shadowRadius: 2,
+                                    marginBottom: 20,
+                                    padding: 20,
+                                }}
+                            >
+                                <Text style={styles.netWorthText}>
+                                    Net Worth
+                                </Text>
+                                <Text
+                                    style={{ fontSize: 30, fontWeight: "bold" }}
                                 >
-                                    <Text style={styles.label}>
-                                        {wallet.name}
-                                    </Text>
-                                </TouchableOpacity>
-                            ))}
-                        </ScrollView>
+                                    {netWorth}
+                                </Text>
+                                <Text>Click</Text>
+                            </View>
+                        )}
+                    </TouchableOpacity>
+                    <View style={styles.line}></View>
 
-                        <PieChart
-                            data={chartData}
-                            width={screenWidth}
-                            height={200}
-                            chartConfig={chartConfig}
-                            accessor="amount"
-                            backgroundColor="transparent"
-                            paddingLeft="0"
-                        />
-                    </View>
+                    <Text style={styles.netWorthText}>
+                        Piggy Bank (Expenditure)
+                    </Text>
+
+                    <PieChart
+                        data={chartData}
+                        width={chartWidth}
+                        height={200}
+                        chartConfig={chartConfig}
+                        accessor="amount"
+                        backgroundColor="transparent"
+                        paddingLeft="0"
+                    />
                 </ScrollView>
             </View>
         </SafeAreaView>
     );
-};
-
-const chartConfig = {
-    backgroundGradientFrom: "#1E2923",
-    backgroundGradientFromOpacity: 0,
-    backgroundGradientTo: "#08130D",
-    backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
-    strokeWidth: 2,
-    barPercentage: 0.5,
 };
 
 const createStyles = (themeColors, fontSizes) =>
@@ -314,37 +343,18 @@ const createStyles = (themeColors, fontSizes) =>
             fontSize: 15,
             color: themeColors.headertext,
         },
-        filter: {
-            color: themeColors.secondary,
-            fontSize: fontSizes.medium,
-            marginHorizontal: 5,
-            alignSelf: "center",
-        },
-        activeFilter: {
-            color: themeColors.primary,
-            fontSize: fontSizes.medium,
-            marginHorizontal: 5,
-        },
-        netWorthContainer: {
-            width: "100%",
-            marginBottom: 20,
-        },
         netWorthText: {
             fontSize: 18,
             fontWeight: "bold",
             color: themeColors.buttons,
             alignSelf: "center",
-            marginBottom: 20,
+            marginBottom: 10,
         },
         netWorthAmount: {
             fontSize: fontSizes.large,
             color: themeColors.primary,
             textAlign: "center",
             marginVertical: 10,
-        },
-        piggyBankContainer: {
-            width: "100%",
-            alignItems: "center",
         },
         walletOptionsContainer: {
             flexDirection: "row",
@@ -363,6 +373,13 @@ const createStyles = (themeColors, fontSizes) =>
         },
         selectedWalletButton: {
             backgroundColor: themeColors.buttons,
+        },
+        line: {
+            borderBottomColor: themeColors.buttons,
+            borderBottomWidth: 1,
+            marginVertical: 10,
+            marginHorizontal: 20,
+            width: "100%",
         },
     });
 

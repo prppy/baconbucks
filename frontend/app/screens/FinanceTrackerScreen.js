@@ -279,7 +279,7 @@ const FinanceTrackerScreen = () => {
                             <Text style={{fontWeight:"bold", color: "red", fontSize:18, marginTop: 10}}>{totalExpense}</Text>
                         </View>
                     </View>
-                    <View style={{flex: 1, borderColor: themeColors.buttons, borderWidth: 1, borderRadius: 10}}>
+                    <View style={{flex: 1, borderColor: themeColors.buttons, borderRadius: 10}}>
                         <FlatList
                             data={flattenedData}
                             keyExtractor={(item) => `${item.type}-${item.id}`}
