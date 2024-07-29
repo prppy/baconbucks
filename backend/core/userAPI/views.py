@@ -186,17 +186,18 @@ class StatisticsDashboardView(APIView):
         wallet_filter = request.GET.get('wallet', 'all')
 
         # Determine the time range based on the filter
+        end_date = datetime.now()
         if time_filter == 'week':
-            start_date = datetime.now() - timedelta(days=7)
+            start_date = end_date - timedelta(days=7)
         elif time_filter == 'month':
-            start_date = datetime.now() - timedelta(days=30)
+            start_date = end_date - timedelta(days=30)
         elif time_filter == 'year':
-            start_date = datetime.now() - timedelta(days=365)
+            start_date = end_date - timedelta(days=365)
         else:
             start_date = datetime.min
 
         # Filter transactions based on wallet and time range
-        transactions = Transaction.objects.filter(date__gte=start_date)
+        transactions = Transaction.objects.filter(date__gte=start_date, date__lt=end_date)
         if wallet_filter != 'all':
             transactions = transactions.filter(wallet__id=wallet_filter)
 
@@ -208,7 +209,7 @@ class StatisticsDashboardView(APIView):
         # Prepare net worth history data
         net_worth_history = []
         for i in range(7):
-            day = datetime.now() - timedelta(days=i)
+            day = end_date - timedelta(days=i)
             day_transactions = transactions.filter(date__date=day.date())
             day_income = day_transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
