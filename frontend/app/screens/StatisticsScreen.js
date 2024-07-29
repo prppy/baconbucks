@@ -4,17 +4,19 @@ import {
     StyleSheet,
     Text,
     View,
-    Dimensions,
-    ActivityIndicator,
+    TouchableOpacity,
+    ScrollView,
+    Dimensions
 } from "react-native";
-import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from "@react-navigation/native";
-import { PieChart, LineChart } from "react-native-chart-kit"; // Fixed import statement
-
-import colors from "../config/colors";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { PieChart, LineChart } from "react-native-chart-kit";
 import { Context } from "../components/GlobalContext";
+import colors from "../config/colors";
 
-const StatisticsScreen = () => {
+const screenWidth = Dimensions.get("window").width;
+
+const StatisticsDashboardScreen = () => {
     const navigation = useNavigation();
     const globalContext = useContext(Context);
     const {
@@ -29,157 +31,175 @@ const StatisticsScreen = () => {
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
     const styles = createStyles(themeColors, fontSizes);
 
-    const [type, setType] = useState("Expense");
-    const [dateRange, setDateRange] = useState("week");
-    const [wallet, setWallet] = useState("all");
+    const [timeFilter, setTimeFilter] = useState("month");
     const [netWorth, setNetWorth] = useState(0);
-    const [categoryData, setCategoryData] = useState([]);
-    const [netWorthTrend, setNetWorthTrend] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [netWorthHistory, setNetWorthHistory] = useState([]);
+    const [showNetWorthGraph, setShowNetWorthGraph] = useState(false);
+    const [piggyBankData, setPiggyBankData] = useState([]);
+    const [walletFilter, setWalletFilter] = useState("all");
+    const [walletOptions, setWalletOptions] = useState([]);
 
     useEffect(() => {
-        fetchStatistics();
-    }, [type, dateRange, wallet]);
+        fetchStatisticsData();
+    }, [timeFilter, walletFilter]);
 
-    const fetchStatistics = async () => {
-        setIsLoading(true);
+    const fetchStatisticsData = async () => {
         try {
-            const response = await fetchData("user/get-statistics/", "GET", {
-                type: type,
-                period: dateRange,
-                wallet_id: wallet
-            });
-            const json = await response.json(); // Added response parsing
+            const json = await fetchData(`user/get-statistics/?time=${timeFilter}&wallet=${walletFilter}`);
             setNetWorth(json.net_worth);
-            setCategoryData(json.category_data);
-            setNetWorthTrend(json.net_worth_trend);
+            setNetWorthHistory(json.net_worth_history);
+            setPiggyBankData(json.piggy_bank);
+            setWalletOptions(json.wallet_options);
         } catch (error) {
-            console.error("Error fetching statistics:", error);
-        } finally {
-            setIsLoading(false);
+            console.error("Error fetching statistics data:", error);
         }
     };
 
-    const pieChartData = categoryData.map((cat, index) => ({
-        name: cat.category,
-        amount: cat.amount,
-        color: cat.color,
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15,
-        key: index.toString() // Added unique key
-    }));
-
-    const chartConfig = {
-        backgroundGradientFrom: themeColors.background,
-        backgroundGradientTo: themeColors.background,
-        decimalPlaces: 2,
-        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-        style: {
-            borderRadius: 16,
-        },
+    const handleNetWorthClick = () => {
+        setShowNetWorthGraph(!showNetWorthGraph);
     };
 
-    if (isLoading) {
-        return (
-            <SafeAreaView style={styles.background}>
-                <ActivityIndicator size="large" color={themeColors.headertext} />
-            </SafeAreaView>
-        );
-    }
+    const handleTimeFilterChange = (filter) => {
+        setTimeFilter(filter);
+    };
+
+    const handleWalletFilterChange = (filter) => {
+        setWalletFilter(filter);
+    };
 
     return (
-        <SafeAreaView style={styles.background}>
+        <SafeAreaView style={[styles.background, styles.centered]}>
             <Text style={styles.headertext}>Statistics Dashboard</Text>
-            <View style={styles.inner}>
-                <View style={styles.filters}>
-                    <Picker
-                        selectedValue={type}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setType(itemValue)}
-                    >
-                        <Picker.Item label="Expense" value="Expense" key="expense" />
-                        <Picker.Item label="Income" value="Income" key="income" />
-                    </Picker>
-                    <Picker
-                        selectedValue={dateRange}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setDateRange(itemValue)}
-                    >
-                        <Picker.Item label="Week" value="week" key="week" />
-                        <Picker.Item label="Month" value="month" key="month" />
-                        <Picker.Item label="Year" value="year" key="year" />
-                        <Picker.Item label="All" value="all" key="all" />
-                    </Picker>
-                    <Picker
-                        selectedValue={wallet}
-                        style={styles.picker}
-                        onValueChange={(itemValue) => setWallet(itemValue)}
-                    >
-                        <Picker.Item label="All Wallets" value="all" key="all_wallets" />
-                        {/* Add wallet options here */}
-                    </Picker>
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.filterContainer}>
+                    <TouchableOpacity onPress={() => handleTimeFilterChange("week")}>
+                        <Text style={timeFilter === "week" ? styles.activeFilter : styles.filter}>Week</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleTimeFilterChange("month")}>
+                        <Text style={timeFilter === "month" ? styles.activeFilter : styles.filter}>Month</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleTimeFilterChange("year")}>
+                        <Text style={timeFilter === "year" ? styles.activeFilter : styles.filter}>Year</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleTimeFilterChange("all")}>
+                        <Text style={timeFilter === "all" ? styles.activeFilter : styles.filter}>All</Text>
+                    </TouchableOpacity>
                 </View>
-                <Text style={styles.netWorth}>Net Worth: {netWorth}</Text>
-                {/* Display trend line graph for Net Worth */}
-                <LineChart
-                    data={{
-                        labels: netWorthTrend.map(point => point.date),
-                        datasets: [{
-                            data: netWorthTrend.map(point => point.balance), // Changed to 'balance'
-                        }],
-                    }}
-                    width={Dimensions.get("window").width - 40}
-                    height={220}
-                    chartConfig={chartConfig}
-                    bezier
-                />
-                {/* Display Pie Chart for Category Breakdown */}
-                <PieChart
-                    data={pieChartData}
-                    width={Dimensions.get("window").width - 40}
-                    height={220}
-                    chartConfig={chartConfig}
-                />
-            </View>
+
+                <View style={styles.netWorthContainer}>
+                    <Text style={styles.netWorthText}>Net Worth</Text>
+                    <TouchableOpacity onPress={handleNetWorthClick}>
+                        {showNetWorthGraph ? (
+                            <LineChart
+                                data={{
+                                    labels: netWorthHistory.map(item => item.label),
+                                    datasets: [{ data: netWorthHistory.map(item => item.value) }],
+                                }}
+                                width={screenWidth - 40}
+                                height={220}
+                                chartConfig={chartConfig}
+                            />
+                        ) : (
+                            <Text style={styles.netWorthAmount}>{netWorth}</Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
+
+                <View style={styles.piggyBankContainer}>
+                    <Text style={styles.piggyBankHeader}>Piggy Bank</Text>
+                    <View style={styles.filterContainer}>
+                        <TouchableOpacity onPress={() => handleWalletFilterChange("all")}>
+                            <Text style={walletFilter === "all" ? styles.activeFilter : styles.filter}>All Wallets</Text>
+                        </TouchableOpacity>
+                        {walletOptions.map(wallet => (
+                            <TouchableOpacity key={wallet.id} onPress={() => handleWalletFilterChange(wallet.id)}>
+                                <Text style={walletFilter === wallet.id ? styles.activeFilter : styles.filter}>
+                                    {wallet.name}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                    <PieChart
+                        data={piggyBankData}
+                        width={screenWidth - 40}
+                        height={220}
+                        chartConfig={chartConfig}
+                        accessor="amount"
+                        backgroundColor="transparent"
+                        paddingLeft="15"
+                        absolute
+                    />
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 };
 
-const createStyles = (themeColors, fontSizes) =>
-    StyleSheet.create({
-        background: {
-            flex: 1,
-            justifyContent: "flex-start",
-            alignItems: "center",
-            backgroundColor: themeColors.background,
-            padding: 20,
-        },
-        headertext: {
-            fontSize: 20,
-            fontWeight: "bold",
-            color: themeColors.headertext,
-            paddingBottom: 20,
-        },
-        inner: {
-            paddingTop: 60,
-            width: "100%",
-            padding: 30,
-            flex: 1,
-        },
-        filters: {
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginBottom: 20,
-        },
-        picker: {
-            width: 100,
-            height: 50,
-        },
-        netWorth: {
-            fontSize: 20,
-            fontWeight: "bold",
-            marginBottom: 20,
-        },
-    });
+const chartConfig = {
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
+    strokeWidth: 2,
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false,
+};
 
-export default StatisticsScreen;
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
+    background: {
+        flex: 1,
+        backgroundColor: themeColors.background,
+    },
+    centered: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    headertext: {
+        color: themeColors.primary,
+        fontSize: fontSizes.large,
+        margin: 10,
+    },
+    scrollViewContent: {
+        alignItems: "center",
+        paddingBottom: 50,
+    },
+    filterContainer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        marginVertical: 10,
+    },
+    filter: {
+        color: themeColors.secondary,
+        fontSize: fontSizes.medium,
+        marginHorizontal: 5,
+    },
+    activeFilter: {
+        color: themeColors.primary,
+        fontSize: fontSizes.medium,
+        marginHorizontal: 5,
+    },
+    netWorthContainer: {
+        marginVertical: 20,
+        alignItems: "center",
+    },
+    netWorthText: {
+        color: themeColors.primary,
+        fontSize: fontSizes.medium,
+    },
+    netWorthAmount: {
+        color: themeColors.primary,
+        fontSize: fontSizes.large,
+        marginVertical: 10,
+    },
+    piggyBankContainer: {
+        marginVertical: 20,
+        alignItems: "center",
+    },
+    piggyBankHeader: {
+        color: themeColors.primary,
+        fontSize: fontSizes.medium,
+    },
+});
+
+export default StatisticsDashboardScreen;

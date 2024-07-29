@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models import Sum
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from .models import User, Wallet
 from .serializers import UserSerializer, WalletSerializer, UserUpdateSerializer
@@ -182,68 +182,49 @@ class WalletUpdateView(APIView):
 
 class StatisticsDashboardView(APIView):
     def get(self, request, format=None):
-        user = request.user
-        filter_type = request.query_params.get('type', 'EX')  # 'EX' for expense, 'EA' for income
-        filter_period = request.query_params.get('period', 'all')  # 'week', 'month', 'year', 'all'
-        wallet_id = request.query_params.get('wallet_id', None)  # Filter by wallet if provided
+        time_filter = request.GET.get('time', 'month')
+        wallet_filter = request.GET.get('wallet', 'all')
 
-        today = date.today()
-        start_date = self.get_start_date(filter_period, today)
+        # Determine the time range based on the filter
+        if time_filter == 'week':
+            start_date = datetime.now() - timedelta(days=7)
+        elif time_filter == 'month':
+            start_date = datetime.now() - timedelta(days=30)
+        elif time_filter == 'year':
+            start_date = datetime.now() - timedelta(days=365)
+        else:
+            start_date = datetime.min
 
-        transactions = Transaction.objects.filter(
-            wallet__user=user,
-            date__gte=start_date,
-            type=filter_type
-        )
-        if wallet_id and wallet_id != 'all':
-            transactions = transactions.filter(wallet_id=wallet_id)
+        # Filter transactions based on wallet and time range
+        transactions = Transaction.objects.filter(date__gte=start_date)
+        if wallet_filter != 'all':
+            transactions = transactions.filter(wallet__id=wallet_filter)
 
-        # Net Worth Calculation
-        wallets = Wallet.objects.filter(user=user)
-        net_worth = sum(wallet.calculate_balance() for wallet in wallets)
+        # Calculate net worth
+        total_income = transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
+        total_expense = transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
+        net_worth = total_income - total_expense
 
-        # Net Worth Trend
-        net_worth_trend = []
-        for i in range(1, 13):  # For the past 12 months, adjust as needed
-            month_start = today.replace(day=1) - timedelta(days=30 * i)
-            month_end = month_start.replace(day=1) + timedelta(days=31)
-            monthly_balance = sum(
-                wallet.calculate_balance()
-                for wallet in wallets
-                if wallet.transactions.filter(date__range=[month_start, month_end]).exists()
-            )
-            net_worth_trend.append({'date': month_start.strftime('%Y-%m'), 'balance': monthly_balance})
+        # Prepare net worth history data
+        net_worth_history = []
+        for i in range(7):
+            day = datetime.now() - timedelta(days=i)
+            day_transactions = transactions.filter(date__date=day.date())
+            day_income = day_transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
+            day_expense = day_transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
+            day_net_worth = day_income - day_expense
+            net_worth_history.append({'label': day.strftime('%Y-%m-%d'), 'value': day_net_worth})
 
-        # Transactions Breakdown
-        category_breakdown = transactions.values('category').annotate(total=Sum('amount'))
-        category_data = [
-            {'category': cat['category'], 'amount': cat['total'], 'color': self.get_color_for_category(cat['category'])}
-            for cat in category_breakdown
-        ]
+        # Prepare piggy bank data
+        piggy_bank = transactions.values('category').annotate(amount=Sum('amount')).order_by('-amount')
+
+        # Get wallet options
+        wallets = Wallet.objects.filter(user=request.user)
+        wallet_options = WalletSerializer(wallets, many=True).data
 
         return Response({
             'net_worth': net_worth,
-            'net_worth_trend': net_worth_trend,
-            'category_data': category_data
-        })
-
-    def get_start_date(self, period, today):
-        if period == 'week':
-            return today - timedelta(weeks=1)
-        elif period == 'month':
-            return today - timedelta(days=30)
-        elif period == 'year':
-            return today - timedelta(days=365)
-        return date.min
-
-    def get_color_for_category(self, category):
-        color_map = {
-            'Salary': '#ffcd56',
-            'Transport': '#ff6384',
-            'Groceries': '#36a2eb',
-            'Food': '#4bc0c0',
-            'Entertainment': '#9966ff',
-            'Rent': '#c9cbcf',
-            'Top Up': '#ff9f40'
-        }
-        return color_map.get(category, '#000000')  # Default color if category not in map
+            'net_worth_history': net_worth_history,
+            'piggy_bank': list(piggy_bank),
+            'wallet_options': wallet_options,
+        }, status=200)
