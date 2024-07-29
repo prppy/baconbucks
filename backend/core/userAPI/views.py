@@ -215,7 +215,7 @@ class StatisticsDashboardView(APIView):
             day_income = day_transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
             cumulative_net_worth += (day_income - day_expense)
-            net_worth_history.append({'label': day.strftime('%Y-%m-%d'), 'value': cumulative_net_worth})
+            net_worth_history.append({'label': day.strftime('%A'), 'value': cumulative_net_worth})
 
         net_worth_history.reverse()  # Ensure the history is in ascending order
 
