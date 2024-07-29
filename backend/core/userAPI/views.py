@@ -202,8 +202,8 @@ class StatisticsDashboardView(APIView):
             transactions = transactions.filter(wallet__id=wallet_filter)
 
         # Calculate net worth
-        total_income = transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
-        total_expense = transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
+        total_income = transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
+        total_expense = transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
         net_worth = total_income - total_expense
 
         # Prepare net worth history data
@@ -212,8 +212,8 @@ class StatisticsDashboardView(APIView):
         for i in range(7):
             day = end_date - timedelta(days=i)
             day_transactions = transactions.filter(date__date=day.date())
-            day_income = day_transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
-            day_expense = day_transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
+            day_income = day_transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
+            day_expense = day_transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
             cumulative_net_worth += (day_income - day_expense)
             net_worth_history.append({'label': day.strftime('%A'), 'value': cumulative_net_worth})
 
