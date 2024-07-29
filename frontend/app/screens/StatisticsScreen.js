@@ -70,6 +70,17 @@ const StatisticsDashboardScreen = () => {
         }
     };
 
+    const { net_worth, net_worth_history, piggy_bank, wallet_options } =
+        piggyBankData;
+
+    const chartData = piggy_bank.map((item) => ({
+        name: item.name,
+        amount: item.amount,
+        color: item.color,
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15,
+    }));
+
     const handleNetWorthClick = () => {
         setShowNetWorthGraph(!showNetWorthGraph);
     };
@@ -250,7 +261,8 @@ const StatisticsDashboardScreen = () => {
                         </ScrollView>
 
                         <PieChart
-                            data={piggyBankData}
+                            data={chartData}
+                            width={screenWidth}
                             height={220}
                             chartConfig={chartConfig}
                             accessor="amount"
@@ -266,27 +278,13 @@ const StatisticsDashboardScreen = () => {
 };
 
 const chartConfig = {
-    backgroundColor: "#ffffff",
-    backgroundGradientFrom: "#ffffff",
-    backgroundGradientTo: "#ffffff",
-    decimalPlaces: 2,
-    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
-    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+    backgroundGradientFrom: "#1E2923",
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: "#08130D",
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(26, 255, 146, ${opacity})`,
     strokeWidth: 2,
-    propsForDots: {
-        r: "6",
-        strokeWidth: "2",
-        stroke: "#ffa726",
-    },
-    propsForLabels: {
-        fontSize: "12",
-        fontWeight: "bold",
-    },
-    propsForBackgroundLines: {
-        strokeDasharray: "",
-        strokeWidth: 0.5,
-        stroke: "#e3e3e3",
-    },
+    barPercentage: 0.5,
 };
 
 const createStyles = (themeColors, fontSizes) =>

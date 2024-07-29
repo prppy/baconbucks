@@ -224,15 +224,15 @@ class StatisticsDashboardView(APIView):
 
         # Convert category codes to names and colors
         categories = {
-            "SL": {"name": "Salary", "color": "#f39c12"},    # example color
-            "GR": {"name": "Groceries", "color": "#27ae60"},
-            "TR": {"name": "Transport", "color": "#3498db"},
-            "RE": {"name": "Rent", "color": "#e74c3c"},
-            "FD": {"name": "Food", "color": "#9b59b6"},
-            "EN": {"name": "Entertainment", "color": "#e67e22"},
-            "TU": {"name": "TopUp", "color": "#2ecc71"},
+            "SL": {"name": "Salary", "color": "#ffccd5"},
+            "GR": {"name": "Groceries", "color": "#ffb3c1"},
+            "TR": {"name": "Transport", "color": "#ff8fa3"},
+            "RE": {"name": "Rent", "color": "#ff758f"},
+            "FD": {"name": "Food", "color": "#ff4d6d"},
+            "EN": {"name": "Entertainment", "color": "#c9184a"},
+            "TU": {"name": "TopUp", "color": "#A4133C"},
         }
-        
+
         piggy_bank_data = []
         for item in piggy_bank:
             category = categories.get(item['category'], {"name": "Unknown", "color": "#95a5a6"})
