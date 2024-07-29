@@ -47,7 +47,7 @@ const ViewWalletScreen = (props) => {
 
     useFocusEffect(
         useCallback(() => {
-            fetchTransData();
+            fetchAllTransData();
         }, [])
     );
 
@@ -66,7 +66,7 @@ const ViewWalletScreen = (props) => {
         return category ? category.icon : "help-outline";
     };
 
-    const fetchTransData = async () => {
+    const fetchAllTransData = async () => {
         setIsLoading(true);
         try {
             const json = await fetchData(`log/get-all-trans/${id}/`);
@@ -142,7 +142,7 @@ const ViewWalletScreen = (props) => {
                         </Text>
                     </View>
 
-                    <Text>Transaction History</Text>
+                    <Text style={{fontWeight:"bold", fontSize:18, marginTop: 10}}>Transaction History</Text>
                     <FlatList
                         data={transData}
                         keyExtractor={(item) => item.id.toString()}

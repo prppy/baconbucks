@@ -1,12 +1,13 @@
 from django.db import models
 from decimal import Decimal
+from datetime import timedelta, date
+from dateutil.relativedelta import relativedelta
 
 from userAPI.models import User, Wallet
 
 # Create your models here.
 
 class Transaction(models.Model):
-
     CATEGORY_CHOICES = [
         ("SL", "Salary"),
         ("GR", "Groceries"),
@@ -26,55 +27,74 @@ class Transaction(models.Model):
         ("N", "Never"),
         ("D", "Daily"),
         ("W", "Weekly"),
-        ("M", "Monthly"),
-        ("Y", "Yearly"),
+        ("M", "Monthly")
     ]
 
     date = models.DateField(blank=False, null=False)
-
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
-
     type = models.CharField(max_length=2, choices=TYPE_CHOICES, blank=False, null=False)
-
-    category = models.CharField(max_length=2, choices=CATEGORY_CHOICES,  blank=False, null=False)
-
+    category = models.CharField(max_length=2, choices=CATEGORY_CHOICES, blank=False, null=False)
     repeating = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, blank=True, null=True)
-
     wallet = models.ForeignKey(Wallet, on_delete=models.CASCADE, related_name='transactions', blank=False, null=False)
-
     description = models.CharField(max_length=256, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.repeating and self.repeating not in dict(self.FREQUENCY_CHOICES):
-            raise ValueError("Invalid frequency value.")
         super().save(*args, **kwargs)
+        if self.repeating != "N":
+            self.create_repeating_transactions()
+
+    def create_repeating_transactions(self):
+        frequency_map = {
+            "D": timedelta(days=1),
+            "W": timedelta(weeks=1),
+            "M": relativedelta(months=1)
+        }
+        
+        delta = frequency_map.get(self.repeating)
+        
+        next_date = self.date + delta
+
+        while next_date.year == self.date.year:
+            Transaction.objects.create(
+                date=next_date,
+                amount=self.amount,
+                type=self.type,
+                category=self.category,
+                repeating=self.repeating,
+                wallet=self.wallet,
+                description=self.description
+            )
+            next_date += delta
 
 class Reminder(models.Model):
-
-    FREQUENCY_CHOICES = [
-        ("D", "Daily"),
-        ("W", "Weekly"),
-        ("M", "Monthly"),
-        ("Y", "Yearly"),
-    ]
-
     date = models.DateField()
-
     name = models.CharField(max_length=64)
-
     description = models.CharField(max_length=256)
-
-    repeating = models.BooleanField(default=False)
-
-    frequency = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, blank=True, null=True)
-
+    repeating = models.CharField(max_length=1, choices=Transaction.FREQUENCY_CHOICES, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reminders")
 
-    class Meta:
-        verbose_name = "Reminder"
-        verbose_name_plural = "Reminders"
-
     def save(self, *args, **kwargs):
-        if self.repeating and not self.frequency:
-            raise ValueError("If repeating is True, frequency must be specified.")
         super().save(*args, **kwargs)
+        if self.repeating != "N":
+            self.create_repeating_reminders()
+
+    def create_repeating_reminders(self):
+        frequency_map = {
+            "D": timedelta(days=1),
+            "W": timedelta(weeks=1),
+            "M": relativedelta(months=1)
+        }
+        
+        delta = frequency_map.get(self.repeating)
+        
+        next_date = self.date + delta
+
+        while next_date.year == self.date.year:
+            Reminder.objects.create(
+                date=next_date,
+                name=self.name,
+                description=self.description,
+                repeating=self.repeating,
+                user=self.user
+            )
+            next_date += delta

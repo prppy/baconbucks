@@ -6,7 +6,6 @@ from .models import Transaction, Reminder
 # Create your serializers here.
 
 class TransactionSerializer(serializers.ModelSerializer):
-    
     class Meta:
         model = Transaction
         fields = ['id', 'date', 'amount', 'type', 'category', 'repeating', 'wallet', 'description']
@@ -35,10 +34,9 @@ class TransactionSerializer(serializers.ModelSerializer):
         return instance
 
 class ReminderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Reminder
-        fields = ['id', 'date', 'name', 'description', 'repeating', 'frequency', 'user']
+        fields = ['id', 'date', 'name', 'description', 'repeating', 'user']
 
     def create(self, validated_data):
         instance = Reminder.objects.create(**validated_data)
@@ -49,7 +47,6 @@ class ReminderSerializer(serializers.ModelSerializer):
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.repeating = validated_data.get('repeating', instance.repeating)
-        instance.frequency = validated_data.get('frequency', instance.frequency)
 
         instance.save()
         return instance

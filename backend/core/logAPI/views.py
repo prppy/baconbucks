@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from datetime import datetime
 
 from .serializers import TransactionSerializer, ReminderSerializer
 from .models import Transaction, Reminder
@@ -23,11 +24,8 @@ class TransactionCreateView(APIView):
         transaction_data['wallet'] = wallet.id
         transaction_serializer = TransactionSerializer(data=transaction_data)
         if transaction_serializer.is_valid():
-            try:
-                transaction_serializer.save()
-                return Response("Transaction created successfully", status=201)
-            except ValueError as e:
-                return Response(str(e), status=400)
+            transaction_serializer.save()
+            return Response("Transaction created successfully", status=201)
         return Response(transaction_serializer.errors, status=400)
         
 class TransactionDetailView(APIView):
@@ -91,26 +89,38 @@ class ReminderDetailView(APIView):
         serializer = ReminderSerializer(reminder)
         return Response(serializer.data)
     
+class ReminderListView(APIView):
+    # see all reminders of this day
+    def get(self, request, date, format=None):
+        try:
+            # Convert date parameter to a datetime.date object
+            selected_date = datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
+
+        # Filter reminders for the specified date
+        reminders = Reminder.objects.filter(date=selected_date, user=request.user)
+
+        if not reminders:
+            return Response("No reminders found for this date.", status=404)
+
+        serializer = ReminderSerializer(reminders, many=True)
+        return Response(serializer.data, status=200)
+    
 class ReminderDeleteView(APIView):
     # delete this reminder
     def delete(self, request, pk, format=None):
         try:
             reminder = Reminder.objects.get(pk=pk, user=request.user)
             reminder.delete()
-            return Response(status=204)
+            return Response("Reminder deleted successfully", status=200)
         except Reminder.DoesNotExist:
-            return Response("Reminder not found.", status=404)
-        
+            return Response("Reminder not found or does not belong to the authenticated user", status=404)
+
 class ReminderUpdateView(APIView):
     # update reminder details
     def put(self, request, pk, format=None):
         try:
             reminder = Reminder.objects.get(pk=pk, user=request.user)
         except Reminder.DoesNotExist:
-            return Response("Reminder not found.", status=404)
-
-        serializer = ReminderSerializer(reminder, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=400)
+            return Response("Reminder not found or does not belong to the authenticated", status=404)

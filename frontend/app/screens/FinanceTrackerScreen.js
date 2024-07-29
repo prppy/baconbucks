@@ -166,17 +166,21 @@ const FinanceTrackerScreen = () => {
                     ? "green"
                     : themeColors.text;
             return (
-                <View style={styles.transBox}>
-                    <Ionicons
-                        name={getCategoryIcon(item.category)}
-                        size={24}
-                        color={themeColors.buttons}
-                    />
-                    <Text style={styles.transaction}>{item.date}</Text>
-                    <Text style={[styles.transaction, { color: amountColor }]}>
-                        {item.amount}
-                    </Text>
-                </View>
+                <TouchableOpacity onPress={() => handleNavigateToTransaction(item)}>
+                    <View style={styles.transBox}>
+                        <Ionicons
+                            name={getCategoryIcon(item.category)}
+                            size={24}
+                            color={themeColors.buttons}
+                        />
+                        <Text style={styles.transaction}>{item.date}</Text>
+                        <Text
+                            style={[styles.transaction, { color: amountColor }]}
+                        >
+                            {item.amount}
+                        </Text>
+                    </View>
+                </TouchableOpacity>
             );
         }
         return null;
@@ -188,16 +192,16 @@ const FinanceTrackerScreen = () => {
 
     const handleNewWallet = async () => {
         console.log(walletName);
-    
+
         if (walletName === "") {
             Alert.alert("Error", "Please input a name.");
             return;
         }
-    
+
         try {
             const body = { name: walletName };
             console.log(JSON.stringify(body));
-    
+
             const json = await fetchData("user/create-wallet/", "POST", body);
             console.log(json);
             setIsVisible(false);
@@ -212,6 +216,11 @@ const FinanceTrackerScreen = () => {
     const handleNavigateToWallet = (item) => {
         console.log(item);
         navigation.navigate("ViewWallet", { wallet: item });
+    };
+
+    const handleNavigateToTransaction = (item) => {
+        console.log(item);
+        navigation.navigate("ViewTransaction", { transaction: item });
     };
 
     const handleNavigateToNewTransaction = (walletId, walletName) => {
@@ -265,29 +274,93 @@ const FinanceTrackerScreen = () => {
                         }}
                     >
                         <View style={styles.centered}>
-                            <Text style={{fontWeight:"bold", fontSize:20}}>BALANCE</Text>
-                            <Text style={{fontWeight:"bold", fontSize:18, marginTop: 10}}>{totalBalance}</Text>
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                                BALANCE
+                            </Text>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: 18,
+                                    marginTop: 10,
+                                }}
+                            >
+                                {totalBalance}
+                            </Text>
                         </View>
                         <View style={styles.verticalline}></View>
                         <View style={styles.centered}>
-                            <Text style={{fontWeight:"bold", color: "green", fontSize:20}}>INCOME</Text>
-                            <Text style={{fontWeight:"bold", color: "green", fontSize:18, marginTop: 10}}>{totalIncome}</Text>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    color: "green",
+                                    fontSize: 20,
+                                }}
+                            >
+                                INCOME
+                            </Text>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    color: "green",
+                                    fontSize: 18,
+                                    marginTop: 10,
+                                }}
+                            >
+                                {totalIncome}
+                            </Text>
                         </View>
                         <View style={styles.verticalline}></View>
                         <View style={styles.centered}>
-                            <Text style={{fontWeight:"bold", color: "red", fontSize:20}}>EXPENSE</Text>
-                            <Text style={{fontWeight:"bold", color: "red", fontSize:18, marginTop: 10}}>{totalExpense}</Text>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    color: "red",
+                                    fontSize: 20,
+                                }}
+                            >
+                                EXPENSE
+                            </Text>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    color: "red",
+                                    fontSize: 18,
+                                    marginTop: 10,
+                                }}
+                            >
+                                {totalExpense}
+                            </Text>
                         </View>
                     </View>
-                    <View style={{flex: 1, borderColor: themeColors.buttons, borderRadius: 10}}>
+                    <View
+                        style={{
+                            flex: 1,
+                            borderColor: themeColors.buttons,
+                            borderRadius: 10,
+                        }}
+                    >
                         <FlatList
                             data={flattenedData}
                             keyExtractor={(item) => `${item.type}-${item.id}`}
                             renderItem={renderItem}
                         />
                     </View>
-                    <View style={{height: 40, justifyContent: "center", marginTop: 20}}>
-                    <Text style={{fontWeight:"bold", fontSize:15, color: themeColors.buttons}}>Add a Wallet and Transactions to begin!</Text>
+                    <View
+                        style={{
+                            height: 40,
+                            justifyContent: "center",
+                            marginTop: 20,
+                        }}
+                    >
+                        <Text
+                            style={{
+                                fontWeight: "bold",
+                                fontSize: 15,
+                                color: themeColors.buttons,
+                            }}
+                        >
+                            Add a Wallet and Transactions to begin!
+                        </Text>
                     </View>
                 </View>
                 <TouchableOpacity
@@ -432,7 +505,7 @@ const createStyles = (themeColors, fontSizes) =>
             alignItems: "center",
         },
         inner: {
-            paddingTop: 60,
+            marginTop: 60,
             width: "100%",
             padding: 30,
             flex: 1,
