@@ -15,7 +15,7 @@ import { PieChart, LineChart } from "react-native-chart-kit";
 import { Context } from "../components/GlobalContext";
 import colors from "../config/colors";
 
-const screenWidth = Dimensions.get("window").width;
+const screenWidth = Dimensions.get("window").width - 30;
 
 const StatisticsDashboardScreen = () => {
     const navigation = useNavigation();
@@ -39,7 +39,6 @@ const StatisticsDashboardScreen = () => {
     const [piggyBankData, setPiggyBankData] = useState([]);
     const [walletFilter, setWalletFilter] = useState("all");
     const [walletOptions, setWalletOptions] = useState([]);
-
     const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
@@ -59,9 +58,6 @@ const StatisticsDashboardScreen = () => {
             setNetWorthHistory(json.net_worth_history);
             setPiggyBankData(json.piggy_bank);
             setWalletOptions(json.wallet_options);
-
-            console.log("Net Worth History:", netWorthHistory);
-            console.log("Piggy Bank Data:", piggyBankData);
         } catch (error) {
             console.error("Error fetching statistics data:", error);
             setError(error.message || "Failed to fetch trans data");
@@ -69,51 +65,6 @@ const StatisticsDashboardScreen = () => {
             setIsLoading(false);
         }
     };
-
-    const { net_worth, net_worth_history, piggy_bank, wallet_options } =
-        piggyBankData;
-
-    const chartData = piggy_bank.map((item) => ({
-        name: item.name,
-        amount: item.amount,
-        color: item.color,
-        legendFontColor: "#7F7F7F",
-        legendFontSize: 15,
-    }));
-
-    const handleNetWorthClick = () => {
-        setShowNetWorthGraph(!showNetWorthGraph);
-    };
-
-    const handleTimeFilterChange = (filter) => {
-        setTimeFilter(filter);
-    };
-
-    const handleWalletFilterChange = (filter) => {
-        setWalletFilter(filter);
-    };
-
-    const categories = [
-        { id: "SL", name: "Salary", icon: "cash-outline" },
-        { id: "GR", name: "Groceries", icon: "cart-outline" },
-        { id: "TR", name: "Transport", icon: "train-outline" },
-        { id: "RE", name: "Rent", icon: "home-outline" },
-        { id: "FD", name: "Food", icon: "fast-food-outline" },
-        { id: "EN", name: "Entertainment", icon: "tv-outline" },
-        { id: "TU", name: "TopUp", icon: "refresh-outline" },
-    ];
-
-    const getCategory = (id) =>
-        categories.find((category) => category.id === id);
-
-    const formattedData = piggyBankData.map((item) => {
-        const category = getCategory(item.category);
-        return {
-            name: category ? category.name : item.category,
-            amount: item.amount,
-            color: category ? category.color : "#ccc", // Use valid color or placeholder if no category found
-        };
-    });
 
     if (isLoading) {
         return (
@@ -144,11 +95,34 @@ const StatisticsDashboardScreen = () => {
         );
     }
 
+    const chartData = (piggyBankData || []).map((item) => ({
+        name: item.name,
+        amount: item.amount,
+        color: item.color,
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15,
+    }));
+
+    const handleNetWorthClick = () => {
+        setShowNetWorthGraph(!showNetWorthGraph);
+    };
+
+    const handleTimeFilterChange = (filter) => {
+        setTimeFilter(filter);
+    };
+
+    const handleWalletFilterChange = (filter) => {
+        setWalletFilter(filter);
+    };
+
     return (
         <SafeAreaView style={[styles.background, styles.centered]}>
             <Text style={styles.headertext}>Statistics Dashboard</Text>
             <View style={styles.inner}>
-                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <ScrollView
+                    contentContainerStyle={styles.scrollViewContent}
+                    showsVerticalScrollIndicator={true}
+                >
                     <View style={styles.filterContainer}>
                         <TouchableOpacity
                             onPress={() => handleTimeFilterChange("week")}
@@ -209,7 +183,7 @@ const StatisticsDashboardScreen = () => {
                                             },
                                         ],
                                     }}
-                                    width="100%"
+                                    width={screenWidth - 30}
                                     height={220}
                                     chartConfig={chartConfig}
                                 />
@@ -263,12 +237,11 @@ const StatisticsDashboardScreen = () => {
                         <PieChart
                             data={chartData}
                             width={screenWidth}
-                            height={220}
+                            height={200}
                             chartConfig={chartConfig}
                             accessor="amount"
                             backgroundColor="transparent"
-                            paddingLeft="15"
-                            absolute
+                            paddingLeft="0"
                         />
                     </View>
                 </ScrollView>

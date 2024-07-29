@@ -220,7 +220,7 @@ class StatisticsDashboardView(APIView):
         net_worth_history.reverse()  # Ensure the history is in ascending order
 
         # Prepare piggy bank data
-        piggy_bank = transactions.values('category').annotate(amount=Sum('amount')).order_by('-amount')
+        piggy_bank = transactions.filter(type="EA").values('category').annotate(amount=Sum('amount')).order_by('-amount')
 
         # Convert category codes to names and colors
         categories = {
