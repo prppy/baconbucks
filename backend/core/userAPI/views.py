@@ -208,13 +208,16 @@ class StatisticsDashboardView(APIView):
 
         # Prepare net worth history data
         net_worth_history = []
+        cumulative_net_worth = 0
         for i in range(7):
             day = end_date - timedelta(days=i)
             day_transactions = transactions.filter(date__date=day.date())
             day_income = day_transactions.filter(type='Income').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='Expense').aggregate(Sum('amount'))['amount__sum'] or 0
-            day_net_worth = day_income - day_expense
-            net_worth_history.append({'label': day.strftime('%Y-%m-%d'), 'value': day_net_worth})
+            cumulative_net_worth += (day_income - day_expense)
+            net_worth_history.append({'label': day.strftime('%Y-%m-%d'), 'value': cumulative_net_worth})
+
+        net_worth_history.reverse()  # Ensure the history is in ascending order
 
         # Prepare piggy bank data
         piggy_bank = transactions.values('category').annotate(amount=Sum('amount')).order_by('-amount')
