@@ -270,7 +270,10 @@ const FinanceTrackerScreen = () => {
                         style={{
                             flexDirection: "row",
                             justifyContent: "space-between",
-                            marginBottom: 20,
+                            marginBottom: 10,
+                            backgroundColor: themeColors.row, 
+                            borderRadius: 10, 
+                            padding: 10
                         }}
                     >
                         <View style={styles.centered}>
@@ -356,10 +359,8 @@ const FinanceTrackerScreen = () => {
                         <Text
                             style={{
                                 fontWeight: "bold",
-                                fontSize: fontSizes.thirteen,
+                                fontSize: fontSizes.fifteen,
                                 color: themeColors.buttons,
-                                width: '80%',
-                                lineHeight: 20,
                             }}
                             numberOfLines={2}
                         >

@@ -256,7 +256,7 @@ const ReminderScreen = () => {
                                 styles.modaltext,
                             ]}
                         />
-                        <Text style={styles.modaltext}>Date</Text>
+                    <Text style={styles.modaltext}>Date</Text>
                         <View
                             style={{
                                 width: "100%",
@@ -267,7 +267,7 @@ const ReminderScreen = () => {
                                 borderRadius: 10,
                             }}
                         >
-                            <Text style={styles.modaltext}>
+                            <Text style={[styles.modaltext, {color: themeColors.buttons, marginBottom: 0}]}>
                                 {reminderDate.toLocaleDateString()}
                             </Text>
                         </View>

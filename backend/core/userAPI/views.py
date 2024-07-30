@@ -208,7 +208,7 @@ class StatisticsDashboardView(APIView):
         # Calculate net worth
         total_income = transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
         total_expense = transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
-        net_worth = total_income - total_expense
+        net_worth = total_income + total_expense
 
         # Prepare net worth history data
         net_worth_history = []
@@ -218,13 +218,16 @@ class StatisticsDashboardView(APIView):
             day_transactions = transactions.filter(date=day.date())
             day_income = day_transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
-            cumulative_net_worth += (day_income - day_expense)
+            cumulative_net_worth += (day_income + day_expense)
             net_worth_history.append({'label': day.strftime('%a'), 'value': cumulative_net_worth})
 
         net_worth_history.reverse()  # Ensure the history is in ascending order
 
-        # Prepare piggy bank data
-        piggy_bank = transactions.filter(type="EA").values('category').annotate(amount=Sum('amount')).order_by('-amount')
+        # Prepare piggy bank data for earnings
+        piggy_bank_earnings = transactions.filter(type="EA").values('category').annotate(amount=Sum('amount')).order_by('-amount')
+
+        # Prepare piggy bank data for expenditures
+        piggy_bank_expenditures = transactions.filter(type="EX").values('category').annotate(amount=Sum('amount')).order_by('-amount')
 
         # Convert category codes to names and colors
         categories = {
@@ -237,10 +240,19 @@ class StatisticsDashboardView(APIView):
             "TU": {"name": "TopUp", "color": "#A4133C"},
         }
 
-        piggy_bank_data = []
-        for item in piggy_bank:
+        piggy_bank_earnings_data = []
+        for item in piggy_bank_earnings:
             category = categories.get(item['category'], {"name": "Unknown", "color": "#95a5a6"})
-            piggy_bank_data.append({
+            piggy_bank_earnings_data.append({
+                'name': category['name'],
+                'amount': item['amount'],
+                'color': category['color']
+            })
+
+        piggy_bank_expenditures_data = []
+        for item in piggy_bank_expenditures:
+            category = categories.get(item['category'], {"name": "Unknown", "color": "#95a5a6"})
+            piggy_bank_expenditures_data.append({
                 'name': category['name'],
                 'amount': item['amount'],
                 'color': category['color']
@@ -252,6 +264,7 @@ class StatisticsDashboardView(APIView):
         return Response({
             'net_worth': net_worth,
             'net_worth_history': net_worth_history,
-            'piggy_bank': piggy_bank_data,
+            'piggy_bank_earnings': piggy_bank_earnings_data,
+            'piggy_bank_expenditures': piggy_bank_expenditures_data,
             'wallet_options': wallet_options,
         }, status=200)

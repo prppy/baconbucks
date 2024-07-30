@@ -34,7 +34,8 @@ const StatisticsDashboardScreen = () => {
     const [netWorth, setNetWorth] = useState(0);
     const [netWorthHistory, setNetWorthHistory] = useState([]);
     const [showNetWorthGraph, setShowNetWorthGraph] = useState(false);
-    const [piggyBankData, setPiggyBankData] = useState([]);
+    const [piggyBankDataEA, setPiggyBankDataEA] = useState([]);
+    const [piggyBankDataEX, setPiggyBankDataEX] = useState([]);
     const [walletFilter, setWalletFilter] = useState("all");
     const [walletOptions, setWalletOptions] = useState([]);
     const [error, setError] = useState();
@@ -53,10 +54,11 @@ const StatisticsDashboardScreen = () => {
             const json = await fetchData(
                 `user/get-statistics/?time=${timeFilter}&wallet=${walletFilter}`
             );
-            console.log(json)
+            console.log(json);
             setNetWorth(json.net_worth);
             setNetWorthHistory(json.net_worth_history);
-            setPiggyBankData(json.piggy_bank);
+            setPiggyBankDataEA(json.piggy_bank_earnings);
+            setPiggyBankDataEX(json.piggy_bank_expenditures);
             setWalletOptions(json.wallet_options);
         } catch (error) {
             console.error("Error fetching statistics data:", error);
@@ -95,7 +97,15 @@ const StatisticsDashboardScreen = () => {
         );
     }
 
-    const chartData = (piggyBankData || []).map((item) => ({
+    const chartDataEA = (piggyBankDataEA || []).map((item) => ({
+        name: item.name,
+        amount: item.amount,
+        color: item.color,
+        legendFontColor: "#7F7F7F",
+        legendFontSize: 15,
+    }));
+
+    const chartDataEX = (piggyBankDataEX || []).map((item) => ({
         name: item.name,
         amount: item.amount,
         color: item.color,
@@ -155,7 +165,8 @@ const StatisticsDashboardScreen = () => {
                             style={[
                                 styles.typeButton,
                                 timeFilter === "week" &&
-                                    styles.selectedTypeButton, { width: "22.5%"}
+                                    styles.selectedTypeButton,
+                                { width: "22.5%" },
                             ]}
                         >
                             <Text style={styles.label}>Week</Text>
@@ -195,7 +206,11 @@ const StatisticsDashboardScreen = () => {
                                     styles.selectedWalletButton,
                             ]}
                         >
-                            <Text style={[styles.label, {marginHorizontal: 15}]}>All</Text>
+                            <Text
+                                style={[styles.label, { marginHorizontal: 15 }]}
+                            >
+                                All
+                            </Text>
                         </TouchableOpacity>
 
                         {walletOptions.map((wallet) => (
@@ -249,7 +264,7 @@ const StatisticsDashboardScreen = () => {
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                     borderRadius: 10,
-                                    shadowColor: '#171717',
+                                    shadowColor: "#171717",
                                     shadowOffset: { width: 0, height: 2 },
                                     shadowOpacity: 0.5,
                                     shadowRadius: 2,
@@ -261,7 +276,10 @@ const StatisticsDashboardScreen = () => {
                                     Net Worth
                                 </Text>
                                 <Text
-                                    style={{ fontSize: fontSizes.thirty, fontWeight: "bold" }}
+                                    style={{
+                                        fontSize: fontSizes.thirty,
+                                        fontWeight: "bold",
+                                    }}
                                 >
                                     {netWorth}
                                 </Text>
@@ -276,7 +294,7 @@ const StatisticsDashboardScreen = () => {
                     </Text>
 
                     <PieChart
-                        data={chartData}
+                        data={chartDataEX}
                         width={chartWidth}
                         height={200}
                         chartConfig={chartConfig}
@@ -284,6 +302,21 @@ const StatisticsDashboardScreen = () => {
                         backgroundColor="transparent"
                         paddingLeft="0"
                     />
+                    <View style={styles.line}></View>
+
+<Text style={styles.netWorthText}>
+    Piggy Bank (Expenditure)
+</Text>
+
+<PieChart
+    data={chartDataEA}
+    width={chartWidth}
+    height={200}
+    chartConfig={chartConfig}
+    accessor="amount"
+    backgroundColor="transparent"
+    paddingLeft="0"
+/>
                 </ScrollView>
             </View>
         </SafeAreaView>
