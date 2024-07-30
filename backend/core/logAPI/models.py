@@ -36,7 +36,7 @@ class Transaction(models.Model):
 
 
 class Reminder(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reminders', blank=False, null=False)
     date = models.DateField()
     name = models.CharField(max_length=64, blank=False, null=False)
     description = models.CharField(max_length=256)
