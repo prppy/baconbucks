@@ -11,7 +11,7 @@ export default function ResultsScreen(props) {
     const { score } = route.params;
 
     const handleRetry = () => {
-        navigation.replace('ChallengesScreen');
+        navigation.replace('MissionsScreen');
     };
 
     const globalContext = useContext(Context);
