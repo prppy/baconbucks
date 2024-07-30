@@ -337,7 +337,7 @@ const createStyles = (themeColors, fontSizes) =>
         reminder: {
             backgroundColor: themeColors.row,
             borderRadius: 10,
-            marginRight: 20,
+            marginRight: 30,
             marginTop: 25,
             padding: 10,
         },
