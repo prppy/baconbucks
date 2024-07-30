@@ -7,6 +7,7 @@ import {
     Alert,
     SafeAreaView,
     StyleSheet,
+    ActivityIndicator
 } from "react-native";
 import { Agenda, calendarTheme } from "react-native-calendars";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -36,12 +37,15 @@ const ReminderScreen = () => {
     const [reminderName, setReminderName] = useState("");
     const [reminderDesc, setReminderDesc] = useState("");
     const [reminderDate, setReminderDate] = useState(new Date());
+    const [loading, setLoading] = useState(false);
 
     const handleNewRem = async () => {
         if (reminderName === "" || reminderDate === "") {
             Alert.alert("Error", "Please input all fields.");
             return;
         }
+
+        setLoading(true);
 
         try {
             const formattedDate = formatDateForDjango(
@@ -71,6 +75,8 @@ const ReminderScreen = () => {
                 "Error",
                 "Failed to create reminder. Please try again."
             );
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -269,8 +275,13 @@ const ReminderScreen = () => {
                     <TouchableOpacity
                         style={styles.savebtn}
                         onPress={handleNewRem}
+                        disabled={loading} // Disable button while loading
                     >
-                        <Text style={styles.btntext}>Save</Text>
+                        {loading ? (
+                            <ActivityIndicator size="small" color="#ffffff" />
+                        ) : (
+                            <Text style={styles.btntext}>Save</Text>
+                        )}
                     </TouchableOpacity>
                 </View>
             </Modal>
