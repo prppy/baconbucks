@@ -7,7 +7,9 @@ import {
     Alert,
     SafeAreaView,
     StyleSheet,
-    ActivityIndicator
+    ActivityIndicator,
+    Keyboard,
+    TouchableWithoutFeedback
 } from "react-native";
 import { Agenda, calendarTheme } from "react-native-calendars";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -123,6 +125,10 @@ const ReminderScreen = () => {
         setIsVisible(!isVisible);
     };
 
+    const dismissKeyboard = () => {
+        Keyboard.dismiss();
+    };
+
     return (
         <SafeAreaView style={styles.background}>
             <Text style={styles.headertext}>Reminders</Text>
@@ -163,7 +169,9 @@ const ReminderScreen = () => {
                                 <Text style={styles.reminderHeader}>
                                     No Reminders
                                 </Text>
-                                <Text style={{color: themeColors.headertext}}>Add a new Reminder</Text>
+                                <Text style={{ color: themeColors.headertext }}>
+                                    Add a new Reminder
+                                </Text>
                             </View>
                         </View>
                     )}
@@ -205,85 +213,99 @@ const ReminderScreen = () => {
                 backdropColor={themeColors.backdrop}
                 backdropOpacity={0.3}
             >
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalHeader}>New Reminder</Text>
-                    <View
-                        style={{
-                            flexDirection: "column",
-                            justifyContent: "space-between",
-                            alignItems: "flex-start",
-                            marginBottom: 10,
-                            width: "100%",
-                        }}
-                    >
-                        <Text style={styles.modaltext}>Name</Text>
-                        <TextInput
-                            value={reminderName}
-                            onChangeText={setReminderName}
-                            placeholder="Type Here"
-                            placeholderTextColor={themeColors.buttons}
-                            autoCapitalize="none"
-                            multiline={true}
-                            style={[
-                                {
-                                    width: "100%",
-                                    color: themeColors.buttons,
-                                    justifyContent: "flex-start",
-                                    backgroundColor: themeColors.row,
-                                    padding: 10,
-                                    borderRadius: 10,
-                                },
-                                styles.modaltext,
-                            ]}
-                        />
-                        <Text style={styles.modaltext}>Description</Text>
-                        <TextInput
-                            value={reminderDesc}
-                            onChangeText={setReminderDesc}
-                            placeholder="Type Here"
-                            placeholderTextColor={themeColors.buttons}
-                            autoCapitalize="none"
-                            multiline={true}
-                            style={[
-                                {
-                                    width: "100%",
-                                    color: themeColors.buttons,
-                                    justifyContent: "flex-start",
-                                    backgroundColor: themeColors.row,
-                                    padding: 10,
-                                    borderRadius: 10,
-                                },
-                                styles.modaltext,
-                            ]}
-                        />
-                    <Text style={styles.modaltext}>Date</Text>
+                <TouchableWithoutFeedback onPress={dismissKeyboard}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalHeader}>New Reminder</Text>
                         <View
                             style={{
+                                flexDirection: "column",
+                                justifyContent: "space-between",
+                                alignItems: "flex-start",
+                                marginBottom: 10,
                                 width: "100%",
-                                color: themeColors.buttons,
-                                justifyContent: "flex-start",
-                                backgroundColor: themeColors.row,
-                                padding: 10,
-                                borderRadius: 10,
                             }}
                         >
-                            <Text style={[styles.modaltext, {color: themeColors.buttons, marginBottom: 0}]}>
-                                {reminderDate.toLocaleDateString()}
-                            </Text>
+                            <Text style={styles.modaltext}>Name</Text>
+                            <TextInput
+                                value={reminderName}
+                                onChangeText={setReminderName}
+                                placeholder="Type Here"
+                                placeholderTextColor={themeColors.buttons}
+                                autoCapitalize="none"
+                                multiline={true}
+                                style={[
+                                    {
+                                        width: "100%",
+                                        color: themeColors.buttons,
+                                        justifyContent: "flex-start",
+                                        backgroundColor: themeColors.row,
+                                        padding: 10,
+                                        borderRadius: 10,
+                                    },
+                                    styles.modaltext,
+                                ]}
+                            />
+                            <Text style={styles.modaltext}>Description</Text>
+                            <TextInput
+                                value={reminderDesc}
+                                onChangeText={setReminderDesc}
+                                placeholder="Type Here"
+                                placeholderTextColor={themeColors.buttons}
+                                autoCapitalize="none"
+                                multiline={true}
+                                style={[
+                                    {
+                                        width: "100%",
+                                        color: themeColors.buttons,
+                                        justifyContent: "flex-start",
+                                        backgroundColor: themeColors.row,
+                                        padding: 10,
+                                        borderRadius: 10,
+                                    },
+                                    styles.modaltext,
+                                ]}
+                            />
+                            <Text style={styles.modaltext}>Date</Text>
+                            <View
+                                style={{
+                                    width: "100%",
+                                    color: themeColors.buttons,
+                                    justifyContent: "flex-start",
+                                    backgroundColor: themeColors.row,
+                                    padding: 10,
+                                    borderRadius: 10,
+                                }}
+                            >
+                                <Text
+                                    style={[
+                                        styles.modaltext,
+                                        {
+                                            color: themeColors.buttons,
+                                            marginBottom: 0,
+                                        },
+                                    ]}
+                                >
+                                    {reminderDate.toLocaleDateString()}
+                                </Text>
+                            </View>
                         </View>
+
+                        <TouchableOpacity
+                            style={styles.savebtn}
+                            onPress={handleNewRem}
+                            disabled={loading} // Disable button while loading
+                        >
+                            {loading ? (
+                                <ActivityIndicator
+                                    size="small"
+                                    color="#ffffff"
+                                />
+                            ) : (
+                                <Text style={styles.btntext}>Save</Text>
+                            )}
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                        style={styles.savebtn}
-                        onPress={handleNewRem}
-                        disabled={loading} // Disable button while loading
-                    >
-                        {loading ? (
-                            <ActivityIndicator size="small" color="#ffffff" />
-                        ) : (
-                            <Text style={styles.btntext}>Save</Text>
-                        )}
-                    </TouchableOpacity>
-                </View>
+                </TouchableWithoutFeedback>
             </Modal>
         </SafeAreaView>
     );
@@ -340,6 +362,8 @@ const createStyles = (themeColors, fontSizes) =>
             padding: 10,
             borderRadius: 10,
             marginTop: 10,
+            width: "50%",
+            alignSelf: "center",
         },
         btntext: {
             color: themeColors.background,
@@ -362,7 +386,7 @@ const createStyles = (themeColors, fontSizes) =>
         },
         reminderText: {
             color: themeColors.headertext,
-        }
+        },
     });
 
 export default ReminderScreen;

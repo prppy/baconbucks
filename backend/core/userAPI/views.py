@@ -206,9 +206,7 @@ class StatisticsDashboardView(APIView):
             transactions = transactions.filter(wallet__id=wallet_filter)
 
         # Calculate net worth
-        total_income = transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
-        total_expense = transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
-        net_worth = total_income + total_expense
+        net_worth = transactions.aggregate(Sum('amount'))['amount__sum'] or 0
 
         # Prepare net worth history data
         net_worth_history = []

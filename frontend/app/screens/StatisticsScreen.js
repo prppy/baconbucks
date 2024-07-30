@@ -305,7 +305,7 @@ const StatisticsDashboardScreen = () => {
                     <View style={styles.line}></View>
 
 <Text style={styles.netWorthText}>
-    Piggy Bank (Expenditure)
+    Piggy Bank (Income)
 </Text>
 
 <PieChart
