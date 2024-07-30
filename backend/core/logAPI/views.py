@@ -104,9 +104,6 @@ class ReminderListView(APIView):
         else:
             reminders = Reminder.objects.filter(user=request.user)
 
-        if not reminders:
-            return Response("No reminders found.", status=404)
-
         serializer = ReminderSerializer(reminders, many=True)
         return Response(serializer.data, status=200)
 
