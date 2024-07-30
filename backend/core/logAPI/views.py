@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from datetime import datetime
+from django.utils.dateparse import parse_date
 
 from .serializers import TransactionSerializer, ReminderSerializer
 from .models import Transaction, Reminder
@@ -92,19 +92,24 @@ class ReminderDetailView(APIView):
 
 class ReminderListView(APIView):
     # see all reminders of this day
-    def get(self, request, date, format=None):
-        try:
-            selected_date = datetime.strptime(date, '%Y-%m-%d').date()
-        except ValueError:
-            return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
-
-        reminders = Reminder.objects.filter(date=selected_date, user=request.user)
+    def get(self, request, date=None, format=None):
+        if date:
+            try:
+                selected_date = parse_date(date)
+                if not selected_date:
+                    return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
+                reminders = Reminder.objects.filter(date=selected_date, user=request.user)
+            except ValueError:
+                return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
+        else:
+            reminders = Reminder.objects.filter(user=request.user)
 
         if not reminders:
-            return Response("No reminders found for this date.", status=404)
+            return Response("No reminders found.", status=404)
 
         serializer = ReminderSerializer(reminders, many=True)
         return Response(serializer.data, status=200)
+
 
 class ReminderDeleteView(APIView):
     # delete this reminder
