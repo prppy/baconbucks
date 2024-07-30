@@ -183,8 +183,8 @@ const ReminderScreen = () => {
                     selected={selectedDate}
                     renderItem={(item) => <ReminderItem item={item} />}
                     renderEmptyDate={() => (
-                        <View style={styles.emptyDate}>
-                            <Text>No reminders</Text>
+                        <View style={styles.reminderContainer}>
+                            <Text style={styles.reminderText}>No reminders</Text>
                         </View>
                     )}
                     rowHasChanged={(r1, r2) => r1 !== r2}
@@ -311,7 +311,6 @@ const createStyles = (themeColors, fontSizes) => StyleSheet.create({
     },
     agenda: {
         backgroundColor: "themeColors.background",
-        height: 350,
         borderWidth: 1,
         borderColor: themeColors.buttons,
         borderRadius: 16,

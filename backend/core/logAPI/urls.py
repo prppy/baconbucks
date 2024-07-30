@@ -10,6 +10,7 @@ urlpatterns = [
     path('update-trans/<int:pk>/', TransactionUpdateView.as_view()),
     path('create-rem/', ReminderCreateView.as_view()),
     path('get-rem/<int:pk>/', ReminderDetailView.as_view()),
+    path('get-all-rem/', ReminderListView.as_view()),
     path('get-all-rem/<str:date>/', ReminderListView.as_view()),
     path('delete-rem/<int:pk>/', ReminderDeleteView.as_view()),
     path('update-rem/<int:pk>/', ReminderUpdateView.as_view()),
