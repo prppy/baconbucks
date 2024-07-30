@@ -70,15 +70,18 @@ class TransactionUpdateView(APIView):
 
 
 class ReminderCreateView(APIView):
-    # create new reminder
+    # create new reminder
     def post(self, request, format=None):
-        reminder_serializer = ReminderSerializer(data=request.data)
+        reminder_data = request.data.copy()
+        reminder_data['user'] = request.user.id
+        reminder_serializer = ReminderSerializer(data=reminder_data)
         if reminder_serializer.is_valid():
-            reminder_serializer.save(user=request.user)
+            reminder_serializer.save()
             return Response("Reminder created successfully", status=201)
         return Response(reminder_serializer.errors, status=400)
 
 class ReminderDetailView(APIView):
+    # view details of this reminder
     def get(self, request, pk, format=None):
         try:
             reminder = Reminder.objects.get(pk=pk, user=request.user)

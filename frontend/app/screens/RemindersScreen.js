@@ -85,20 +85,39 @@ const ReminderScreen = () => {
 
     const handleNewRem = async () => {
         if (reminderName === "" || reminderDate === "") {
-            Alert.alert("Error", "Please input a name.");
+            Alert.alert("Error", "Please input all fields.");
             return;
         }
 
         try {
-            const body = { name: reminderName, date: reminderDate, description: reminderDesc };
-            console.log(JSON.stringify(body));
+            const formattedDate = formatDateForDjango(reminderDate.toISOString());
+            const body = { name: reminderName, date: formattedDate, description: reminderDesc };
 
             const json = await fetchData("log/create-rem/", "POST", body);
-            console.log(json);
+
+            // Update the reminders for the selected date
+            fetchRemData(formattedDate);
+
+            // Reset the modal fields
+            setReminderName("");
+            setReminderDesc("");
+            setReminderDate(new Date());
+
+            // Close the modal
+            toggleModal();
+
         } catch (error) {
             console.error("Error during create-rem:", error);
             Alert.alert("Error", "Failed to create reminder. Please try again.");
         }
+    };
+
+    const formatDateForDjango = (isoDateString) => {
+        const date = new Date(isoDateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
     };
 
     const toggleModal = () => {
@@ -147,6 +166,7 @@ const ReminderScreen = () => {
                         </View>
                     )}
                     rowHasChanged={(r1, r2) => r1 !== r2}
+                    onDayPress={(day) => setSelectedDate(day.dateString)}
                 />
             </View>
             <TouchableOpacity style={styles.addreminder} onPress={toggleModal}>
@@ -275,21 +295,13 @@ const createStyles = (themeColors, fontSizes) =>
         reminderContainer: {
             backgroundColor: "#fff",
             padding: 10,
-            marginBottom: 5,
-            borderRadius: 5,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.1,
-            shadowRadius: 5,
+            marginVertical: 10,
+            borderRadius: 10,
+            backgroundColor: themeColors.background,
         },
         reminderText: {
-            fontSize: 16,
-        },
-        emptyDate: {
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 20,
+            fontSize: fontSizes.font,
+            color: themeColors.headertext,
         },
         addreminder: {
             position: "absolute",
@@ -297,35 +309,37 @@ const createStyles = (themeColors, fontSizes) =>
             right: 30,
         },
         modalContent: {
-            borderRadius: 10,
-            backgroundColor: "#F4D5E1",
-            justifyContent: "center",
-            alignContent: "center",
-            alignItems: "center",
+            backgroundColor: themeColors.background,
             padding: 20,
-            marginHorizontal: 10,
+            borderRadius: 10,
         },
         modalHeader: {
-            fontSize: fontSizes.eighteen,
+            fontSize: 20,
             fontWeight: "bold",
-            marginBottom: 10,
-        },
-        modaltext: {
-            fontSize: fontSizes.fifteen,
-            padding: 10,
-        },
-        savebtn: {
-            width: 80,
-            height: 30,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#df4b75",
-            borderRadius: 5,
-            marginTop: 20,
+            color: themeColors.headertext,
+            marginBottom: 20,
         },
         label: {
-            fontSize: 18,
-            marginBottom: 5,
+            fontSize: 16,
+            color: themeColors.headertext,
+            marginBottom: 10,
+        },
+        savebtn: {
+            marginTop: 20,
+            backgroundColor: themeColors.buttons,
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 5,
+        },
+        btntext: {
+            color: "#fff",
+            fontSize: 16,
+            textAlign: "center",
+        },
+        emptyDate: {
+            height: 15,
+            flex: 1,
+            paddingTop: 30,
         },
     });
 

@@ -45,6 +45,6 @@ class ReminderSerializer(serializers.ModelSerializer):
         instance.date = validated_data.get('date', instance.date)
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
-
+        instance.user = validated_data.get('user', instance.user)
         instance.save()
         return instance
