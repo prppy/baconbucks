@@ -197,15 +197,18 @@ class StatisticsDashboardView(APIView):
         else:
             start_date = datetime.min
 
-        # Filter transactions based on user, wallet, and time range
-        transactions = Transaction.objects.filter(user=user, date__gte=start_date, date__lte=end_date)
+        # Get all wallets of the user
+        wallets = Wallet.objects.filter(user=user)
+
+        # Filter transactions based on wallet and time range
+        transactions = Transaction.objects.filter(wallet__in=wallets, date__gte=start_date, date__lte=end_date)
         if wallet_filter != 'all':
             transactions = transactions.filter(wallet__id=wallet_filter)
 
         # Calculate net worth
         total_income = transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
         total_expense = transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
-        net_worth = total_income + total_expense
+        net_worth = total_income - total_expense
 
         # Prepare net worth history data
         net_worth_history = []
@@ -215,7 +218,7 @@ class StatisticsDashboardView(APIView):
             day_transactions = transactions.filter(date=day.date())
             day_income = day_transactions.filter(type='EA').aggregate(Sum('amount'))['amount__sum'] or 0
             day_expense = day_transactions.filter(type='EX').aggregate(Sum('amount'))['amount__sum'] or 0
-            cumulative_net_worth += (day_income + day_expense)
+            cumulative_net_worth += (day_income - day_expense)
             net_worth_history.append({'label': day.strftime('%a'), 'value': cumulative_net_worth})
 
         net_worth_history.reverse()  # Ensure the history is in ascending order
@@ -244,7 +247,6 @@ class StatisticsDashboardView(APIView):
             })
 
         # Get wallet options
-        wallets = Wallet.objects.filter(user=user)
         wallet_options = WalletSerializer(wallets, many=True).data
 
         return Response({
