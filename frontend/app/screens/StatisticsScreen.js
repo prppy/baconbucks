@@ -155,7 +155,7 @@ const StatisticsDashboardScreen = () => {
                             style={[
                                 styles.typeButton,
                                 timeFilter === "week" &&
-                                    styles.selectedTypeButton,
+                                    styles.selectedTypeButton, { width: "22.5%"}
                             ]}
                         >
                             <Text style={styles.label}>Week</Text>
@@ -330,7 +330,7 @@ const createStyles = (themeColors, fontSizes) =>
             width: "100%",
         },
         typeButton: {
-            width: "25%",
+            width: "22.5%",
             alignItems: "center",
             padding: 12,
             borderWidth: 2,
