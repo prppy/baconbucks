@@ -91,19 +91,9 @@ class ReminderDetailView(APIView):
         return Response(serializer.data)
 
 class ReminderListView(APIView):
-    # see all reminders of this day
-    def get(self, request, date=None, format=None):
-        if date:
-            try:
-                selected_date = parse_date(date)
-                if not selected_date:
-                    return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
-                reminders = Reminder.objects.filter(date=selected_date, user=request.user)
-            except ValueError:
-                return Response("Invalid date format. Please use YYYY-MM-DD.", status=400)
-        else:
-            reminders = Reminder.objects.filter(user=request.user)
-
+    # see all reminders
+    def get(self, request, format=None):
+        reminders = Reminder.objects.filter(user=request.user)
         serializer = ReminderSerializer(reminders, many=True)
         return Response(serializer.data, status=200)
 
