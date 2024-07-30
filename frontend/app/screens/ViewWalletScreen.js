@@ -39,7 +39,8 @@ const ViewWalletScreen = (props) => {
     const { name, balance, id } = wallet;
 
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     const [isLoading, setIsLoading] = useState(true);
     const [transData, setTransData] = useState();
@@ -129,20 +130,21 @@ const ViewWalletScreen = (props) => {
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: 10,
-                            shadowColor: themeColors.settingsicons,
-                            shadowOffset: { width: 5, height: 10 },
-                            shadowOpacity: 0.5,
+                            shadowColor: '#171717',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
                             shadowRadius: 2,
                             marginBottom: 20,
+                            elevation: 5,
                         }}
                     >
-                        <Text>BALANCE</Text>
-                        <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+                        <Text style={{fontSize: fontSizes.fifteen, color: themeColors.headertext}}>BALANCE</Text>
+                        <Text style={{ fontSize: fontSizes.thirty, fontWeight: "bold", color: themeColors.headertext }}>
                             xxx.xx
                         </Text>
                     </View>
 
-                    <Text style={{fontWeight:"bold", fontSize:18, marginTop: 10}}>Transaction History</Text>
+                    <Text style={{fontWeight:"bold", fontSize: fontSizes.eighteen, marginTop: 10, color: themeColors.headertext}}>Transaction History</Text>
                     <FlatList
                         data={transData}
                         keyExtractor={(item) => item.id.toString()}
@@ -182,7 +184,7 @@ const ViewWalletScreen = (props) => {
                     >
                         <Ionicons
                             name="pencil-outline"
-                            size={40}
+                            size={30}
                             color={themeColors.buttons}
                         />
                     </TouchableOpacity>
@@ -192,7 +194,7 @@ const ViewWalletScreen = (props) => {
                     >
                         <Ionicons
                             name="add-circle-outline"
-                            size={40}
+                            size={35}
                             color={themeColors.buttons}
                         />
                     </TouchableOpacity>
@@ -202,8 +204,7 @@ const ViewWalletScreen = (props) => {
     );
 };
 
-const createStyles = (themeColors) =>
-    StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
         background: {
             flex: 1,
             justifyContent: "flex-start",
@@ -218,7 +219,7 @@ const createStyles = (themeColors) =>
             flex: 1,
         },
         headertext: {
-            fontSize: 20,
+            fontSize: fontSizes.twenty,
             fontWeight: "bold",
             position: "absolute",
             top: 70,
@@ -244,6 +245,10 @@ const createStyles = (themeColors) =>
             bottom: 30,
             right: 30,
         },
+        transaction: {
+            color: themeColors.headertext,
+            fontSize: fontSizes.sixteen,
+        }
     });
 
 export default ViewWalletScreen;

@@ -119,10 +119,10 @@ const FinanceTrackerScreen = () => {
                         >
                             <Ionicons
                                 name="wallet-outline"
-                                size={30}
+                                size={25}
                                 color={themeColors.buttons}
                             />
-                            <Text style={{ marginLeft: 15 }}>{item.name}</Text>
+                            <Text style={{ marginLeft: 15, color: themeColors.headertext, fontSize: fontSizes.sixteen }}>{item.name}</Text>
                         </TouchableOpacity>
                         <View
                             style={{
@@ -141,7 +141,7 @@ const FinanceTrackerScreen = () => {
                             >
                                 <Ionicons
                                     name="add-circle-outline"
-                                    size={30}
+                                    size={25}
                                     color={themeColors.buttons}
                                 />
                             </TouchableOpacity>
@@ -150,7 +150,7 @@ const FinanceTrackerScreen = () => {
                             >
                                 <Ionicons
                                     name="folder-open-outline"
-                                    size={30}
+                                    size={25}
                                     color={themeColors.buttons}
                                 />
                             </TouchableOpacity>
@@ -274,14 +274,15 @@ const FinanceTrackerScreen = () => {
                         }}
                     >
                         <View style={styles.centered}>
-                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                            <Text style={{ fontWeight: "bold", fontSize: fontSizes.eighteen, color: themeColors.headertext }}>
                                 BALANCE
                             </Text>
                             <Text
                                 style={{
                                     fontWeight: "bold",
-                                    fontSize: 18,
+                                    fontSize: fontSizes.eighteen,
                                     marginTop: 10,
+                                    color: themeColors.headertext,
                                 }}
                             >
                                 {totalBalance}
@@ -293,7 +294,7 @@ const FinanceTrackerScreen = () => {
                                 style={{
                                     fontWeight: "bold",
                                     color: "green",
-                                    fontSize: 20,
+                                    fontSize: fontSizes.eighteen,
                                 }}
                             >
                                 INCOME
@@ -302,7 +303,7 @@ const FinanceTrackerScreen = () => {
                                 style={{
                                     fontWeight: "bold",
                                     color: "green",
-                                    fontSize: 18,
+                                    fontSize: fontSizes.eighteen,
                                     marginTop: 10,
                                 }}
                             >
@@ -315,7 +316,7 @@ const FinanceTrackerScreen = () => {
                                 style={{
                                     fontWeight: "bold",
                                     color: "red",
-                                    fontSize: 20,
+                                    fontSize: fontSizes.eighteen,
                                 }}
                             >
                                 EXPENSE
@@ -324,7 +325,7 @@ const FinanceTrackerScreen = () => {
                                 style={{
                                     fontWeight: "bold",
                                     color: "red",
-                                    fontSize: 18,
+                                    fontSize: fontSizes.eighteen,
                                     marginTop: 10,
                                 }}
                             >
@@ -355,9 +356,12 @@ const FinanceTrackerScreen = () => {
                         <Text
                             style={{
                                 fontWeight: "bold",
-                                fontSize: 15,
+                                fontSize: fontSizes.thirteen,
                                 color: themeColors.buttons,
+                                width: '80%',
+                                lineHeight: 20,
                             }}
+                            numberOfLines={2}
                         >
                             Add a Wallet and Transactions to begin!
                         </Text>
@@ -369,7 +373,7 @@ const FinanceTrackerScreen = () => {
                 >
                     <Ionicons
                         name="add-circle"
-                        size={40}
+                        size={35}
                         color={themeColors.buttons}
                     />
                 </TouchableOpacity>
@@ -413,7 +417,7 @@ const createStyles = (themeColors, fontSizes) =>
         },
 
         headertext: {
-            fontSize: 20,
+            fontSize: fontSizes.twenty,
             fontWeight: "bold",
             position: "absolute",
             top: 70,
@@ -424,7 +428,7 @@ const createStyles = (themeColors, fontSizes) =>
 
         walletBox: {
             height: 70,
-            backgroundColor: "white",
+            backgroundColor: themeColors.row,
             borderRadius: 10,
             flexDirection: "row",
             justifyContent: "space-between",
@@ -434,7 +438,8 @@ const createStyles = (themeColors, fontSizes) =>
         },
 
         walletText: {
-            fontSize: 20,
+            fontSize: fontSizes.twenty,
+            color: themeColors.headertext,
         },
         transBox: {
             width: "90%",

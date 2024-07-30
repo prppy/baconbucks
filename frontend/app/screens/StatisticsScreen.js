@@ -249,8 +249,8 @@ const StatisticsDashboardScreen = () => {
                                     alignItems: "center",
                                     justifyContent: "space-between",
                                     borderRadius: 10,
-                                    shadowColor: themeColors.settingsicons,
-                                    shadowOffset: { width: 5, height: 10 },
+                                    shadowColor: '#171717',
+                                    shadowOffset: { width: 0, height: 2 },
                                     shadowOpacity: 0.5,
                                     shadowRadius: 2,
                                     marginBottom: 20,
@@ -261,7 +261,7 @@ const StatisticsDashboardScreen = () => {
                                     Net Worth
                                 </Text>
                                 <Text
-                                    style={{ fontSize: 30, fontWeight: "bold" }}
+                                    style={{ fontSize: fontSizes.thirty, fontWeight: "bold" }}
                                 >
                                     {netWorth}
                                 </Text>
@@ -304,7 +304,7 @@ const createStyles = (themeColors, fontSizes) =>
             justifyContent: "center",
         },
         headertext: {
-            fontSize: 20,
+            fontSize: fontSizes.twenty,
             fontWeight: "bold",
             position: "absolute",
             top: 70,
@@ -330,7 +330,7 @@ const createStyles = (themeColors, fontSizes) =>
             width: "100%",
         },
         typeButton: {
-            width: "22.5%",
+            width: "25%",
             alignItems: "center",
             padding: 12,
             borderWidth: 2,
@@ -341,18 +341,18 @@ const createStyles = (themeColors, fontSizes) =>
             backgroundColor: themeColors.buttons,
         },
         label: {
-            fontSize: 15,
+            fontSize: fontSizes.thirteen,
             color: themeColors.headertext,
         },
         netWorthText: {
-            fontSize: 18,
+            fontSize: fontSizes.eighteen,
             fontWeight: "bold",
             color: themeColors.buttons,
             alignSelf: "center",
             marginBottom: 10,
         },
         netWorthAmount: {
-            fontSize: fontSizes.large,
+            fontSize: fontSizes.eighteen,
             color: themeColors.primary,
             textAlign: "center",
             marginVertical: 10,

@@ -27,8 +27,6 @@ export const HomeTabs = () => {
           iconName = focused ? 'notifications' : 'notifications-outline';
         } else if (route.name === 'Missions') {
           iconName = focused ? 'rocket' : 'rocket-outline'
-        } else if (route.name === 'Community') {
-          iconName = focused ? 'people' : 'people-outline';
         } else if (route.name === 'Settings') {
           iconName = focused ? 'settings' : 'settings-outline';
         }
@@ -42,7 +40,6 @@ export const HomeTabs = () => {
       <Tab.Screen name="Statistics" options={{ headerShown: false }} component={StatisticsStack} />
       <Tab.Screen name="Reminders" options={{ headerShown: false }} component={RemindersStack} />
       <Tab.Screen name="Missions" options={{ headerShown: false }} component={MissionsStack} />
-      <Tab.Screen name="Community" options={{ headerShown: false }} component={CommunityScreen} />
       <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
     </Tab.Navigator>
   );

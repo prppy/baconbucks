@@ -15,11 +15,13 @@ const Provider = ({ children }) => {
     const [isLargeFont, setIsLargeFont] = useState(false);
 
     const defaultFontSizes = {
+        thirteen: 13,
         fourteen: 14,
         fifteen: 15,
         sixteen: 16,
         eighteen: 18,
         twenty: 20,
+        thirty: 30,
         twentyfour: 24,
         twohundred: 200, //to adjust width & height of modal
     };

@@ -163,7 +163,7 @@ const ReminderScreen = () => {
                                 <Text style={styles.reminderHeader}>
                                     No Reminders
                                 </Text>
-                                <Text>Add a new Reminder</Text>
+                                <Text style={{color: themeColors.headertext}}>Add a new Reminder</Text>
                             </View>
                         </View>
                     )}
@@ -195,7 +195,7 @@ const ReminderScreen = () => {
             <TouchableOpacity style={styles.addreminder} onPress={toggleModal}>
                 <Ionicons
                     name="add-circle"
-                    size={40}
+                    size={35}
                     color={themeColors.buttons}
                 />
             </TouchableOpacity>
@@ -299,7 +299,7 @@ const createStyles = (themeColors, fontSizes) =>
             padding: 20,
         },
         headertext: {
-            fontSize: 20,
+            fontSize: fontSizes.twenty,
             fontWeight: "bold",
             position: "absolute",
             top: 70,
@@ -327,11 +327,13 @@ const createStyles = (themeColors, fontSizes) =>
             fontSize: fontSizes.eighteen,
             alignSelf: "center",
             fontWeight: "bold",
+            color: themeColors.headertext,
         },
         modaltext: {
             fontSize: fontSizes.fifteen,
             marginBottom: 10,
             fontWeight: "bold",
+            color: themeColors.headertext,
         },
         savebtn: {
             backgroundColor: themeColors.buttons,
@@ -356,7 +358,11 @@ const createStyles = (themeColors, fontSizes) =>
             fontSize: fontSizes.fifteen,
             fontWeight: "bold",
             marginBottom: 10,
+            color: themeColors.headertext,
         },
+        reminderText: {
+            color: themeColors.headertext,
+        }
     });
 
 export default ReminderScreen;

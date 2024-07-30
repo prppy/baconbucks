@@ -156,6 +156,8 @@ const NewTransactionScreen = () => {
                             keyboardType="numeric"
                             value={amount}
                             onChangeText={handleAmountChange}
+                            placeholderTextColor={themeColors.headertext}
+                            
                         />
                     </View>
 
@@ -280,8 +282,7 @@ const NewTransactionScreen = () => {
     );
 };
 
-const createStyles = (themeColors) =>
-    StyleSheet.create({
+const createStyles = (themeColors, fontSizes) => StyleSheet.create({
         background: {
             flex: 1,
             justifyContent: "flex-start",
@@ -333,17 +334,17 @@ const createStyles = (themeColors) =>
             alignSelf: "center",
         },
         amountInput: {
-            fontSize: 32,
+            fontSize: fontSizes.thirty,
             fontWeight: "bold",
             marginBottom: 16,
             textAlign: "center",
             borderBottomWidth: 1,
             borderColor: themeColors.buttons,
-            color: themeColors.buttons,
+            color: themeColors.headertext,
             paddingHorizontal: 20,
         },
         label: {
-            fontSize: 18,
+            fontSize: fontSizes.eighteen,
             marginVertical: 8,
             color: themeColors.headertext,
         },
@@ -389,7 +390,7 @@ const createStyles = (themeColors) =>
         },
         modalItem: {
             marginTop: 8,
-            fontSize: 15,
+            fontSize: fontSizes.fifteen,
         },
 
         saveButton: {
@@ -402,7 +403,7 @@ const createStyles = (themeColors) =>
         },
         saveButtonText: {
             color: "#fff",
-            fontSize: 16,
+            fontSize: fontSizes.sixteen,
         },
         line: {
             borderBottomColor: themeColors.buttons,
