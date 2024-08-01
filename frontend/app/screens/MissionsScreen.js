@@ -71,7 +71,7 @@ export default function MissionsScreen(props) {
                                 styles.buttonContainer,
                                 {
                                     top: viewDimensions.height * 0.065,
-                                    left: 0,
+                                    left: 0.1,
                                 },
                             ]}
                         >
@@ -203,7 +203,7 @@ const createStyles = (themeColors, fontSizes) =>
             padding: 30,
             backgroundColor: themeColors.row,
             borderColor: "#ccc",
-            borderRadius: 10,
+            borderRadius: 20,
             shadowColor: "#171717",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.2,
