@@ -27,6 +27,8 @@ export const HomeTabs = () => {
           iconName = focused ? 'notifications' : 'notifications-outline';
         } else if (route.name === 'Missions') {
           iconName = focused ? 'rocket' : 'rocket-outline'
+        } else if (route.name === 'Community') {
+          iconName = focused ? 'people' : 'people-outline';
         } else if (route.name === 'Settings') {
           iconName = focused ? 'settings' : 'settings-outline';
         }

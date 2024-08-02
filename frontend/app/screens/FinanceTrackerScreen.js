@@ -173,9 +173,9 @@ const FinanceTrackerScreen = () => {
                             size={24}
                             color={themeColors.buttons}
                         />
-                        <Text style={styles.transaction}>{item.date}</Text>
+                        <Text style={{color: themeColors.headertext}}>{item.date}</Text>
                         <Text
-                            style={[styles.transaction, { color: amountColor }]}
+                            style={{ color: amountColor }}
                         >
                             {item.amount}
                         </Text>
