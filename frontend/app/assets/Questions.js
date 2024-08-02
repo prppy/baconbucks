@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import data from "./QuizData";
+import { Context } from "../components/GlobalContext";
 
 export default Questions = ({ index, question, totalQuestions }) => {
+    const globalContext = useContext(Context);
+    const {
+        userObj,
+        isLightTheme,
+        isLargeFont,
+        defaultFontSizes,
+        getLargerFontSizes,
+    } = globalContext;
+    const themeColors = isLightTheme ? colors.light : colors.dark;
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
+
   return (
       <View style={styles.container}>
           {/* Question Counter */}
@@ -17,7 +30,8 @@ export default Questions = ({ index, question, totalQuestions }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const createStyles = (themeColors, fontSizes) =>
+    StyleSheet.create({
   container: {
       padding: 20,
   },
@@ -27,19 +41,19 @@ const styles = StyleSheet.create({
       marginBottom: 10,
   },
   indexText: {
-      color: '#333',
-      fontSize: 15,
+      color: themeColors.headertext,
+      fontSize: fontSizes.fifteen,
       opacity: 0.6,
       marginRight: 2,
   },
   totalText: {
-      color: '#333',
-      fontSize: 13,
+      color: themeColors.headertext,
+      fontSize: fontSizes.thirteen,
       opacity: 0.6,
   },
   questionText: {
-      color: '#333',
-      fontSize: 18,
+      color: themeColors.headertext,
+      fontSize: fontSizes.eighteen,
       textAlign: 'center',
   },
 });

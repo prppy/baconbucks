@@ -11,9 +11,16 @@ export default function QuizScreen(props) {
     const navigation = useNavigation();
     const allQuestions = data;
     const globalContext = useContext(Context);
-    const { userObj, isLightTheme } = globalContext;
+    const {
+        userObj,
+        isLightTheme,
+        isLargeFont,
+        defaultFontSizes,
+        getLargerFontSizes,
+    } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
-    const styles = createStyles(themeColors);
+    const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
+    const styles = createStyles(themeColors, fontSizes);
 
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [progress, setProgress] = useState(new Animated.Value(1));
@@ -151,7 +158,8 @@ export default function QuizScreen(props) {
     );
 }
 
-const createStyles = (themeColors) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) =>
+    StyleSheet.create({
     safeArea: {
         flex: 1,
         backgroundColor: themeColors.background,
@@ -168,7 +176,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         padding: 40,
         borderTopRightRadius: 40,
         borderRadius: 10,
-        backgroundColor: '#f6dde7',
+        backgroundColor: themeColors.row,
         alignItems: "center",
         shadowColor: "#171717",
         shadowOffset: { width: -6, height: 6 },
@@ -191,7 +199,7 @@ const createStyles = (themeColors) => StyleSheet.create({
         shadowRadius: 3,
     },
     optionText: {
-        fontSize: 16,
+        fontSize: fontSizes.sixteen,
         color: "black",
         textAlign: "center",
     },
@@ -208,10 +216,11 @@ const createStyles = (themeColors) => StyleSheet.create({
         borderRadius: 10,
         paddingVertical: 13,
         paddingHorizontal: 20,
+        top: 20,
     },
     btnNextText: {
         color: "#333",
-        fontSize: 17,
+        fontSize: fontSizes.eighteen,
         letterSpacing: 1.1,
     },
 });
