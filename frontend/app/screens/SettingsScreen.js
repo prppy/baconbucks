@@ -50,7 +50,13 @@ export default function SettingsScreen(props) {
             <Text style={styles.headertext}>Settings</Text>
 
             {/* Profile pic */}
-            <View style={styles.pfp}></View>
+            <View style={styles.pfp}>
+                <Ionicons 
+                    name='person-circle-outline'
+                    size={130}
+                    color={themeColors.settingsicons}
+                /> 
+            </View>
 
             <Text style={styles.username}>{userObj?.username || "Username"}</Text>
             
@@ -164,10 +170,6 @@ const createStyles = (themeColors, fontSizes) => StyleSheet.create({
         height: 65,
     },
     pfp: {
-        width: 110,
-        height: 110,
-        borderRadius: 55,
-        backgroundColor: '#ccc',
         marginTop: 70,
         shadowColor: '#171717',
         shadowOffset: { width: 0, height: 2 },

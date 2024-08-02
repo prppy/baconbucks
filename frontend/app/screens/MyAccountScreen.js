@@ -29,13 +29,13 @@ export default function MyAccountScreen(props) {
             <Text style={styles.headertext}>Profile</Text>
 
             {/* Profile pic */}
-            <View style={styles.pfp}></View>
-            <TouchableOpacity style={styles.editpfp}>
+            <View style={styles.pfp}>
                 <Ionicons 
-                    name="pencil" 
-                    size={18} 
-                    color={themeColors.whitetext} />
-            </TouchableOpacity>
+                    name='person-circle-outline'
+                    size={150}
+                    color={themeColors.settingsicons}
+                /> 
+            </View>
             
             {/* Username */}
             <View style={styles.row}>
@@ -181,10 +181,6 @@ const createStyles = (themeColors, fontSizes) => StyleSheet.create({
         height: 80,
     },
     pfp: {
-        width: 120,
-        height: 120,
-        borderRadius: 60,
-        backgroundColor: '#ccc',
         marginTop: 70,
         shadowColor: '#171717',
         shadowOffset: { width: 0, height: 2 },
