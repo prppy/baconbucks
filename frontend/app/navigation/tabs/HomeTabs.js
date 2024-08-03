@@ -42,6 +42,7 @@ export const HomeTabs = () => {
       <Tab.Screen name="Statistics" options={{ headerShown: false }} component={StatisticsStack} />
       <Tab.Screen name="Reminders" options={{ headerShown: false }} component={RemindersStack} />
       <Tab.Screen name="Missions" options={{ headerShown: false }} component={MissionsStack} />
+      <Tab.Screen name="Community" options={{ headerShown: false }} component={CommunityScreen} />
       <Tab.Screen name="Settings" options={{ headerShown: false }} component={SettingsStack} />
     </Tab.Navigator>
   );

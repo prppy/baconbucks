@@ -21,13 +21,13 @@ class PlayCreateView(APIView):
     def post(self, request, format=None):
         serializer = PlaySerializer(data=request.data)
         if serializer.is_valid():
+            # Save the play object, automatically calculating the attempt number
             serializer.save(user=request.user)
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
 class PlayListView(APIView):
     # see all plays of this user
-
     def get(self, request, format=None):
         plays = Play.objects.filter(user=request.user)
         serializer = PlaySerializer(plays, many=True)

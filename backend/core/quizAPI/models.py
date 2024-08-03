@@ -31,5 +31,9 @@ class Play(models.Model):
         unique_together = ['attempt', 'user', 'quiz']
 
     def save(self, *args, **kwargs):
+        if not self.pk:  # If the object is new
+            # Get the latest attempt number for this user and quiz
+            latest_attempt = Play.objects.filter(user=self.user, quiz=self.quiz).aggregate(Max('attempt'))['attempt__max']
+            self.attempt = (latest_attempt or 0) + 1
         self.bacoin = self.score * 5
         super().save(*args, **kwargs)

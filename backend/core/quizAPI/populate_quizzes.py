@@ -9,10 +9,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 django.setup()
 
 from quizAPI.serializers import QuizSerializer, QuestionSerializer, OptionSerializer
+from quizAPI.models import Quiz, Question, Option
 
 input_data = [
     {
-        "quiz_name": "CPF Quiz 1",
+        "quiz_name": "CPF 1",
         "questions": [
             {
                 "question_name": "At what age can Singaporeans start withdrawing their CPF savings for retirement?",
@@ -44,7 +45,7 @@ input_data = [
         ]
     },
     {
-        "quiz_name": "CPF Quiz 2",
+        "quiz_name": "CPF 2",
         "questions": [
             {
                 "question_name": "What percentage of the monthly CPF contribution goes into the Ordinary Account for individuals aged 35 and below?",
@@ -76,7 +77,7 @@ input_data = [
         ]
     },
     {
-        "quiz_name": "Banking Quiz 1",
+        "quiz_name": "Banking 1",
         "questions": [
             {
                 "question_name": "What is a characteristic of credit cards in Singapore?",
@@ -108,7 +109,7 @@ input_data = [
         ]
     },
     {
-        "quiz_name": "Banking Quiz 2",
+        "quiz_name": "Banking 2",
         "questions": [
             {
                 "question_name": "What does ‘interest rate’ refer to in banking?",
@@ -127,11 +128,20 @@ input_data = [
                     {"option_text": "A fixed deposit account", "is_correct": False},
                     {"option_text": "Permission to withdraw more money than what is in your account", "is_correct": True}
                 ]
+            },
+            {
+                "question_name": "What is the function of an Automated Teller Machine (ATM)?",
+                "options": [
+                    {"option_text": "To process online payments", "is_correct": False},
+                    {"option_text": "To withdraw and deposit cash", "is_correct": True},
+                    {"option_text": "To apply for loans", "is_correct": False},
+                    {"option_text": "To trade stocks", "is_correct": False}
+                ]
             }
         ]
     },
     {
-        "quiz_name": "Tax Quiz 1",
+        "quiz_name": "Tax 1",
         "questions": [
             {
                 "question_name": "Which of the following is a tax-deductible expense for individuals in Singapore?",
@@ -163,7 +173,7 @@ input_data = [
         ]
     },
     {
-        "quiz_name": "Tax Quiz 2",
+        "quiz_name": "Tax 2",
         "questions": [
             {
                 "question_name": "What is the penalty for late filing of income tax returns in Singapore?",
@@ -182,78 +192,78 @@ input_data = [
                     {"option_text": "$30,000", "is_correct": True},
                     {"option_text": "$40,000", "is_correct": False}
                 ]
+            },
+            {
+                "question_name": "What is the Goods and Services Tax (GST) rate in Singapore as of 2024?",
+                "options": [
+                    {"option_text": "5%", "is_correct": False},
+                    {"option_text": "7%", "is_correct": False},
+                    {"option_text": "9%", "is_correct": True},
+                    {"option_text": "10%", "is_correct": False}
+                ]
             }
         ]
     },
     {
-        "quiz_name": "Insurance Quiz 1",
+        "quiz_name": "Insurance 1",
         "questions": [
             {
                 "question_name": "What is an insurance claim?",
                 "options": [
-                    {"option_text": "The amount you pay for your insurance policy", "is_correct": False},
-                    {"option_text": "A request for payment from the insurance company when you experience a loss/damage", "is_correct": True},
-                    {"option_text": "The process of evaluating the risk for insurance", "is_correct": False},
-                    {"option_text": "Applying for insurance", "is_correct": False}
+                    {"option_text": "A request for payment by the insurance company", "is_correct": True},
+                    {"option_text": "A policy premium", "is_correct": False},
+                    {"option_text": "A type of insurance policy", "is_correct": False},
+                    {"option_text": "An investment product", "is_correct": False}
                 ]
             },
             {
-                "question_name": "What is the ‘grace period’ in an insurance policy?",
+                "question_name": "What does a life insurance policy cover?",
                 "options": [
-                    {"option_text": "The period during which you can cancel the policy without penalty", "is_correct": False},
-                    {"option_text": "The period after the premium is due during which the policyholder can pay without losing coverage", "is_correct": True},
-                    {"option_text": "The period in which the insurer can change the terms of the policy", "is_correct": False},
-                    {"option_text": "The period before the policy becomes effective", "is_correct": False}
+                    {"option_text": "Medical expenses", "is_correct": False},
+                    {"option_text": "Home repairs", "is_correct": False},
+                    {"option_text": "Income loss due to death", "is_correct": True},
+                    {"option_text": "Travel expenses", "is_correct": False}
                 ]
             },
             {
-                "question_name": "What is the difference between term life insurance and whole life insurance?",
+                "question_name": "Which type of insurance is mandatory for car owners in Singapore?",
                 "options": [
-                    {"option_text": "Term life insurance is cheaper and lasts for a specific period, while whole life insurance is more expensive and lasts for the policyholder's entire life.", "is_correct": True},
-                    {"option_text": "Term life insurance is more expensive and lasts for the policyholder's entire life, while whole life insurance is cheaper and lasts for a specific period.", "is_correct": False},
-                    {"option_text": "Term life insurance covers health expenses, while whole life insurance covers funeral costs.", "is_correct": False},
-                    {"option_text": "There is no difference between term life and whole life insurance.", "is_correct": False}
+                    {"option_text": "Health insurance", "is_correct": False},
+                    {"option_text": "Travel insurance", "is_correct": False},
+                    {"option_text": "Home insurance", "is_correct": False},
+                    {"option_text": "Motor insurance", "is_correct": True}
                 ]
             }
         ]
     },
     {
-        "quiz_name": "Insurance Quiz 2",
+        "quiz_name": "Insurance 2",
         "questions": [
             {
-                "question_name": "Which of the following best describes ‘liability insurance’?",
+                "question_name": "What does an insurance premium refer to?",
                 "options": [
-                    {"option_text": "Insurance that covers your own medical expenses", "is_correct": False},
-                    {"option_text": "Insurance that covers damages you cause to others", "is_correct": True},
-                    {"option_text": "Insurance that covers damages others caused on you", "is_correct": False},
-                    {"option_text": "Insurance that covers your own housing expenses", "is_correct": False}
+                    {"option_text": "The amount paid to maintain insurance coverage", "is_correct": True},
+                    {"option_text": "The amount received from an insurance claim", "is_correct": False},
+                    {"option_text": "The cost of an insurance policy", "is_correct": False},
+                    {"option_text": "A type of insurance benefit", "is_correct": False}
                 ]
             },
             {
-                "question_name": "What does ‘beneficiary’ mean in a life insurance policy?",
+                "question_name": "What is a deductible in an insurance policy?",
                 "options": [
-                    {"option_text": "The insurance company providing the coverage", "is_correct": False},
-                    {"option_text": "The person/entity receiving the policy’s benefits", "is_correct": True},
-                    {"option_text": "The underwriter who assessed the policy risk", "is_correct": False},
-                    {"option_text": "The person/entity who purchased the insurance policy", "is_correct": False}
+                    {"option_text": "The amount the insurer pays before benefits kick in", "is_correct": False},
+                    {"option_text": "The amount the policyholder pays before benefits kick in", "is_correct": True},
+                    {"option_text": "The total coverage amount of the policy", "is_correct": False},
+                    {"option_text": "The monthly payment for the policy", "is_correct": False}
                 ]
             },
             {
-                "question_name": "What is the term for the amount you pay out of pocket before your insurance starts to cover expenses?",
+                "question_name": "Which type of insurance covers medical expenses?",
                 "options": [
-                    {"option_text": "Premium", "is_correct": False},
-                    {"option_text": "Deductible", "is_correct": True},
-                    {"option_text": "Co-pay", "is_correct": False},
-                    {"option_text": "Coverage limit", "is_correct": False}
-                ]
-            },
-            {
-                "question_name": "What is a premium in terms of insurance?",
-                "options": [
-                    {"option_text": "Amount of money paid by the insurer to the policyholder", "is_correct": False},
-                    {"option_text": "Amount of money paid by the policyholder to the insurer", "is_correct": True},
-                    {"option_text": "Amount of coverage provided by the insurance policy", "is_correct": False},
-                    {"option_text": "Amount of time the insurance policy is valid", "is_correct": False}
+                    {"option_text": "Life insurance", "is_correct": False},
+                    {"option_text": "Travel insurance", "is_correct": False},
+                    {"option_text": "Health insurance", "is_correct": True},
+                    {"option_text": "Home insurance", "is_correct": False}
                 ]
             }
         ]
@@ -263,31 +273,28 @@ input_data = [
 # Function to populate quizzes
 def populate_quizzes():
     for quiz_data in input_data:
-        # Serialize and create quiz instance
-        quiz_serializer = QuizSerializer(data=quiz_data)
+        # Create quiz instance
+        quiz_serializer = QuizSerializer(data={"quiz_name": quiz_data["quiz_name"]})
         if quiz_serializer.is_valid():
             quiz = quiz_serializer.save()
             print(f"Quiz '{quiz.quiz_name}' created successfully!")
-            
+
             # Process each question for the quiz
             for question_data in quiz_data.get('questions', []):
-                question_data['quiz'] = quiz.id  # Assign quiz id to question data
-                question_serializer = QuestionSerializer(data=question_data)
-                if question_serializer.is_valid():
-                    question = question_serializer.save()
-                    print(f"Question '{question.question_name}' created successfully!")
-                    
-                    # Process each option for the question
-                    for option_data in question_data.get('options', []):
-                        option_data['question'] = question.id  # Assign question id to option data
-                        option_serializer = OptionSerializer(data=option_data)
-                        if option_serializer.is_valid():
-                            option_serializer.save()
-                            print(f"Option '{option_data['option_text']}' created successfully!")
-                        else:
-                            print(f"Failed to create option: {option_serializer.errors}")
-                else:
-                    print(f"Failed to create question: {question_serializer.errors}")
+                question = Question.objects.create(
+                    quiz=quiz,
+                    question_name=question_data["question_name"]
+                )
+                print(f"Question '{question.question_name}' created successfully!")
+
+                # Process each option for the question
+                for option_data in question_data.get('options', []):
+                    option = Option.objects.create(
+                        question=question,
+                        option_text=option_data["option_text"],
+                        is_correct=option_data["is_correct"]
+                    )
+                    print(f"Option '{option.option_text}' created successfully!")
         else:
             print(f"Failed to create quiz: {quiz_serializer.errors}")
 

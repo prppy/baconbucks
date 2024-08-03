@@ -1,35 +1,64 @@
-import React, { useState, useContext } from "react";
-import { SafeAreaView, StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Button, Animated, ScrollView } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
+import {
+    SafeAreaView,
+    Text,
+    View,
+    TouchableOpacity,
+    Animated,
+    ActivityIndicator,
+    StyleSheet,
+} from "react-native";
 import colors from "../config/colors";
-import { useNavigation } from "@react-navigation/native";
-import data from "../assets/QuizData";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import ProgressBar from "../assets/ProgressBar";
 import Questions from "../assets/Questions";
 import { Context } from "../components/GlobalContext";
 
 export default function QuizScreen(props) {
     const navigation = useNavigation();
-    const allQuestions = data;
+    const route = useRoute();
+    const { QuizID } = route.params;
+
     const globalContext = useContext(Context);
     const {
-        userObj,
         isLightTheme,
         isLargeFont,
         defaultFontSizes,
         getLargerFontSizes,
+        fetchData,
     } = globalContext;
+
     const themeColors = isLightTheme ? colors.light : colors.dark;
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
     const styles = createStyles(themeColors, fontSizes);
 
+    const [quizData, setQuizData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [progress, setProgress] = useState(new Animated.Value(1));
     const [fadeAnim, setFadeAnim] = useState(new Animated.Value(1));
-
     const [isOptionsDisabled, setIsOptionsDisabled] = useState(false);
     const [currentOptionSelected, setCurrentOptionSelected] = useState(null);
     const [correctOption, setCorrectOption] = useState(null);
     const [score, setScore] = useState(0);
+
+    useEffect(() => {
+        fetchQuizData();
+    }, [QuizID]);
+
+    const fetchQuizData = async () => {
+        try {
+            const json = await fetchData(`quiz/get-quiz/${QuizID}/`);
+            setQuizData(json);
+        } catch (error) {
+            console.error("Error fetching quiz data:", error);
+            setError(error.message || "Failed to fetch quiz data");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const restartQuiz = () => {
         setCurrentQuestionIndex(0);
@@ -41,7 +70,9 @@ export default function QuizScreen(props) {
 
     const validateAnswer = (selectedOption) => {
         if (!isOptionsDisabled) {
-            let correct_option = allQuestions[currentQuestionIndex]["correct_option"];
+            let correct_option = quizData.questions[
+                currentQuestionIndex
+            ].options.find((option) => option.is_correct).option_text;
 
             setCurrentOptionSelected(selectedOption);
             setCorrectOption(correct_option);
@@ -53,7 +84,7 @@ export default function QuizScreen(props) {
     };
 
     const handleNext = () => {
-        if (currentQuestionIndex === allQuestions.length - 1) {
+        if (currentQuestionIndex === quizData.questions.length - 1) {
             navigation.replace("Results", { score: score });
         } else {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
@@ -85,142 +116,200 @@ export default function QuizScreen(props) {
     const renderOptions = () => {
         return (
             <View style={styles.optionsContainer}>
-                {allQuestions[currentQuestionIndex]?.options.map((option, index) => (
-                    <Animated.View
-                        key={index}
-                        style={{
-                            opacity: fadeAnim,
-                            transform: [
-                                {
-                                    translateY: fadeAnim.interpolate({
-                                        inputRange: [0, 1],
-                                        outputRange: [(150 / 4) * (index + 10), 0], // 0 : 150, 0.5 : 75, 1 : 0
-                                    }),
-                                },
-                            ],
-                        }}
-                    >
-                        <TouchableOpacity
-                            onPress={() => validateAnswer(option)}
-                            style={[
-                                styles.optionsText,
-                                {
-                                    backgroundColor: isOptionsDisabled
-                                        ? option === correctOption
-                                            ? "#98ce90"
-                                            : option === currentOptionSelected
-                                            ? "#db7873" //red
-                                            : "#d4d4d5" //gray
-                                        : "#d4d4d5",
-                                },
-                            ]}
+                {quizData.questions[currentQuestionIndex]?.options.map(
+                    (option, index) => (
+                        <Animated.View
+                            key={index}
+                            style={{
+                                opacity: fadeAnim,
+                                transform: [
+                                    {
+                                        translateY: fadeAnim.interpolate({
+                                            inputRange: [0, 1],
+                                            outputRange: [
+                                                (150 / 4) * (index + 10),
+                                                0,
+                                            ], // 0 : 150, 0.5 : 75, 1 : 0
+                                        }),
+                                    },
+                                ],
+                            }}
                         >
-                            <Text style={styles.optionText}>{option}</Text>
-                        </TouchableOpacity>
-                    </Animated.View>
-                ))}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    validateAnswer(option.option_text)
+                                }
+                                style={[
+                                    styles.optionsText,
+                                    {
+                                        backgroundColor: isOptionsDisabled
+                                            ? option.option_text ===
+                                              correctOption
+                                                ? "#98ce90"
+                                                : option.option_text ===
+                                                  currentOptionSelected
+                                                ? "#db7873" //red
+                                                : "#d4d4d5" //gray
+                                            : "#d4d4d5",
+                                    },
+                                ]}
+                            >
+                                <Text style={styles.optionText}>
+                                    {option.option_text}
+                                </Text>
+                            </TouchableOpacity>
+                        </Animated.View>
+                    )
+                )}
             </View>
         );
     };
 
+    if (loading) {
+        return (
+            <SafeAreaView style={[styles.background, styles.centered]}>
+                <ActivityIndicator size="large" color={themeColors.primary} />
+            </SafeAreaView>
+        );
+    }
+
+    if (error) {
+        return (
+            <SafeAreaView style={[styles.background, styles.centered]}>
+                <Text style={styles.errorText}>Error fetching quiz data</Text>
+            </SafeAreaView>
+        );
+    }
+
     return (
-        <SafeAreaView style={styles.safeArea}>
-                <View style={styles.container}>
-                    <View style={styles.subContainer}>
-                        <ProgressBar progress={progress} />
-                        <Questions
-                            index={currentQuestionIndex}
-                            question={allQuestions[currentQuestionIndex]?.question}
-                            totalQuestions={allQuestions.length}
-                        />
-                    </View>
-                    {renderOptions()}
+        <SafeAreaView style={styles.background}>
+            <Text style={styles.headertext}>
+                Current Quiz: {quizData.quiz_name}
+            </Text>
+            <View style={styles.inner}>
+                <View style={styles.subContainer}>
+                    <ProgressBar progress={progress} />
+                    <Questions
+                        index={currentQuestionIndex}
+                        question={
+                            quizData.questions[currentQuestionIndex]
+                                ?.question_name
+                        }
+                        totalQuestions={quizData.questions.length}
+                    />
                 </View>
+                {renderOptions()}
+
                 <View style={styles.nextButtonContainer}>
                     <TouchableOpacity
-                        style={[
-                            styles.btnNext,
-                            {
-                                backgroundColor: !currentOptionSelected ? "#cfcdcc" : "#DF4B75",
-                            },
-                        ]}
+                        style={{
+                            backgroundColor: !currentOptionSelected
+                                ? "#cfcdcc"
+                                : "#DF4B75",
+                                width: "100%", 
+                                alignContent: "center",
+                                borderRadius: 10
+                        }}
                         disabled={!currentOptionSelected}
                         onPress={handleNext}
                     >
-                        <Text style={[styles.btnNextText, 
-                            {
-                                color: !currentOptionSelected ? "black" : 'white',
-                            },
-                        ]}>NEXT</Text>
+                        <Text
+                            style={[
+                                styles.btnNextText,
+                                {
+                                    color: !currentOptionSelected
+                                        ? "black"
+                                        : "white",
+                                },
+                            ]}
+                        >
+                            NEXT
+                        </Text>
                     </TouchableOpacity>
                 </View>
+            </View>
         </SafeAreaView>
     );
 }
 
 const createStyles = (themeColors, fontSizes) =>
     StyleSheet.create({
-    safeArea: {
-        flex: 1,
-        backgroundColor: themeColors.background,
-    },
-    container: {
-        flex: 1,
-        paddingVertical: 20,
-        paddingHorizontal: 20,
-        justifyContent: 'centre',
-    },
-    subContainer: {
-        marginTop: 10,
-        marginVertical: 10,
-        padding: 40,
-        borderTopRightRadius: 40,
-        borderRadius: 10,
-        backgroundColor: themeColors.row,
-        alignItems: "center",
-        shadowColor: "#171717",
-        shadowOffset: { width: -6, height: 6 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-    },
-    optionsContainer: {
-        marginTop: 15,
-    },
-    optionsText: {
-        borderRadius: 5,
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 10,
-        paddingHorizontal: 30,
-        marginVertical: 10,
-        shadowColor: "#171717",
-        shadowOffset: { width: -3, height: 3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-    },
-    optionText: {
-        fontSize: fontSizes.sixteen,
-        color: "black",
-        textAlign: "center",
-    },
-    nextButtonContainer: {
-        position: "absolute",
-        marginTop: 570,
-        right: 20,
-        shadowColor: "#171717",
-        shadowOffset: { width: -3, height: 3 },
-        shadowOpacity: 0.2,
-        shadowRadius: 3,
-    },
-    btnNext: {
-        borderRadius: 10,
-        paddingVertical: 13,
-        paddingHorizontal: 20,
-        top: 20,
-    },
-    btnNextText: {
-        color: "#333",
-        fontSize: fontSizes.eighteen,
-        letterSpacing: 1.1,
-    },
-});
+        background: {
+            flex: 1,
+            justifyContent: "flex-start",
+            alignItems: "center",
+            backgroundColor: themeColors.background,
+            padding: 20,
+        },
+        centered: {
+            alignItems: "center",
+            justifyContent: "center",
+        },
+        headertext: {
+            fontSize: fontSizes.twenty,
+            fontWeight: "bold",
+            position: "absolute",
+            top: 70,
+            left: 30,
+            color: themeColors.headertext,
+            paddingBottom: 20,
+        },
+        centered: {
+            alignItems: "center",
+            justifyContent: "center",
+        },
+
+        inner: {
+            paddingTop: 60,
+            width: "100%",
+            padding: 30,
+            flex: 1,
+        },
+        subContainer: {
+            marginVertical: 10,
+            padding: 40,
+            borderRadius: 20,
+            backgroundColor: themeColors.row,
+            alignItems: "center",
+            shadowColor: "#171717",
+            shadowOffset: { width: -6, height: 6 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
+        },
+        optionsContainer: {
+            marginTop: 15,
+        },
+        optionsText: {
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 10,
+            paddingHorizontal: 30,
+            marginVertical: 10,
+            shadowColor: "#171717",
+            shadowOffset: { width: -3, height: 3 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
+        },
+        optionText: {
+            fontSize: fontSizes.sixteen,
+            color: "black",
+            textAlign: "center",
+        },
+        nextButtonContainer: {
+            shadowColor: "#171717",
+            shadowOffset: { width: -3, height: 3 },
+            shadowOpacity: 0.2,
+            shadowRadius: 3,
+            width: "40%",
+            alignSelf: "center", 
+            marginTop: 10
+        },
+        btnNextText: {
+            color: "#333",
+            fontSize: fontSizes.sixteen,
+            letterSpacing: 1.1,
+            alignSelf: "center", 
+            margin: 10
+        },
+    });
