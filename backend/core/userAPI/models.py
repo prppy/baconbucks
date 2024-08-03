@@ -37,30 +37,14 @@ class UserManager(BaseUserManager):
         return user
 
 class User(AbstractBaseUser):
-
-    username = models.CharField(
-        max_length=32,
-        unique=True,
-    )
-
-    email = models.EmailField(
-        unique=True, 
-    )
-
-    password = models.CharField(
-        max_length=256,
-    )
-
+    username = models.CharField(max_length=32, unique=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=256)
     is_active = models.BooleanField(default=True)
-
     is_staff = models.BooleanField(default=False)
-
     is_admin = models.BooleanField(default=False)
-
     is_superuser = models.BooleanField(default=False)
-
     date_joined = models.DateTimeField(auto_now_add=True)
-
     last_login = models.DateTimeField(default=timezone.now)
 
     objects = UserManager()
