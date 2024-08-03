@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, ScrollView, ActivityIndicator } from "react-native";
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
 import { Context } from "../components/GlobalContext";

@@ -269,13 +269,21 @@ class StatisticsDashboardView(APIView):
     
 class LeaderboardView(APIView):
     def get(self, request):
-        users = User.objects.all().order_by('-bacoin')[:30]  # Top 100 users
-        leaderboard = [
-            {
-                "username": user.username,
-                "bacoin": user.bacoin,
-                "rank": idx + 1
-            }
-            for idx, user in enumerate(users)
-        ]
+        users = User.objects.all()
+        leaderboard = sorted(
+            [
+                {
+                    "username": user.username,
+                    "bacoin": user.calculate_bacoin(),
+                    "rank": None  # Rank will be set after sorting
+                }
+                for user in users
+            ],
+            key=lambda x: x["bacoin"],
+            reverse=True
+        )
+
+        for idx, user in enumerate(leaderboard):
+            user["rank"] = idx + 1
+
         return Response(leaderboard, status=200)
