@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import TestView, UserSignUpView, UserLoginView, UserDetailView, UserDeleteView, UserUpdateView, WalletCreateView, WalletDetailView, WalletDeleteView, WalletUpdateView, StatisticsDashboardView
+from .views import TestView, UserSignUpView, UserLoginView, UserDetailView, UserDeleteView, UserUpdateView, WalletCreateView, WalletDetailView, WalletDeleteView, WalletUpdateView, StatisticsDashboardView, LeaderboardView
 
 urlpatterns = [
     path('test/', TestView.as_view()),
@@ -14,6 +14,7 @@ urlpatterns = [
     path('delete-wallet/<int:pk>/', WalletDeleteView.as_view()),
     path('update-wallet/<int:pk>/', WalletUpdateView.as_view()),
     path('get-statistics/', StatisticsDashboardView.as_view()),
+    path('leaderboard/', LeaderboardView.as_view()),
 ]
 
 # localhost:8000/api/v1.0/user/

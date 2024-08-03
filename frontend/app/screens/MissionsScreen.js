@@ -4,10 +4,7 @@ import {
     StyleSheet,
     Text,
     View,
-    Image,
     TouchableOpacity,
-    ScrollView,
-    Dimensions,
 } from "react-native";
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
@@ -37,6 +34,81 @@ export default function MissionsScreen(props) {
         <SafeAreaView style={styles.background}>
             <Text style={styles.headertext}>Missions</Text>
             <View style={styles.inner}>
+                <View style={styles.quizbox}>
+                    <View
+                        style={[
+                            styles.centered,
+                            {
+                                flexDirection: "row",
+                                width: "50%",
+                                justifyContent: "space-around",
+                            },
+                        ]}
+                    >
+                        <Ionicons
+                            name="server-outline"
+                            size={35}
+                            color={themeColors.buttons}
+                        ></Ionicons>
+                        <View style={styles.centered}>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: fontSizes.eighteen,
+                                    color: themeColors.buttons,
+                                }}
+                            >
+                                Bacoin
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: fontSizes.eighteen,
+                                    marginTop: 10,
+                                    color: themeColors.headertext,
+                                }}
+                            >
+                                xxxx
+                            </Text>
+                        </View>
+                    </View>
+                    <View style={styles.verticalline}></View>
+                    <View
+                        style={[
+                            styles.centered,
+                            {
+                                flexDirection: "row",
+                                width: "50%",
+                                justifyContent: "space-around",
+                            },
+                        ]}
+                    >
+                        <Ionicons
+                            name="trophy-outline"
+                            size={35}
+                            color={themeColors.buttons}
+                        ></Ionicons>
+                        <View style={styles.centered}>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: fontSizes.eighteen,
+                                    color: themeColors.buttons,
+                                }}
+                            >
+                                Rank
+                            </Text>
+                            <Text
+                                style={{
+                                    fontSize: fontSizes.eighteen,
+                                    marginTop: 10,
+                                    color: themeColors.headertext,
+                                }}
+                            >
+                                Rank
+                            </Text>
+                        </View>
+                    </View>
+                </View>
                 {/* CPF */}
                 <View style={styles.quizbox}>
                     <View style={{ width: "90%" }}>
@@ -47,7 +119,7 @@ export default function MissionsScreen(props) {
                         </Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={{ alignSelf: "center" }}>
                         <Ionicons
                             name="chevron-forward"
                             size={30}
@@ -66,7 +138,7 @@ export default function MissionsScreen(props) {
                         </Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={{ alignSelf: "center" }}>
                         <Ionicons
                             name="chevron-forward"
                             size={30}
@@ -85,7 +157,7 @@ export default function MissionsScreen(props) {
                         </Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={{ alignSelf: "center" }}>
                         <Ionicons
                             name="chevron-forward"
                             size={30}
@@ -100,11 +172,11 @@ export default function MissionsScreen(props) {
                     <View style={{ width: "90%" }}>
                         <Text style={styles.rowheader}>Insurance</Text>
                         <Text style={styles.rowcontent} numberOfLines={2}>
-                        Have you bought your insurance yet?
+                            Have you bought your insurance yet?
                         </Text>
                     </View>
 
-                    <TouchableOpacity>
+                    <TouchableOpacity style={{ alignSelf: "center" }}>
                         <Ionicons
                             name="chevron-forward"
                             size={30}
@@ -149,13 +221,15 @@ const createStyles = (themeColors, fontSizes) =>
             elevation: 20,
             marginBottom: 10,
             flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "flex-end",
+            alignItems: "stretch",
+            justifyContent: "center",
+            alignContent: "center",
         },
         rowheader: {
             color: themeColors.headertext,
             fontSize: fontSizes.eighteen,
             marginBottom: 5,
+            fontWeight: "bold",
         },
         rowcontent: {
             color: themeColors.headertext,
@@ -202,5 +276,9 @@ const createStyles = (themeColors, fontSizes) =>
         },
         buttonContainer: {
             position: "absolute",
+        },
+        verticalline: {
+            borderLeftWidth: 1,
+            borderLeftColor: themeColors.buttons,
         },
     });

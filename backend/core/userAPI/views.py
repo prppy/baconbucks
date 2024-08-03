@@ -266,3 +266,16 @@ class StatisticsDashboardView(APIView):
             'piggy_bank_expenditures': piggy_bank_expenditures_data,
             'wallet_options': wallet_options,
         }, status=200)
+    
+class LeaderboardView(APIView):
+    def get(self, request):
+        users = User.objects.all().order_by('-bacoin')[:30]  # Top 100 users
+        leaderboard = [
+            {
+                "username": user.username,
+                "bacoin": user.bacoin,
+                "rank": idx + 1
+            }
+            for idx, user in enumerate(users)
+        ]
+        return Response(leaderboard, status=200)
