@@ -37,25 +37,6 @@ export default function MissionsScreen(props) {
         <SafeAreaView style={styles.background}>
             <Text style={styles.headertext}>Missions</Text>
             <View style={styles.inner}>
-                {/* RANDOM */}
-                <View style={styles.quizbox}>
-                    <View style={{ width: "90%" }}>
-                        <Text style={styles.rowheader}>Random</Text>
-                        <Text style={styles.rowcontent} numberOfLines={2}>
-                            Not sure where to get started? Try out any topic
-                            here!
-                        </Text>
-                    </View>
-
-                    <TouchableOpacity>
-                        <Ionicons
-                            name="chevron-forward"
-                            size={30}
-                            color={themeColors.buttons}
-                        />
-                    </TouchableOpacity>
-                </View>
-
                 {/* CPF */}
                 <View style={styles.quizbox}>
                     <View style={{ width: "90%" }}>
