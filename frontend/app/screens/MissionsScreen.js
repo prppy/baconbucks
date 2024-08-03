@@ -32,9 +32,9 @@ export default function MissionsScreen(props) {
     };
 
     useFocusEffect(
-        useCallback(async () => {
-            await updateUserDetails();
-        })
+        useCallback(() => {
+            updateUserDetails();
+        }, [])
     );
 
     return (
@@ -111,7 +111,7 @@ export default function MissionsScreen(props) {
                                     color: themeColors.headertext,
                                 }}
                             >
-                                Rank
+                                {userObj.rank}
                             </Text>
                         </View>
                     </View>

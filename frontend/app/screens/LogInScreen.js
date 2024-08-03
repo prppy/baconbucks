@@ -110,6 +110,7 @@ export default function LogInScreen() {
                                     onChangeText={setUserName}
                                     secureTextEntry={false}
                                     autoCapitalize="none"
+                                    autoComplete="username"
                                 />
                             </View>
                             <Text style={styles.text}>Password</Text>
@@ -125,6 +126,7 @@ export default function LogInScreen() {
                                     onChangeText={setPassword}
                                     secureTextEntry={secure}
                                     autoCapitalize="none"
+                                    autoComplete="current-password"
                                 />
                             </View>
 

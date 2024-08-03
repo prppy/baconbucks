@@ -5,12 +5,9 @@ import {
     Text,
     View,
     TouchableWithoutFeedback,
-    TextInput,
     TouchableOpacity,
-    Button,
     FlatList,
     Keyboard,
-    Alert,
     ActivityIndicator,
 } from "react-native";
 import {
@@ -43,7 +40,7 @@ const ViewWalletScreen = (props) => {
     const styles = createStyles(themeColors, fontSizes);
 
     const [isLoading, setIsLoading] = useState(true);
-    const [transData, setTransData] = useState();
+    const [transData, setTransData] = useState([]);
     const [error, setError] = useState();
 
     useFocusEffect(
@@ -130,54 +127,82 @@ const ViewWalletScreen = (props) => {
                             alignItems: "center",
                             justifyContent: "center",
                             borderRadius: 10,
-                            shadowColor: '#171717',
+                            shadowColor: "#171717",
                             shadowOffset: { width: 0, height: 2 },
                             shadowOpacity: 0.2,
                             shadowRadius: 2,
                             marginBottom: 20,
-                            elevation: 5,
+                            elevation: 10,
                         }}
                     >
-                        <Text style={{fontSize: fontSizes.fifteen, color: themeColors.headertext}}>BALANCE</Text>
-                        <Text style={{ fontSize: fontSizes.thirty, fontWeight: "bold", color: themeColors.headertext }}>
+                        <Text
+                            style={{
+                                fontSize: fontSizes.fifteen,
+                                color: themeColors.headertext,
+                            }}
+                        >
+                            BALANCE
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: fontSizes.thirty,
+                                fontWeight: "bold",
+                                color: themeColors.headertext,
+                            }}
+                        >
                             xxx.xx
                         </Text>
                     </View>
 
-                    <Text style={{fontWeight:"bold", fontSize: fontSizes.eighteen, marginTop: 10, color: themeColors.headertext}}>Transaction History</Text>
-                    <FlatList
-                        data={transData}
-                        keyExtractor={(item) => item.id.toString()}
-                        renderItem={({ item }) => {
-                            const amountColor =
-                                item.type === "EX"
-                                    ? "red"
-                                    : item.type === "EA"
-                                    ? "green"
-                                    : themeColors.text;
-
-                            return (
-                                <View style={styles.transBox}>
-                                    <Ionicons
-                                        name={getCategoryIcon(item.category)}
-                                        size={24}
-                                        color={themeColors.buttons}
-                                    />
-                                    <Text style={styles.transaction}>
-                                        {item.date}
-                                    </Text>
-                                    <Text
-                                        style={[
-                                            styles.transaction,
-                                            { color: amountColor },
-                                        ]}
-                                    >
-                                        {item.amount}
-                                    </Text>
-                                </View>
-                            );
+                    <Text
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: fontSizes.eighteen,
+                            marginTop: 10,
+                            color: themeColors.headertext,
                         }}
-                    />
+                    >
+                        Transaction History
+                    </Text>
+
+                    {/* Ensure FlatList takes up available space */}
+                    <View style={{ flex: 1 }}>
+                        <FlatList
+                            data={transData}
+                            keyExtractor={(item) => item.id.toString()}
+                            renderItem={({ item }) => {
+                                const amountColor =
+                                    item.type === "EX"
+                                        ? "red"
+                                        : item.type === "EA"
+                                        ? "green"
+                                        : themeColors.text;
+
+                                return (
+                                    <View style={styles.transBox}>
+                                        <Ionicons
+                                            name={getCategoryIcon(
+                                                item.category
+                                            )}
+                                            size={24}
+                                            color={themeColors.buttons}
+                                        />
+                                        <Text style={styles.transaction}>
+                                            {item.date}
+                                        </Text>
+                                        <Text
+                                            style={[
+                                                styles.transaction,
+                                                { color: amountColor },
+                                            ]}
+                                        >
+                                            {item.amount}
+                                        </Text>
+                                    </View>
+                                );
+                            }}
+                        />
+                    </View>
 
                     <TouchableOpacity
                         style={[styles.addwallet, { bottom: 80 }]}
@@ -204,7 +229,8 @@ const ViewWalletScreen = (props) => {
     );
 };
 
-const createStyles = (themeColors, fontSizes) => StyleSheet.create({
+const createStyles = (themeColors, fontSizes) =>
+    StyleSheet.create({
         background: {
             flex: 1,
             justifyContent: "flex-start",
@@ -239,6 +265,11 @@ const createStyles = (themeColors, fontSizes) => StyleSheet.create({
             flexDirection: "row",
             justifyContent: "space-between",
             alignContent: "center",
+            shadowColor: "#171717",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+            elevation: 20,
         },
         addwallet: {
             position: "absolute",
@@ -248,7 +279,7 @@ const createStyles = (themeColors, fontSizes) => StyleSheet.create({
         transaction: {
             color: themeColors.headertext,
             fontSize: fontSizes.sixteen,
-        }
+        },
     });
 
 export default ViewWalletScreen;

@@ -225,6 +225,11 @@ const NewTransactionScreen = () => {
                                     backgroundColor: themeColors.row,
                                     padding: 10,
                                     borderRadius: 10,
+                                    shadowColor: "#171717",
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 2,
+                                    elevation: 20,
                                 },
                                 styles.label,
                             ]}

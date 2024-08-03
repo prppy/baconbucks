@@ -48,12 +48,6 @@ const FinanceTrackerScreen = () => {
         setIsVisible(!isVisible);
     };
 
-    useFocusEffect(
-        useCallback(() => {
-            fetchWalletData();
-        }, [])
-    );
-
     const categories = [
         { id: "SL", icon: "cash-outline" },
         { id: "GR", icon: "cart-outline" },
@@ -68,6 +62,12 @@ const FinanceTrackerScreen = () => {
         const category = categories.find((cat) => cat.id === categoryId);
         return category ? category.icon : "help-outline";
     };
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchWalletData();
+        }, [])
+    );
 
     const fetchWalletData = async () => {
         setIsLoading(true);
@@ -122,7 +122,15 @@ const FinanceTrackerScreen = () => {
                                 size={25}
                                 color={themeColors.buttons}
                             />
-                            <Text style={{ marginLeft: 15, color: themeColors.headertext, fontSize: fontSizes.sixteen }}>{item.name}</Text>
+                            <Text
+                                style={{
+                                    marginLeft: 15,
+                                    color: themeColors.headertext,
+                                    fontSize: fontSizes.sixteen,
+                                }}
+                            >
+                                {item.name}
+                            </Text>
                         </TouchableOpacity>
                         <View
                             style={{
@@ -166,17 +174,19 @@ const FinanceTrackerScreen = () => {
                     ? "green"
                     : themeColors.text;
             return (
-                <TouchableOpacity onPress={() => handleNavigateToTransaction(item)}>
+                <TouchableOpacity
+                    onPress={() => handleNavigateToTransaction(item)}
+                >
                     <View style={styles.transBox}>
                         <Ionicons
                             name={getCategoryIcon(item.category)}
                             size={24}
                             color={themeColors.buttons}
                         />
-                        <Text style={{color: themeColors.headertext}}>{item.date}</Text>
-                        <Text
-                            style={{ color: amountColor }}
-                        >
+                        <Text style={{ color: themeColors.headertext }}>
+                            {item.date}
+                        </Text>
+                        <Text style={{ color: amountColor }}>
                             {item.amount}
                         </Text>
                     </View>
@@ -271,13 +281,24 @@ const FinanceTrackerScreen = () => {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             marginBottom: 10,
-                            backgroundColor: themeColors.row, 
-                            borderRadius: 10, 
-                            padding: 10
+                            backgroundColor: themeColors.row,
+                            borderRadius: 10,
+                            padding: 10,
+                            shadowColor: "#171717",
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
+                            elevation: 20,
                         }}
                     >
                         <View style={styles.centered}>
-                            <Text style={{ fontWeight: "bold", fontSize: fontSizes.eighteen, color: themeColors.headertext }}>
+                            <Text
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: fontSizes.eighteen,
+                                    color: themeColors.headertext,
+                                }}
+                            >
                                 BALANCE
                             </Text>
                             <Text
@@ -436,6 +457,11 @@ const createStyles = (themeColors, fontSizes) =>
             alignItems: "center",
             marginBottom: 10,
             padding: 20,
+            shadowColor: "#171717",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+            elevation: 20,
         },
 
         walletText: {
@@ -454,6 +480,11 @@ const createStyles = (themeColors, fontSizes) =>
             flexDirection: "row",
             justifyContent: "space-between",
             alignContent: "center",
+            shadowColor: "#171717",
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
+            elevation: 20,
         },
         modalContent: {
             width: 300,

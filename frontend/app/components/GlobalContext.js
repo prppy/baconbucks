@@ -119,7 +119,6 @@ const Provider = ({ children }) => {
                     },
                     body: body ? JSON.stringify(body) : null,
                 };
-
                 const response = await fetch(`${domain}/${url}`, options);
 
                 if (response.ok) {
