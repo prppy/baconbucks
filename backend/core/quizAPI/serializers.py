@@ -8,6 +8,7 @@ class PlaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Play
         fields = ['id', 'quiz', 'attempt', 'date', 'score']
+        read_only_fields = ['attempt', 'date']  # Mark `attempt` and `date` as read-only
 
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:

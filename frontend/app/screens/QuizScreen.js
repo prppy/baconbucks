@@ -60,14 +60,6 @@ export default function QuizScreen(props) {
         }
     };
 
-    const restartQuiz = () => {
-        setCurrentQuestionIndex(0);
-        setScore(0);
-        setCurrentOptionSelected(null);
-        setCorrectOption(null);
-        setIsOptionsDisabled(false);
-    };
-
     const validateAnswer = (selectedOption) => {
         if (!isOptionsDisabled) {
             let correct_option = quizData.questions[
@@ -85,7 +77,7 @@ export default function QuizScreen(props) {
 
     const handleNext = () => {
         if (currentQuestionIndex === quizData.questions.length - 1) {
-            navigation.replace("Results", { score: score });
+            navigation.replace("Results", { score: score, QuizID: QuizID });
         } else {
             setCurrentQuestionIndex(currentQuestionIndex + 1);
             setCurrentOptionSelected(null);

@@ -17,12 +17,11 @@ class QuizDetailView(APIView):
         return Response(serializer.data)
     
 class PlayCreateView(APIView):
-    # create new play
+    # Create new play
     def post(self, request, format=None):
         serializer = PlaySerializer(data=request.data)
         if serializer.is_valid():
-            # Save the play object, automatically calculating the attempt number
-            serializer.save(user=request.user)
+            serializer.save(user=request.user)  # `attempt` will be handled by the model's `save` method
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
