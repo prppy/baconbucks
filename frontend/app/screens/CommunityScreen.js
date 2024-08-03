@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { SafeAreaView, StyleSheet, Text, View, ScrollView, ActivityIndicator } from "react-native";
+import {
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    View,
+    ScrollView,
+    ActivityIndicator,
+} from "react-native";
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
 import { Context } from "../components/GlobalContext";
@@ -30,7 +37,11 @@ export default function CommunityScreen(props) {
         try {
             const json = await fetchData(`user/leaderboard/`);
             setLeaderboard(json);
-        } catch (error) {}
+        } catch (error) {
+            setError(error.message || "Failed to fetch leadrboard data");
+        } finally {
+            setIsLoading(false)
+        }
     };
 
     if (isLoading) {
@@ -54,7 +65,7 @@ export default function CommunityScreen(props) {
 
     return (
         <SafeAreaView style={styles.background}>
-            <Text style={styles.headertext}>Community</Text>
+            <Text style={styles.headertext}>Community Leaderboard</Text>
             <ScrollView style={styles.inner}>
                 {leaderboard.map((user, index) => (
                     <View style={styles.row} key={index}>
@@ -107,7 +118,7 @@ const createStyles = (themeColors, fontSizes) =>
             justifyContent: "space-between",
             padding: 20,
             height: 80,
-            marginBottom: 20,
+            marginBottom: 10,
         },
         rank: {
             fontSize: fontSizes.twenty,
