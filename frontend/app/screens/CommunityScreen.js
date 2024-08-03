@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,7 +8,7 @@ import {
     ActivityIndicator,
 } from "react-native";
 import colors from "../config/colors";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Context } from "../components/GlobalContext";
 
 export default function CommunityScreen(props) {
@@ -29,9 +29,11 @@ export default function CommunityScreen(props) {
     const [error, setError] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        fetchLeaderboard();
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            fetchLeaderboard();
+        }, [])
+    );
 
     const fetchLeaderboard = async () => {
         try {
@@ -40,7 +42,7 @@ export default function CommunityScreen(props) {
         } catch (error) {
             setError(error.message || "Failed to fetch leadrboard data");
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     };
 

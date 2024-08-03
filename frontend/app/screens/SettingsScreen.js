@@ -8,7 +8,7 @@ import colors from "../config/colors";
 
 export default function SettingsScreen(props) {
     const globalContext = useContext(Context);
-    const { setuserObj, userObj, isLightTheme, toggleTheme, isLargeFont, defaultFontSizes, getLargerFontSizes, toggleFontSize } = globalContext;
+    const { setUserObj, userObj, isLightTheme, toggleTheme, isLargeFont, defaultFontSizes, getLargerFontSizes, toggleFontSize } = globalContext;
     const navigation = useNavigation();
     const themeColors = isLightTheme ? colors.light : colors.dark;
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
@@ -36,7 +36,7 @@ export default function SettingsScreen(props) {
     };
 
     const handleLogOut = () => {
-        setuserObj();
+        setUserObj();
     };
 
     const handleMyAccount = () => {

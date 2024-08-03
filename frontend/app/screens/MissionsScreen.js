@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useCallback } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -7,7 +7,7 @@ import {
     TouchableOpacity,
 } from "react-native";
 import colors from "../config/colors";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Context } from "../components/GlobalContext";
 
@@ -21,6 +21,7 @@ export default function MissionsScreen(props) {
         isLargeFont,
         defaultFontSizes,
         getLargerFontSizes,
+        updateUserDetails,
     } = globalContext;
     const themeColors = isLightTheme ? colors.light : colors.dark;
     const fontSizes = isLargeFont ? getLargerFontSizes() : defaultFontSizes;
@@ -29,6 +30,12 @@ export default function MissionsScreen(props) {
     const handleNavigateToQuiz = (quizID) => {
         navigation.navigate("QuizScreen", { QuizID: quizID });
     };
+
+    useFocusEffect(
+        useCallback(async () => {
+            await updateUserDetails();
+        })
+    );
 
     return (
         <SafeAreaView style={styles.background}>
@@ -67,7 +74,7 @@ export default function MissionsScreen(props) {
                                     color: themeColors.headertext,
                                 }}
                             >
-                                xxxx
+                                {userObj.bacoin}
                             </Text>
                         </View>
                     </View>

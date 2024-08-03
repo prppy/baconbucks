@@ -18,8 +18,12 @@ import { Keyboard } from "react-native";
 
 export default function LogInScreen() {
     const globalContext = useContext(Context);
-    const { domain, setUserObj, setToken, setRefresh, fetchData, userObj } =
-        globalContext;
+    const {
+        domain,
+        setToken,
+        setRefresh,
+        updateUserDetails,
+    } = globalContext;
 
     const [username, setUserName] = useState("");
     const [password, setPassword] = useState("");
@@ -61,11 +65,7 @@ export default function LogInScreen() {
             console.log("User logged in successfully.");
 
             // fetch user data using the token
-            const user = await fetchData("user/get-user/");
-            console.log("User Data:", user);
-
-            // set userObj in state
-            setUserObj(user);
+            await updateUserDetails();
         } catch (logInError) {
             const errorMessages = Object.keys(logInError).map((key) => {
                 return `${key}: ${logInError[key].join(", ")}`;

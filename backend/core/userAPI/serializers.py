@@ -1,11 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
 from datetime import date
+from django.db.models import F
 
 from .models import User, Wallet
 from logAPI.models import Transaction
-from logAPI.serializers import ReminderSerializer, TransactionSerializer
-from quizAPI.serializers import PlaySerializer
+from logAPI.serializers import TransactionSerializer
 
 # Create your serializers here.
 
@@ -46,6 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
         write_only=True
     )
     bacoin = serializers.SerializerMethodField()
+    rank = serializers.SerializerMethodField()
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -59,6 +60,11 @@ class UserSerializer(serializers.ModelSerializer):
     
     def get_bacoin(self, obj):
         return obj.calculate_bacoin()
+    
+    def get_rank(self, obj):
+        # Get the rank of the user based on their bacoin
+        rank = User.objects.filter(bacoin__gt=obj.bacoin).annotate(rank=F('bacoin')).count() + 1
+        return rank
     
     def validate_username(self, value):
         errors = []
@@ -81,11 +87,10 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'bacoin')
+        fields = ('id', 'username', 'email', 'password', 'confirm_password', 'bacoin', 'rank')
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, validators=[validate_password])
-    
     confirm_password = serializers.CharField(write_only=True, required=False)
 
     class Meta:
