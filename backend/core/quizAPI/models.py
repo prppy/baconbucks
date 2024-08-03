@@ -7,7 +7,6 @@ from userAPI.models import User
 
 class Quiz(models.Model):
     quiz_name = models.CharField(max_length=255)
-    
 
 class Question(models.Model):
     question_name = models.CharField(max_length=255)
