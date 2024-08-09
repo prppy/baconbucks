@@ -131,7 +131,7 @@ export default function MissionsScreen(props) {
                             name="chevron-forward"
                             size={30}
                             color={themeColors.buttons}
-                            onPress={() => handleNavigateToQuiz(7)}
+                            onPress={() => handleNavigateToQuiz(Math.floor(Math.random() * 2) + 6)}
                         />
                     </TouchableOpacity>
                 </View>
@@ -150,7 +150,7 @@ export default function MissionsScreen(props) {
                             name="chevron-forward"
                             size={30}
                             color={themeColors.buttons}
-                            onPress={() => handleNavigateToQuiz(10)}
+                            onPress={() => handleNavigateToQuiz(Math.floor(Math.random() * 2) + 10)}
                         />
                     </TouchableOpacity>
                 </View>
@@ -169,7 +169,7 @@ export default function MissionsScreen(props) {
                             name="chevron-forward"
                             size={30}
                             color={themeColors.buttons}
-                            onPress={() => handleNavigateToQuiz(8)}
+                            onPress={() => handleNavigateToQuiz(Math.floor(Math.random() * 2) + 8)}
                         />
                     </TouchableOpacity>
                 </View>
@@ -187,8 +187,8 @@ export default function MissionsScreen(props) {
                         <Ionicons
                             name="chevron-forward"
                             size={30}
-                            color={themeColors.buttons}
-                            onPress={() => handleNavigateToQuiz(12)}
+                            color={themeColors.buttons}›
+                            onPress={() => handleNavigateToQuiz(Math.floor(Math.random() * 2) + 12)}
                         />
                     </TouchableOpacity>
                 </View>

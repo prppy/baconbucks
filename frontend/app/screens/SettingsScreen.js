@@ -36,7 +36,7 @@ export default function SettingsScreen(props) {
     };
 
     const handleLogOut = () => {
-        setUserObj();
+        setUserObj(null);
     };
 
     const handleMyAccount = () => {

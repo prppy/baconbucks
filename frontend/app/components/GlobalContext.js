@@ -9,7 +9,7 @@ const Provider = ({ children }) => {
     const [domain, setDomain] = useState(
         "https://backonbucks-05fec980cd2b.herokuapp.com/api/v1.0"
     );
-    const [userObj, setUserObj] = useState();
+    const [userObj, setUserObj] = useState(null);
 
     const systemTheme = useColorScheme();
     const [isLightTheme, setIsLightTheme] = useState(systemTheme === "light");
