@@ -15,7 +15,7 @@ class WalletSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Wallet
-        fields = ['id', 'name', 'user', 'transactions', 'balance']
+        fields = ['id', 'name', 'user', 'transactions']
 
     def get_transactions(self, obj):
         today = date.today()
@@ -31,6 +31,13 @@ class WalletSerializer(serializers.ModelSerializer):
         combined_transactions_sorted = sorted(combined_transactions, key=lambda x: x.date, reverse=True)[:3]
 
         return TransactionSerializer(combined_transactions_sorted, many=True).data
+    
+class WalletBalanceSerializer(serializers.ModelSerializer):
+    balance = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Wallet
+        fields = ['id', 'balance']
 
     def get_balance(self, obj):
         return obj.calculate_balance()

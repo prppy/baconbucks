@@ -6,7 +6,7 @@ from django.db.models import Sum
 from datetime import date, timedelta, datetime
 
 from .models import User, Wallet
-from .serializers import UserSerializer, WalletSerializer, UserUpdateSerializer
+from .serializers import UserSerializer, WalletSerializer, UserUpdateSerializer, WalletBalanceSerializer
 from logAPI.models import Transaction
 
 # Create your views here.
@@ -144,6 +144,19 @@ class WalletDetailView(APIView):
             return Response(response_data, status=200)
         except Wallet.DoesNotExist:
             return Response('Wallet not found', status=404)
+        
+class WalletBalanceView(APIView):
+
+    def get(self, request, wallet_id, *args, **kwargs):
+        wallet = Wallet.objects.filter(id=wallet_id, user=request.user).first()
+        if not wallet:
+            return Response(
+                {"detail": "Wallet not found."},
+                status=404
+            )
+
+        serializer = WalletBalanceSerializer(wallet)
+        return Response(serializer.data)
     
 class WalletDeleteView(APIView):
     # delete current wallet

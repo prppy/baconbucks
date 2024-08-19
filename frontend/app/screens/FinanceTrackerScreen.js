@@ -119,7 +119,7 @@ const FinanceTrackerScreen = () => {
                         >
                             <Ionicons
                                 name="wallet-outline"
-                                size={25}
+                                size={30}
                                 color={themeColors.buttons}
                             />
                             <Text
@@ -149,7 +149,7 @@ const FinanceTrackerScreen = () => {
                             >
                                 <Ionicons
                                     name="add-circle-outline"
-                                    size={25}
+                                    size={30}
                                     color={themeColors.buttons}
                                 />
                             </TouchableOpacity>
@@ -158,7 +158,7 @@ const FinanceTrackerScreen = () => {
                             >
                                 <Ionicons
                                     name="folder-open-outline"
-                                    size={25}
+                                    size={30}
                                     color={themeColors.buttons}
                                 />
                             </TouchableOpacity>
@@ -274,7 +274,6 @@ const FinanceTrackerScreen = () => {
         <TouchableWithoutFeedback onPress={dismissKeyboard}>
             <SafeAreaView style={[styles.background, styles.centered]}>
                 <Text style={styles.headertext}>Finance Tracker</Text>
-
                 <View style={styles.inner}>
                     <View
                         style={{
@@ -357,10 +356,20 @@ const FinanceTrackerScreen = () => {
                             </Text>
                         </View>
                     </View>
+                    <Text
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: fontSizes.eighteen,
+                            marginBottom: 10,
+                            marginTop: 20,
+                            color: themeColors.headertext,
+                        }}
+                    >
+                        My Wallets
+                    </Text>
                     <View
                         style={{
                             flex: 1,
-                            borderColor: themeColors.buttons,
                             borderRadius: 10,
                         }}
                     >
@@ -450,6 +459,7 @@ const createStyles = (themeColors, fontSizes) =>
 
         walletBox: {
             height: 70,
+            width: "95%",
             backgroundColor: themeColors.row,
             borderRadius: 10,
             flexDirection: "row",
@@ -462,6 +472,8 @@ const createStyles = (themeColors, fontSizes) =>
             shadowOpacity: 0.2,
             shadowRadius: 2,
             elevation: 20,
+
+            alignSelf: "center"
         },
 
         walletText: {

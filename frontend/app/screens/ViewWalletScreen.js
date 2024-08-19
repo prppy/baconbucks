@@ -9,6 +9,7 @@ import {
     FlatList,
     Keyboard,
     ActivityIndicator,
+    ScrollView,
 } from "react-native";
 import {
     useNavigation,
@@ -78,6 +79,31 @@ const ViewWalletScreen = (props) => {
 
     const handleNavigateToNewTransaction = (walletId, walletName) => {
         navigation.navigate("NewTransaction", { walletId, walletName });
+    };
+
+    const renderItem = ({ item }) => {
+        const amountColor =
+            item.type === "EX"
+                ? "red"
+                : item.type === "EA"
+                ? "green"
+                : themeColors.text;
+
+        return (
+            <TouchableWithoutFeedback onPress={()=>{}}>
+                <View style={styles.transBox}>
+                    <Ionicons
+                        name={getCategoryIcon(item.category)}
+                        size={30}
+                        color={themeColors.buttons}
+                    />
+                    <Text style={styles.transaction}>{item.date}</Text>
+                    <Text style={[styles.transaction, { color: amountColor }]}>
+                        {item.amount}
+                    </Text>
+                </View>
+            </TouchableWithoutFeedback>
+        );
     };
 
     const dismissKeyboard = () => {
@@ -158,72 +184,39 @@ const ViewWalletScreen = (props) => {
                         style={{
                             fontWeight: "bold",
                             fontSize: fontSizes.eighteen,
-                            marginTop: 10,
+                            marginVertical: 10,
                             color: themeColors.headertext,
                         }}
                     >
                         Transaction History
                     </Text>
 
-                    {/* Ensure FlatList takes up available space */}
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, borderRadius: 10 }}>
                         <FlatList
                             data={transData}
                             keyExtractor={(item) => item.id.toString()}
-                            renderItem={({ item }) => {
-                                const amountColor =
-                                    item.type === "EX"
-                                        ? "red"
-                                        : item.type === "EA"
-                                        ? "green"
-                                        : themeColors.text;
-
-                                return (
-                                    <View style={styles.transBox}>
-                                        <Ionicons
-                                            name={getCategoryIcon(
-                                                item.category
-                                            )}
-                                            size={24}
-                                            color={themeColors.buttons}
-                                        />
-                                        <Text style={styles.transaction}>
-                                            {item.date}
-                                        </Text>
-                                        <Text
-                                            style={[
-                                                styles.transaction,
-                                                { color: amountColor },
-                                            ]}
-                                        >
-                                            {item.amount}
-                                        </Text>
-                                    </View>
-                                );
-                            }}
+                            renderItem={renderItem}
                         />
                     </View>
-
-                    <TouchableOpacity
-                        style={[styles.addwallet, { bottom: 80 }]}
-                    >
-                        <Ionicons
-                            name="pencil-outline"
-                            size={30}
-                            color={themeColors.buttons}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.addwallet}
-                        onPress={() => handleNavigateToNewTransaction(id, name)}
-                    >
-                        <Ionicons
-                            name="add-circle-outline"
-                            size={35}
-                            color={themeColors.buttons}
-                        />
-                    </TouchableOpacity>
                 </View>
+                <TouchableOpacity style={[styles.addwallet, { bottom: 80 }]}>
+                    <Ionicons
+                        name="pencil-outline"
+                        size={30}
+                        color={themeColors.buttons}
+                    />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={styles.addwallet}
+                    onPress={() => handleNavigateToNewTransaction(id, name)}
+                >
+                    <Ionicons
+                        name="add-circle-outline"
+                        size={35}
+                        color={themeColors.buttons}
+                    />
+                </TouchableOpacity>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
@@ -254,22 +247,21 @@ const createStyles = (themeColors, fontSizes) =>
             paddingBottom: 20,
         },
         transBox: {
-            width: "100%",
-            height: 65,
+            height: 70,
+            width: "95%",
             backgroundColor: themeColors.row,
-            padding: 20,
             borderRadius: 10,
-            marginTop: 10,
-            alignItems: "center",
-            alignSelf: "center",
             flexDirection: "row",
             justifyContent: "space-between",
-            alignContent: "center",
+            alignItems: "center",
+            marginBottom: 10,
+            padding: 20,
             shadowColor: "#171717",
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.2,
             shadowRadius: 2,
             elevation: 20,
+            alignSelf: "center"
         },
         addwallet: {
             position: "absolute",

@@ -187,7 +187,7 @@ export default function MissionsScreen(props) {
                         <Ionicons
                             name="chevron-forward"
                             size={30}
-                            color={themeColors.buttons}›
+                            color={themeColors.buttons}
                             onPress={() => handleNavigateToQuiz(Math.floor(Math.random() * 2) + 12)}
                         />
                     </TouchableOpacity>

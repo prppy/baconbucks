@@ -54,7 +54,6 @@ const StatisticsDashboardScreen = () => {
             const json = await fetchData(
                 `user/get-statistics/?time=${timeFilter}&wallet=${walletFilter}`
             );
-            console.log(json);
             setNetWorth(json.net_worth);
             setNetWorthHistory(json.net_worth_history);
             setPiggyBankDataEA(json.piggy_bank_earnings);
